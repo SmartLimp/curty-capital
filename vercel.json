@@ -1,0 +1,9 @@
+{
+  "name": "curty-capital",
+  "buildCommand": "echo 'Static site'",
+  "outputDirectory": ".",
+  "env": {
+    "VITE_SUPABASE_URL": "@SUPABASE_URL",
+    "VITE_SUPABASE_ANON_KEY": "@SUPABASE_ANON_KEY"
+  }
+}
