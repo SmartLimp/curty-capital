@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curty | Capital — Painel Operacional</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0D10;--bg2:#111318;--bg3:#1A1D23;--bg4:#23272F;--border:#1E2228;--border2:#2A2F3A;--text:#FFF;--text2:#8B919E;--text3:#444851;--blue:#2F6BFF;--bd:#0D1F3C;--bb:#185FA5;--gold:#C8A24A;--gd:#1A140A;--gb:#854F0B;--green:#4ADE80;--grd:#0D2215;--grb:#1A5C35;--red:#F87171;--rdd:#1A0E0E;--rb:#7B2020;--r:8px;--rl:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:220px;min-width:220px;background:var(--bg2);border-right:.5px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto}
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+.topbar{background:var(--bg2);border-bottom:.5px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.content{padding:24px;flex:1}
+.logo-wrap{padding:18px 16px 14px;border-bottom:.5px solid var(--border)}
+.lc{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;color:var(--text)}
+.ls{color:var(--blue);margin:0 3px}
+.lk{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:300;color:var(--gold);letter-spacing:2px}
+.lsub{font-size:9px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+.nav-sec{padding:12px 10px 4px}
+.nav-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:0 6px;margin-bottom:4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r);cursor:pointer;color:var(--text2);font-size:12px;transition:all .15s;margin-bottom:2px;border:.5px solid transparent}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--bd);color:var(--blue);border-color:var(--bb)}
+.nav-item svg{width:14px;height:14px;min-width:14px}
+.nbadge{margin-left:auto;font-size:9px;padding:1px 5px;border-radius:10px}
+.nb-red{background:var(--rdd);color:var(--red)}
+.nb-blue{background:var(--bd);color:var(--blue)}
+.sf{margin-top:auto;padding:12px 10px;border-top:.5px solid var(--border)}
+.uav{width:30px;height:30px;border-radius:50%;background:var(--bd);border:.5px solid var(--bb);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--blue)}
+.tt{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500}
+.ts{font-size:10px;color:var(--text2);margin-top:1px}
+.tr{display:flex;align-items:center;gap:10px}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:3px 9px;border-radius:20px}
+.pg{background:var(--grd);color:var(--green);border:.5px solid var(--grb)}
+.ps{background:var(--bd);color:var(--blue);border:.5px solid var(--bb);cursor:pointer}
+.ps:hover{background:var(--blue);color:#fff}
+.page{display:none}.page.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.g5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rl);padding:14px 16px;margin-bottom:12px}
+.ct{font-size:11px;font-weight:500;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sl{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;margin-top:16px}
+.sl:first-child{margin-top:0}
+.sec{margin-bottom:24px}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stt{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.08em}
+.metric{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rl);padding:14px 16px;position:relative}
+.ml{font-size:10px;color:var(--text2);margin-bottom:4px}
+.mv{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:500;line-height:1}
+.md{font-size:10px;color:var(--text2);margin-top:4px}
+.mbar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.mbf{height:100%;border-radius:2px}
+.editable{background:transparent;border:none;color:inherit;font-family:inherit;font-size:inherit;font-weight:inherit;outline:none;cursor:pointer}
+.editable:hover,.editable:focus{background:var(--bg3);border-radius:4px;padding:0 4px;margin:0 -4px}
+.hint{position:absolute;top:8px;right:8px;font-size:8px;color:var(--text3);opacity:0;transition:opacity .2s}
+.metric:hover .hint{opacity:1}
+.alert{display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-radius:var(--r);margin-bottom:6px}
+.adot{width:6px;height:6px;border-radius:50%;margin-top:3px;min-width:6px}
+.atxt{font-size:11px;line-height:1.4;flex:1}
+.aclose{font-size:16px;opacity:.5;cursor:pointer;padding:0 4px}.aclose:hover{opacity:1}
+.al-r{background:var(--rdd);border:.5px solid var(--rb)}.al-r .adot{background:var(--red)}.al-r .atxt{color:var(--red)}
+.al-a{background:var(--gd);border:.5px solid var(--gb)}.al-a .adot{background:var(--gold)}.al-a .atxt{color:var(--gold)}
+.al-g{background:var(--grd);border:.5px solid var(--grb)}.al-g .adot{background:var(--green)}.al-g .atxt{color:var(--green)}
+.al-b{background:var(--bd);border:.5px solid var(--bb)}.al-b .adot{background:var(--blue)}.al-b .atxt{color:var(--blue)}
+.kr{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:.5px solid var(--border)}
+.kr:last-child{border-bottom:none}
+.kn{font-size:11px;color:var(--text2)}
+.kv{font-size:11px;font-weight:500;color:var(--text)}
+.kv.good{color:var(--green)}.kv.warn{color:var(--gold)}.kv.bad{color:var(--red)}.kv.bl{color:var(--blue)}
+.kve{font-size:11px;font-weight:500;color:var(--text);background:transparent;border:none;outline:none;text-align:right;cursor:pointer;font-family:'Inter',sans-serif;border-radius:4px;padding:1px 4px;transition:background .2s;max-width:130px}
+.kve:hover,.kve:focus{background:var(--bg3)}
+.lr{display:flex;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border);align-items:flex-start}
+.lr:last-child{border-bottom:none}
+.li{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;min-width:30px;font-size:13px}
+.li-g{background:var(--grd)}.li-b{background:var(--bd)}.li-a{background:var(--gd)}.li-r{background:var(--rdd)}
+.lt2{font-size:12px;font-weight:500;color:var(--text)}
+.ld2{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4}
+.ldate{font-size:10px;color:var(--text3);white-space:nowrap}
+.pipe-stage{flex:1;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.pipe-label{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.pipe-count{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:500;line-height:1}
+.pipe-value{font-size:10px;color:var(--blue);margin-top:2px}
+.pipe-sla{font-size:9px;color:var(--text3);margin-top:2px}
+.pipe-arrow{display:flex;align-items:center;color:var(--border2);font-size:16px}
+.fcast-row{display:flex;gap:6px;align-items:flex-end;height:52px;margin-top:8px}
+.fbar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.fbar{width:100%;border-radius:3px 3px 0 0}
+.fbar-label{font-size:9px;color:var(--text2)}
+.cap-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:8px}
+.cap-fill{height:100%;border-radius:3px}
+.pbar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.pbar-label{font-size:11px;color:var(--text2);width:90px;min-width:90px}
+.pbar-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:2px}
+.pbar-pct{font-size:10px;font-weight:500;min-width:32px;text-align:right}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;border:none;font-family:'Inter',sans-serif}
+.btn.active{box-shadow:0 0 0 2px var(--border2)}
+.bbl{background:var(--blue);color:#fff}.bbl:hover{background:#1A4FCC}
+.bgh{background:var(--bg3);color:var(--text2);border:.5px solid var(--border2)}.bgh:hover{color:var(--text)}
+.bgold{background:var(--gd);color:var(--gold);border:.5px solid var(--gb)}.bgold:hover{background:var(--gold);color:var(--bg)}
+.bgreen{background:var(--grd);color:var(--green);border:.5px solid var(--grb)}
+.bred{background:var(--rdd);color:var(--red);border:.5px solid var(--rb)}
+.bsm{padding:4px 10px;font-size:10px}
+.bfull{width:100%;justify-content:center}
+.tag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:20px;margin-right:4px}
+.tg{background:var(--grd);color:var(--green)}.ta{background:var(--gd);color:var(--gold)}.tb{background:var(--bd);color:var(--blue)}.tr2{background:var(--rdd);color:var(--red)}
+.criat-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid var(--border)}
+.criat-row:last-child{border-bottom:none}
+.criat-name{font-size:11px;color:var(--text);flex:1}
+.criat-badge{font-size:9px;padding:2px 7px;border-radius:20px}
+.cb-test{background:var(--bd);color:var(--blue)}.cb-win{background:var(--grd);color:var(--green)}.cb-pend{background:var(--gd);color:var(--gold)}
+.rp{background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--r);padding:14px;font-size:11px;color:var(--text2);line-height:1.8;white-space:pre-line;margin-bottom:10px;min-height:80px}
+
+/* CLIENTS - TABLE */
+.clients-table-wrapper{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:16px}
+.clients-table{width:100%;border-collapse:collapse;font-size:12px}
+.clients-table thead{background:var(--bg3);border-bottom:.5px solid var(--border2)}
+.clients-table th{padding:12px;text-align:left;font-weight:500;color:var(--text2);font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+.clients-table tbody tr{border-bottom:.5px solid var(--border);cursor:pointer;transition:background .15s}
+.clients-table tbody tr:hover{background:var(--bg3)}
+.clients-table td{padding:12px;color:var(--text);font-size:11px}
+.ct-nome{font-weight:500;display:flex;align-items:center;gap:8px}
+.ct-av{width:32px;height:32px;border-radius:50%;background:var(--bd);border:.5px solid var(--bb);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue);min-width:32px}
+.ct-edit{background:transparent;border:none;color:inherit;font-family:inherit;font-size:inherit;outline:none;cursor:pointer;padding:2px 4px;border-radius:3px;transition:background .2s}
+.ct-edit:hover,.ct-edit:focus{background:var(--bg4)}
+.ct-hs{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;text-align:center}
+.ct-tag{display:inline-block;font-size:9px;padding:2px 8px;border-radius:20px;background:var(--bd);color:var(--blue)}
+.ct-status{display:inline-block;font-size:9px;padding:2px 8px;border-radius:20px}
+.cts-ativo{background:var(--grd);color:var(--green)}
+.cts-risco{background:var(--gd);color:var(--gold)}
+.cts-critico{background:var(--rdd);color:var(--red)}
+tr[data-status="Inativo"]{opacity:0.5;background:var(--bg4)}
+tr[data-status="Pausado"]{opacity:0.7}
+.ct-status-badge{display:inline-block;font-size:8px;padding:2px 6px;border-radius:12px;font-weight:600;margin-right:4px}
+.st-ativo{background:var(--grd);color:var(--green)}
+.st-pausado{background:var(--gd);color:var(--gold)}
+.st-inativo{background:var(--rdd);color:var(--red)}
+.add-row-btn{width:100%;padding:12px;background:var(--bg3);border:none;color:var(--blue);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;transition:background .15s}
+.add-row-btn:hover{background:var(--bg4)}
+
+/* DOSSIE */
+.dos-hdr{background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--rl);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.dos-av{width:48px;height:48px;border-radius:50%;background:var(--bd);border:.5px solid var(--bb);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--blue);min-width:48px}
+.dos-name{font-size:16px;font-weight:500}
+.dos-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.dos-hs{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+.dos-na{padding:6px 14px;background:var(--bd);border:.5px solid var(--bb);border-radius:var(--r);font-size:11px;color:var(--blue);white-space:nowrap}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r);background:var(--bg3);color:var(--text2);border:.5px solid var(--border2);font-size:11px;cursor:pointer;margin-bottom:16px;font-family:'Inter',sans-serif}
+.back-btn:hover{color:var(--text)}
+.tabs{display:flex;gap:0;border-bottom:.5px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 16px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:5px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tc{display:none}.tc.active{display:block}
+.field{background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:8px}
+.field:last-child{margin-bottom:0}
+.fl{font-size:10px;color:var(--text2);margin-bottom:3px}
+.fv{font-size:12px;font-weight:500;color:var(--text)}
+.fv-edit{font-size:12px;color:var(--text);font-weight:500;background:transparent;border:none;outline:none;width:100%;cursor:pointer;font-family:'Inter',sans-serif;border-radius:4px;padding:0;transition:background .2s}
+.fv-edit:hover,.fv-edit:focus{background:var(--bg4);padding:2px 4px;margin:-2px -4px}
+.phase{display:flex;gap:0;margin-bottom:16px}
+.ph{flex:1;padding:8px;border:.5px solid var(--border);text-align:center;font-size:10px;cursor:pointer;transition:all .15s}
+.ph:first-child{border-radius:var(--r) 0 0 var(--r)}.ph:last-child{border-radius:0 var(--r) var(--r) 0}
+.ph+.ph{border-left:none}
+.ph-done{background:var(--grd);border-color:var(--grb)}.ph-cur{background:var(--bd);border-color:var(--bb)}.ph-neu{background:var(--bg3)}
+.ph-l{color:var(--text2);font-size:9px;margin-bottom:2px}.ph-v{font-weight:500}
+.ph-done .ph-v{color:var(--green)}.ph-cur .ph-v{color:var(--blue)}.ph-neu .ph-v{color:var(--text3)}
+.hbr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.hbl{font-size:11px;color:var(--text2);width:90px;min-width:90px}
+.hbt{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.hbf{height:100%;border-radius:2px}
+.hbv{font-size:10px;font-weight:500;min-width:32px;text-align:right}
+.ar{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border)}
+.ar:last-child{border-bottom:none}
+.an{font-size:12px;color:var(--text);flex:1}
+.av-edit{font-size:11px;color:var(--text2);background:transparent;border:none;outline:none;width:130px;cursor:pointer;font-family:'Inter',sans-serif;text-align:right;border-radius:4px;padding:1px 4px;transition:background .2s}
+.av-edit:hover,.av-edit:focus{background:var(--bg3)}
+.ast{font-size:10px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.ast-ok{background:var(--grd);color:var(--green)}.ast-pend{background:var(--gd);color:var(--gold)}.ast-miss{background:var(--rdd);color:var(--red)}
+.db{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.db:hover{border-color:var(--border2)}.db.open2{border-color:var(--blue)}
+.dbh{display:flex;align-items:center;justify-content:space-between}
+.db.open2 .dbh{margin-bottom:8px}
+.dbt{font-size:12px;font-weight:500;color:var(--text)}
+.dbs{font-size:10px;padding:2px 8px;border-radius:20px}
+.ds-ok{background:var(--grd);color:var(--green)}.ds-w{background:var(--gd);color:var(--gold)}.ds-b{background:var(--rdd);color:var(--red)}
+.dbd{font-size:11px;color:var(--text2);line-height:1.5;display:none;margin-bottom:6px}
+.db.open2 .dbd{display:block}
+.dbe{width:100%;background:transparent;border:none;border-top:.5px solid var(--border);color:var(--text2);font-size:11px;font-family:'Inter',sans-serif;padding:8px 0 0;margin-top:8px;outline:none;resize:none;line-height:1.5;display:none}
+.db.open2 .dbe{display:block}
+.cli{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border)}
+.cli:last-child{border-bottom:none}
+.clb{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;min-width:18px;margin-top:1px;cursor:pointer;transition:all .15s}
+.clb.done{background:var(--green);border-color:var(--green)}
+.clt{font-size:12px;color:var(--text);flex:1;line-height:1.4}
+.cli.done .clt{text-decoration:line-through;color:var(--text2)}
+.clr{font-size:10px;color:var(--text2);white-space:nowrap}
+.cld{font-size:10px;white-space:nowrap;margin-left:8px}
+.cld.urgent{color:var(--gold)}.cld.late{color:var(--red)}.cld.done2{color:var(--green)}.cld.normal{color:var(--text3)}
+.payr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border)}
+.payr:last-child{border-bottom:none}
+.payn{font-size:12px;color:var(--text);flex:1}
+.payv{font-size:12px;font-weight:500}
+
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center}
+.mbg.open{display:flex}
+.modal{background:var(--bg2);border:.5px solid var(--border2);border-radius:16px;padding:24px;width:520px;max-width:92vw;max-height:88vh;overflow-y:auto}
+.modal h3{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:500;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.mc{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;line-height:1}
+.fg{margin-bottom:14px}
+.fl2{font-size:11px;color:var(--text2);margin-bottom:5px;display:block}
+.fi{width:100%;background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--r);padding:8px 12px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.fi:focus{border-color:var(--blue)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.fsel{width:100%;background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--r);padding:8px 12px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:.5px solid var(--grb);border-radius:var(--rl);padding:12px 16px;font-size:12px;color:var(--green);z-index:300;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="logo-wrap">
+    <div><span class="lc">Curty</span><span class="ls"> | </span><span class="lk">Capital</span></div>
+    <div class="lsub">Máquina de Orçamentos</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Principal</div>
+    <div class="nav-item active" onclick="showPage('morning')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      Morning View<span class="nbadge nb-red" id="badge-alerts">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('clientes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Clientes<span class="nbadge nb-blue" id="badge-clients">1</span>
+    </div>
+    <div class="nav-item" onclick="showPage('pipeline')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Pipeline
+    </div>
+    <div class="nav-item" onclick="showPage('capacidade')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Capacidade
+    </div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Marketing</div>
+    <div class="nav-item" onclick="showPage('trafego')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Tráfego Pago
+    </div>
+    <div class="nav-item" onclick="showPage('criativos')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+      Criativos
+    </div>
+    <div class="nav-item" onclick="showPage('social')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      Social Media
+    </div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Gestão</div>
+    <div class="nav-item" onclick="showPage('financeiro')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Financeiro
+    </div>
+    <div class="nav-item" onclick="showPage('relatorios')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Relatórios
+    </div>
+  </div>
+  <div class="sf">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="uav">TC</div>
+      <div><div style="font-size:11px;font-weight:500">The Curtys</div><div style="font-size:9px;color:var(--text2)">CEO · curty capital</div></div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="tt" id="page-title">Morning View</div>
+      <div class="ts" id="page-sub">Visão geral do dia · curty capital</div>
+    </div>
+    <div class="tr">
+      <div class="pill pg"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>Sistema ativo</div>
+      <div class="pill ps" onclick="saveAll()">💾 Salvar</div>
+      <div style="font-size:11px;color:var(--text2)" id="clock">--:--</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- MORNING VIEW -->
+  <div class="page active" id="page-morning">
+    <div class="sec">
+      <div class="g5">
+        <div class="metric"><div class="ml">MRR atual</div><div class="mv" style="color:var(--gold)"><span class="editable" contenteditable id="mrr" onblur="calcMeta()">R$ 300</span></div><div class="md warn" id="mrr-meta">Meta: R$ 15.000 · 2%</div><div class="mbar"><div class="mbf" id="mrr-bar" style="background:var(--gold);width:2%"></div></div><div class="hint">clique p/ editar</div></div>
+        <div class="metric"><div class="ml">Forecast 90d</div><div class="mv" style="color:var(--blue)"><span class="editable" contenteditable id="forecast">R$ 9.300</span></div><div class="md bl">Projeção 3 meses</div><div class="hint">clique p/ editar</div></div>
+        <div class="metric"><div class="ml">Clientes ativos</div><div class="mv" id="total-clientes">1</div><div class="md warn">Cap: 10 · <span id="slots-livres">9</span> livres</div><div class="mbar"><div class="mbf" id="cap-mbar" style="background:var(--blue);width:10%"></div></div></div>
+        <div class="metric"><div class="ml">CPL qualificado</div><div class="mv"><span class="editable" contenteditable id="cpl" onblur="checkCPL()">R$ 35</span></div><div class="md warn">Teto: R$ 40</div><div class="hint">clique p/ editar</div></div>
+        <div class="metric"><div class="ml">SLA violados</div><div class="mv" style="color:var(--red)">0</div><div class="md" style="color:var(--red)">Leads +5min</div></div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sh"><div class="stt">Alertas</div><span style="font-size:10px;color:var(--blue);cursor:pointer" onclick="openModal('modal-alerta')">+ Adicionar</span></div>
+      <div id="alertas-container">
+        <div class="alert al-r" id="al-1"><div class="adot"></div><div class="atxt">BM da Smart Limp não configurado — bloqueia campanhas</div><span class="aclose" onclick="removeAlerta('al-1')">×</span></div>
+        <div class="alert al-a" id="al-2"><div class="adot"></div><div class="atxt">Pixel não instalado — Smart Limp sem rastreamento</div><span class="aclose" onclick="removeAlerta('al-2')">×</span></div>
+        <div class="alert al-b" id="al-3"><div class="adot"></div><div class="atxt">Upsell — Smart Limp tem base de 3.500 clientes para reativar</div><span class="aclose" onclick="removeAlerta('al-3')">×</span></div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sh"><div class="stt">Clientes — visão rápida</div><span style="font-size:10px;color:var(--blue);cursor:pointer" onclick="showPage('clientes')">Ver todos →</span></div>
+      <div class="g3">
+        <div class="card" style="cursor:pointer" onclick="showPage('clientes');setTimeout(()=>abrirDossie('smartlimp'),50)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div class="cc-av">SL</div>
+            <div><div style="font-size:13px;font-weight:500">Smart Limp</div><div style="font-size:10px;color:var(--text2)">Fase 3 · R$300/mês</div></div>
+            <div class="cc-hs hs-g" id="hs-mini">72</div>
+          </div>
+          <div style="font-size:10px;color:var(--blue)">Abrir dossiê completo →</div>
+        </div>
+        <div class="card">
+          <div class="ct">Pipeline hoje</div>
+          <div class="kr"><span class="kn">Leads ativos</span><span class="kv"><input class="kve" id="leads-pipe" value="3" onchange="saveAll()"></span></div>
+          <div class="kr"><span class="kn">Diagnósticos</span><span class="kv"><input class="kve" id="diag-ag" value="1" onchange="saveAll()"></span></div>
+          <div class="kr"><span class="kn">Propostas abertas</span><span class="kv warn"><input class="kve" id="prop-ab" value="2" onchange="saveAll()"></span></div>
+        </div>
+        <div class="card">
+          <div class="ct">Atividade recente</div>
+          <div id="log-mini">
+            <div class="lr"><div class="li li-g"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div style="flex:1"><div style="font-size:11px;font-weight:500">Diagnóstico Smart Limp ✓</div></div><div class="ldate">hoje</div></div>
+            <div class="lr"><div class="li li-a"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg></div><div style="flex:1"><div style="font-size:11px;font-weight:500">BM pendente de config.</div></div><div class="ldate">hoje</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTES -->
+  <div class="page" id="page-clientes">
+    <div id="view-lista">
+      <div class="sh">
+        <div class="stt">Clientes ativos (<span id="count-clientes">1</span>)</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn bgh bsm" onclick="filtrarClientesPorStatus('todos')" id="btn-todos">Todos</button>
+          <button class="btn bbl bsm" onclick="filtrarClientesPorStatus('Ativo')" id="btn-ativos">Ativos</button>
+          <button class="btn bsm" onclick="filtrarClientesPorStatus('Pausado')" id="btn-pausados" style="background:var(--warn);color:#fff">Pausados</button>
+          <button class="btn bred bsm" onclick="filtrarClientesPorStatus('Inativo')" id="btn-inativos">Inativos</button>
+          <button class="btn bbl bsm" style="margin-left:auto" onclick="adicionarLinhaCliente()">+ Novo cliente</button>
+        </div>
+      </div>
+      <div class="clients-table-wrapper">
+        <table class="clients-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Tipo</th>
+              <th>Data de entrada</th>
+              <th>MRR</th>
+              <th>Fase</th>
+              <th>Status</th>
+              <th>Último contato</th>
+              <th style="text-align:center;width:50px">Health Score</th>
+            </tr>
+          </thead>
+          <tbody id="clients-tbody">
+            <tr onclick="abrirDossieFromTable(this)" data-cliente-id="smartlimp" data-status="Ativo">
+              <td><div class="ct-nome"><div class="ct-av">SL</div><input class="ct-edit" type="text" value="Smart Limp" data-field="nome"></div></td>
+              <td><input class="ct-edit" type="text" value="Higienização" data-field="tipo"></td>
+              <td><input class="ct-edit" type="text" value="Junho 2025" data-field="entrada"></td>
+              <td><input class="ct-edit" type="text" value="R$ 300" data-field="mrr"></td>
+              <td><span class="ct-tag" data-field="fase">Fase 3</span></td>
+              <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option></select></td>
+              <td><input class="ct-edit" type="text" value="Hoje" data-field="contato"></td>
+              <td style="text-align:center"><div class="ct-hs hs-g" id="hs-table-smartlimp" data-field="health">72</div></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="add-row-btn" onclick="adicionarLinhaCliente()">+ Adicionar cliente</button>
+      </div>
+    </div>
+
+    <div id="view-dossie" style="display:none">
+      <button class="back-btn" onclick="voltarLista()">← Voltar para clientes</button>
+      <div class="dos-hdr">
+        <div class="dos-av" id="dos-av">SL</div>
+        <div style="flex:1">
+          <div class="dos-name" id="dos-nome">Smart Limp</div>
+          <div class="dos-meta" id="dos-meta">Higienização de estofados · Rio de Janeiro · 15 dias</div>
+        </div>
+        <div class="dos-na" id="dos-na" onclick="irParaProximaAcao()" style="cursor:pointer" title="Clique para ir direto para esta entrega">⚡ Carregando...</div>
+        <div class="dos-hs hs-g" id="dos-hs">72</div>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('visao')">Visão geral</div>
+        <div class="tab" onclick="showTab('dados')">Dados</div>
+        <div class="tab" onclick="showTab('acessos')">Acessos</div>
+        <div class="tab" onclick="showTab('diagnostico')">Diagnóstico</div>
+        <div class="tab" onclick="showTab('entregas')">Entregas</div>
+        <div class="tab" onclick="showTab('historico')">Histórico</div>
+        <div class="tab" onclick="showTab('trafego-c')">Tráfego</div>
+        <div class="tab" onclick="showTab('financeiro-c')">Financeiro</div>
+      </div>
+
+      <!-- VISÃO GERAL -->
+      <div class="tc active" id="tc-visao">
+        <div class="phase" id="phase-strip">
+          <div class="ph ph-done" onclick="setFase(1)"><div class="ph-l">F1</div><div class="ph-v">✓ Diag.</div></div>
+          <div class="ph ph-done" onclick="setFase(2)"><div class="ph-l">F2</div><div class="ph-v">✓ Ativ.</div></div>
+          <div class="ph ph-cur" onclick="setFase(3)"><div class="ph-l">F3</div><div class="ph-v">● Estr.</div></div>
+          <div class="ph ph-neu" onclick="setFase(4)"><div class="ph-l">F4</div><div class="ph-v">— Aquis.</div></div>
+          <div class="ph ph-neu" onclick="setFase(5)"><div class="ph-l">F5</div><div class="ph-v">— Conv.</div></div>
+          <div class="ph ph-neu" onclick="setFase(6)"><div class="ph-l">F6</div><div class="ph-v">— Esc.</div></div>
+        </div>
+        <div class="g3">
+          <div>
+            <div class="sl">Health score</div>
+            <div class="card">
+              <div class="hbr"><div class="hbl">Pagamento</div><div class="hbt"><div class="hbf" id="hb-pag" style="width:100%;background:var(--green)"></div></div><div class="hbv good" id="hbv-pag">100%</div></div>
+              <div class="hbr"><div class="hbl">CPL ok</div><div class="hbt"><div class="hbf" id="hb-cpl" style="width:90%;background:var(--green)"></div></div><div class="hbv good" id="hbv-cpl">90%</div></div>
+              <div class="hbr"><div class="hbl">Reunião</div><div class="hbt"><div class="hbf" id="hb-reu" style="width:50%;background:var(--gold)"></div></div><div class="hbv warn" id="hbv-reu">50%</div></div>
+              <div class="hbr"><div class="hbl">Entregas</div><div class="hbt"><div class="hbf" id="hb-ent" style="width:60%;background:var(--gold)"></div></div><div class="hbv warn" id="hbv-ent">60%</div></div>
+              <div class="hbr"><div class="hbl">NPS</div><div class="hbt"><div class="hbf" id="hb-nps" style="width:0%;background:var(--text3)"></div></div><div class="hbv" id="hbv-nps" style="color:var(--text3)">—</div></div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button class="btn bgh bsm" onclick="openModal('modal-reuniao')">+ Reunião</button>
+                <button class="btn bgh bsm" onclick="openModal('modal-nps')">+ NPS</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="sl">Alertas do cliente</div>
+            <div id="client-alerts">
+              <div class="alert al-r"><div class="adot"></div><div class="atxt">BM não configurado</div></div>
+              <div class="alert al-a"><div class="adot"></div><div class="atxt">Reunião semanal não agendada</div></div>
+              <div class="alert al-b"><div class="adot"></div><div class="atxt">Base de 3.500 clientes disponível para reativação</div></div>
+            </div>
+            <button class="btn bgh bsm" style="margin-top:8px" onclick="openModal('modal-alerta-c')">+ Alerta</button>
+          </div>
+          <div>
+            <div class="sl">Resumo</div>
+            <div class="field"><div class="fl">Valor mensal</div><div class="fv">R$ <input class="fv-edit" id="sl-valor" value="300" onchange="saveAll()" style="width:60px">/mês</div></div>
+            <div class="field"><div class="fl">Próxima reunião</div><div class="fv"><input class="fv-edit" id="prox-reu" value="A definir" onchange="saveAll()"></div></div>
+            <div class="field"><div class="fl">Próximo pagamento</div><div class="fv"><input class="fv-edit" id="prox-pgto" value="01/08/2025" onchange="saveAll()"></div></div>
+            <div class="field"><div class="fl">Gestor</div><div class="fv"><input class="fv-edit" id="gestor" value="The Curtys" onchange="saveAll()"></div></div>
+            <button class="btn bgold bsm bfull" style="margin-top:8px" onclick="abrirUpsell()">↑ Ofertar upsell</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DADOS -->
+      <div class="tc" id="tc-dados">
+        <div class="sl">Empresa</div>
+        <div class="g3">
+          <div class="field"><div class="fl">Razão social</div><div class="fv"><input class="fv-edit" id="d-razao" value="Smart Limp Ltda." onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">CNPJ</div><div class="fv"><input class="fv-edit" id="d-cnpj" value="" placeholder="00.000.000/0001-00" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Segmento</div><div class="fv"><input class="fv-edit" id="d-seg" value="Higienização de estofados" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Cidade</div><div class="fv"><input class="fv-edit" id="d-cidade" value="Rio de Janeiro — RJ" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Ticket médio</div><div class="fv">R$ <input class="fv-edit" id="d-ticket" value="300" onchange="saveAll()" style="width:60px"></div></div>
+          <div class="field"><div class="fl">Público-alvo</div><div class="fv"><input class="fv-edit" id="d-pub" value="Mulheres 30+, filhos e pets" onchange="saveAll()"></div></div>
+        </div>
+        <div class="sl">Contato</div>
+        <div class="g3">
+          <div class="field"><div class="fl">Responsável</div><div class="fv"><input class="fv-edit" id="d-resp" value="The Curtys" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">WhatsApp</div><div class="fv"><input class="fv-edit" id="d-wpp" value="+55 21 97968-0336" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">E-mail</div><div class="fv"><input class="fv-edit" id="d-email" value="" placeholder="email@smartlimp.com.br" onchange="saveAll()"></div></div>
+        </div>
+        <div class="sl">Contrato</div>
+        <div class="g3">
+          <div class="field"><div class="fl">Início</div><div class="fv"><input class="fv-edit" id="d-inicio" value="Junho 2025" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Modelo</div><div class="fv"><input class="fv-edit" id="d-modelo" value="Setup + Mensalidade" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Área de atuação</div><div class="fv"><input class="fv-edit" id="d-area" value="Zona Sul e Barra" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Base de clientes</div><div class="fv"><input class="fv-edit" id="d-base" value="3.500 clientes" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Serviço principal</div><div class="fv"><input class="fv-edit" id="d-serv" value="Higienização e impermeabilização" onchange="saveAll()"></div></div>
+          <div class="field"><div class="fl">Nível atual</div><div class="fv"><input class="fv-edit" id="d-nivel" value="Nível 1 — Estruturação" onchange="saveAll()"></div></div>
+        </div>
+      </div>
+
+      <!-- ACESSOS -->
+      <div class="tc" id="tc-acessos">
+        <div style="padding:8px 12px;background:var(--bd);border:.5px solid var(--bb);border-radius:var(--r);font-size:11px;color:var(--blue);margin-bottom:14px">🔒 Dados salvos localmente — nunca enviados para servidor externo</div>
+        <div class="sl">Meta / Facebook</div>
+        <div class="card">
+          <div class="ar"><div class="an">Business Manager (BM ID)</div><input class="av-edit" id="ac-bm" value="" placeholder="ID do BM" onchange="upStatus('st-bm','ac-bm')"><span class="ast ast-pend" id="st-bm">Pendente</span></div>
+          <div class="ar"><div class="an">Conta de anúncios (ID)</div><input class="av-edit" id="ac-ads" value="" placeholder="act_000000000" onchange="upStatus('st-ads','ac-ads')"><span class="ast ast-pend" id="st-ads">Pendente</span></div>
+          <div class="ar"><div class="an">Pixel Meta (ID)</div><input class="av-edit" id="ac-pixel" value="" placeholder="ID do Pixel" onchange="upStatus('st-pixel','ac-pixel')"><span class="ast ast-pend" id="st-pixel">Pendente</span></div>
+          <div class="ar"><div class="an">Página do Facebook</div><input class="av-edit" id="ac-fbpage" value="" placeholder="@pagina" onchange="upStatus('st-fbpage','ac-fbpage')"><span class="ast ast-pend" id="st-fbpage">Pendente</span></div>
+          <div class="ar"><div class="an">Instagram Business</div><input class="av-edit" id="ac-ig" value="@smartlimp" onchange="upStatus('st-ig','ac-ig')"><span class="ast ast-ok" id="st-ig">Configurado</span></div>
+          <div class="ar"><div class="an">WhatsApp Business API</div><input class="av-edit" id="ac-wpp" value="Meta Cloud API" onchange="upStatus('st-wpp','ac-wpp')"><span class="ast ast-ok" id="st-wpp">Configurado</span></div>
+        </div>
+        <div class="sl">Google</div>
+        <div class="card">
+          <div class="ar"><div class="an">Google Analytics (GA4)</div><input class="av-edit" id="ac-ga4" value="" placeholder="G-XXXXXXXXXX" onchange="upStatus('st-ga4','ac-ga4')"><span class="ast ast-pend" id="st-ga4">Pendente</span></div>
+          <div class="ar"><div class="an">Google Tag Manager</div><input class="av-edit" id="ac-gtm" value="" placeholder="GTM-XXXXXXX" onchange="upStatus('st-gtm','ac-gtm')"><span class="ast ast-pend" id="st-gtm">Pendente</span></div>
+          <div class="ar"><div class="an">Google Ads</div><input class="av-edit" id="ac-gads" value="" placeholder="000-000-0000" onchange="upStatus('st-gads','ac-gads')"><span class="ast ast-miss" id="st-gads">Não tem</span></div>
+          <div class="ar"><div class="an">Google Meu Negócio</div><input class="av-edit" id="ac-gmn" value="" placeholder="Link do perfil" onchange="upStatus('st-gmn','ac-gmn')"><span class="ast ast-miss" id="st-gmn">Não tem</span></div>
+          <div class="ar"><div class="an">Search Console</div><input class="av-edit" id="ac-gsc" value="" placeholder="Domínio verificado" onchange="upStatus('st-gsc','ac-gsc')"><span class="ast ast-pend" id="st-gsc">Pendente</span></div>
+        </div>
+        <div class="sl">Outros</div>
+        <div class="card">
+          <div class="ar"><div class="an">Domínio</div><input class="av-edit" id="ac-dom" value="" placeholder="smartlimp.com.br" onchange="upStatus('st-dom','ac-dom')"><span class="ast ast-pend" id="st-dom">Pendente</span></div>
+          <div class="ar"><div class="an">Hospedagem</div><input class="av-edit" id="ac-host" value="" placeholder="Hostinger / Vercel" onchange="upStatus('st-host','ac-host')"><span class="ast ast-pend" id="st-host">Pendente</span></div>
+          <div class="ar"><div class="an">TikTok Ads</div><input class="av-edit" id="ac-ttk" value="" placeholder="ID da conta" onchange="upStatus('st-ttk','ac-ttk')"><span class="ast ast-miss" id="st-ttk">Não tem</span></div>
+          <div class="ar"><div class="an">CRM próprio</div><input class="av-edit" id="ac-crm" value="Smart Limp CRM (Vercel)" onchange="upStatus('st-crm','ac-crm')"><span class="ast ast-ok" id="st-crm">Configurado</span></div>
+        </div>
+      </div>
+
+      <!-- DIAGNÓSTICO -->
+      <div class="tc" id="tc-diagnostico">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:12px">Clique em cada bloco para expandir e editar</div>
+        <div class="db open2" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">1. Produto</span><span class="dbs ds-ok">Forte</span></div><div class="dbd">Higienização e impermeabilização de estofados. Ticket R$300. Serviço padronizado, não depende do dono para execução.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">2. Oferta</span><span class="dbs ds-w">Melhorar</span></div><div class="dbd">Diferencial de impermeabilização pouco explorado. Oportunidade: comunicar proteção para famílias com pets e crianças.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">3. Cliente ideal</span><span class="dbs ds-ok">Definido</span></div><div class="dbd">Mulheres 30+, casadas, filhos e/ou pets, condomínios na Zona Sul e Barra do RJ. Ticket aceito: R$250–R$400.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">4. Aquisição atual</span><span class="dbs ds-b">Crítico</span></div><div class="dbd">100% dependente de indicação. Sem tráfego pago. Base de 3.500 clientes nunca reativada — oportunidade imediata.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">5. Conversão</span><span class="dbs ds-w">Melhorar</span></div><div class="dbd">Sem script padronizado. Sem follow-up. Agente Lara (IA) já implementada e em fase de ativação — atendimento 24/7.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">6. Operação</span><span class="dbs ds-ok">Escalável</span></div><div class="dbd">Serviço padronizado. Equipe executa sem o dono. Capacidade de crescimento identificada na Zona Sul e Barra.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">7. Dados e controle</span><span class="dbs ds-w">Melhorar</span></div><div class="dbd">CRM próprio em uso (Vercel + Supabase). Sem pixel ativo. Decisões no feeling. Base: 16.000+ registros históricos.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">8. Estrutura comercial</span><span class="dbs ds-b">Crítico</span></div><div class="dbd">Sem funil estruturado. Sem script padronizado. Sem follow-up sistemático. Lara em implantação — vai resolver qualificação automática.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+      </div>
+
+      <!-- ENTREGAS -->
+      <div class="tc" id="tc-entregas">
+        <div class="sl">Fase 3 — Estruturação comercial</div>
+        <div class="card" id="checklist-f3">
+          <div class="cli" id="cl-1"><div class="clb done" onclick="toggleCheck(this,'cl-1')"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="clt">Diagnóstico estratégico (8 blocos)</div><div class="clr">The Curtys</div><div class="cld done2">✓</div></div>
+          <div class="cli" id="cl-2"><div class="clb done" onclick="toggleCheck(this,'cl-2')"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="clt">CRM configurado com pipeline de vendas</div><div class="clr">The Curtys</div><div class="cld done2">✓</div></div>
+          <div class="cli" id="cl-3"><div class="clb" onclick="toggleCheck(this,'cl-3')"></div><div class="clt">Business Manager + conta de anúncios criada</div><div class="clr">Tráfego</div><div class="cld urgent">Urgente</div></div>
+          <div class="cli" id="cl-4"><div class="clb" onclick="toggleCheck(this,'cl-4')"></div><div class="clt">Pixel + GTM + eventos mapeados</div><div class="clr">Tráfego</div><div class="cld urgent">Urgente</div></div>
+          <div class="cli" id="cl-5"><div class="clb" onclick="toggleCheck(this,'cl-5')"></div><div class="clt">Script de atendimento validado (Lara + humano)</div><div class="clr">Comercial</div><div class="cld late">Atrasado</div></div>
+          <div class="cli" id="cl-6"><div class="clb" onclick="toggleCheck(this,'cl-6')"></div><div class="clt">Follow-up automatizado no CRM</div><div class="clr">Operações</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="cl-7"><div class="clb" onclick="toggleCheck(this,'cl-7')"></div><div class="clt">Reunião semanal agendada (dia e hora fixos)</div><div class="clr">The Curtys</div><div class="cld urgent">Pendente</div></div>
+        </div>
+        <div class="sl">Fase 4 — Aquisição (próxima)</div>
+        <div class="card" id="checklist-f4">
+          <div class="cli" id="cl-8"><div class="clb" onclick="toggleCheck(this,'cl-8')"></div><div class="clt">Campanha de reativação de base — 3.500 clientes</div><div class="clr">Tráfego</div><div class="cld normal">Semana 3</div></div>
+          <div class="cli" id="cl-9"><div class="clb" onclick="toggleCheck(this,'cl-9')"></div><div class="clt">Campanha de aquisição fria — Meta Ads ativa</div><div class="clr">Tráfego</div><div class="cld normal">Semana 4</div></div>
+          <div class="cli" id="cl-10"><div class="clb" onclick="toggleCheck(this,'cl-10')"></div><div class="clt">3 criativos validados (Reels + Feed + Stories)</div><div class="clr">Design</div><div class="cld normal">Semana 3</div></div>
+          <div class="cli" id="cl-11"><div class="clb" onclick="toggleCheck(this,'cl-11')"></div><div class="clt">Landing page de orçamento ativa</div><div class="clr">Design</div><div class="cld normal">Semana 3</div></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button class="btn bbl bsm" onclick="openModal('modal-entrega')">+ Nova entrega</button>
+          <button class="btn bgh bsm" onclick="saveAll()">Salvar</button>
+        </div>
+      </div>
+
+      <!-- HISTÓRICO -->
+      <div class="tc" id="tc-historico">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="sl" style="margin:0">Log de atividades</div>
+          <button class="btn bbl bsm" onclick="openModal('modal-log')">+ Registrar</button>
+        </div>
+        <div id="log-container">
+          <div class="lr"><div class="li li-g"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div style="flex:1"><div class="lt2">Diagnóstico estratégico concluído</div><div class="ld2">8 blocos · Gargalo: aquisição e estrutura comercial · Base de 3.500 clientes identificada</div></div><div class="ldate">Jun 2025</div></div>
+          <div class="lr"><div class="li li-b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div style="flex:1"><div class="lt2">Contrato assinado — onboarding iniciado</div><div class="ld2">Setup + Mensalidade R$300 · Fases 1 e 2 concluídas no Dia 1</div></div><div class="ldate">Jun 2025</div></div>
+          <div class="lr"><div class="li li-a"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div style="flex:1"><div class="lt2">Agente Lara ativada no WhatsApp</div><div class="ld2">Meta Cloud API · Número: 5521979680336 · Atendimento 24/7 em testes</div></div><div class="ldate">Jun 2025</div></div>
+          <div class="lr"><div class="li li-b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div style="flex:1"><div class="lt2">CRM Smart Limp construído e entregue</div><div class="ld2">Vercel + Supabase · Kanban + DRE + Financeiro</div></div><div class="ldate">Mai 2025</div></div>
+        </div>
+      </div>
+
+      <!-- TRÁFEGO DO CLIENTE -->
+      <div class="tc" id="tc-trafego-c">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <label style="font-size:11px;font-weight:500">Mês:</label>
+          <input type="month" id="trfg-mes" onchange="carregarTrafegoDaMes()" style="padding:6px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px">
+        </div>
+
+        <!-- FACEBOOK -->
+        <div style="margin-bottom:24px">
+          <div class="sl">📘 Facebook Ads</div>
+          <div class="g2">
+            <div class="card"><span class="kn">Tráfego (R$)</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="fb-traf">R$ 0</div></div>
+            <div class="card"><span class="kn">Orçamentos</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="fb-orc">0</div></div>
+            <div class="card"><span class="kn">Custo p/ Orç</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-cpo">—</div></div>
+            <div class="card"><span class="kn">Vendas</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="fb-vend">0</div></div>
+            <div class="card"><span class="kn">Taxa Conv %</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-tconv">—</div></div>
+            <div class="card"><span class="kn">CAC</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-cac">—</div></div>
+            <div class="card"><span class="kn">Faturamento</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="fb-fat">R$ 0</div></div>
+            <div class="card"><span class="kn">ROI</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-roi">—</div></div>
+            <div class="card"><span class="kn">Ticket Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-tm">—</div></div>
+          </div>
+          <div style="overflow-x:auto;margin-top:12px">
+            <table style="width:100%;font-size:10px;border-collapse:collapse">
+              <thead>
+                <tr style="background:var(--bg3);border-bottom:.5px solid var(--border)">
+                  <th style="padding:8px;text-align:left;font-weight:600">Dia</th>
+                  <th style="padding:8px;text-align:center">Tráfego R$</th>
+                  <th style="padding:8px;text-align:center">Orçamentos</th>
+                  <th style="padding:8px;text-align:center">Custo/Orc</th>
+                  <th style="padding:8px;text-align:center">Vendas</th>
+                  <th style="padding:8px;text-align:center">Conv %</th>
+                  <th style="padding:8px;text-align:center">CAC</th>
+                  <th style="padding:8px;text-align:center">Faturamento</th>
+                  <th style="padding:8px;text-align:center">ROI</th>
+                  <th style="padding:8px;text-align:center">Ticket Médio</th>
+                </tr>
+              </thead>
+              <tbody id="fb-tabela"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- GOOGLE ADS -->
+        <div style="margin-bottom:24px">
+          <div class="sl">🔍 Google Ads</div>
+          <div class="g2">
+            <div class="card"><span class="kn">Tráfego (R$)</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="gg-traf">R$ 0</div></div>
+            <div class="card"><span class="kn">Orçamentos</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="gg-orc">0</div></div>
+            <div class="card"><span class="kn">Custo p/ Orç</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-cpo">—</div></div>
+            <div class="card"><span class="kn">Vendas</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="gg-vend">0</div></div>
+            <div class="card"><span class="kn">Taxa Conv %</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-tconv">—</div></div>
+            <div class="card"><span class="kn">CAC</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-cac">—</div></div>
+            <div class="card"><span class="kn">Faturamento</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="gg-fat">R$ 0</div></div>
+            <div class="card"><span class="kn">ROI</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-roi">—</div></div>
+            <div class="card"><span class="kn">Ticket Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-tm">—</div></div>
+          </div>
+          <div style="overflow-x:auto;margin-top:12px">
+            <table style="width:100%;font-size:10px;border-collapse:collapse">
+              <thead>
+                <tr style="background:var(--bg3);border-bottom:.5px solid var(--border)">
+                  <th style="padding:8px;text-align:left;font-weight:600">Dia</th>
+                  <th style="padding:8px;text-align:center">Tráfego R$</th>
+                  <th style="padding:8px;text-align:center">Orçamentos</th>
+                  <th style="padding:8px;text-align:center">Custo/Orc</th>
+                  <th style="padding:8px;text-align:center">Vendas</th>
+                  <th style="padding:8px;text-align:center">Conv %</th>
+                  <th style="padding:8px;text-align:center">CAC</th>
+                  <th style="padding:8px;text-align:center">Faturamento</th>
+                  <th style="padding:8px;text-align:center">ROI</th>
+                  <th style="padding:8px;text-align:center">Ticket Médio</th>
+                </tr>
+              </thead>
+              <tbody id="gg-tabela"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CONSOLIDADO -->
+        <div>
+          <div class="sl">📊 Consolidado (Facebook + Google)</div>
+          <div class="g2">
+            <div class="card"><span class="kn">Tráfego Total (R$)</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="tot-traf">R$ 0</div></div>
+            <div class="card"><span class="kn">Orçamentos Total</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="tot-orc">0</div></div>
+            <div class="card"><span class="kn">Custo p/ Orç Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-cpo">—</div></div>
+            <div class="card"><span class="kn">Vendas Total</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="tot-vend">0</div></div>
+            <div class="card"><span class="kn">Taxa Conv % Média</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-tconv">—</div></div>
+            <div class="card"><span class="kn">CAC Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-cac">—</div></div>
+            <div class="card"><span class="kn">Faturamento Total</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="tot-fat">R$ 0</div></div>
+            <div class="card"><span class="kn">ROI Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-roi">—</div></div>
+            <div class="card"><span class="kn">Ticket Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-tm">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINANCEIRO DO CLIENTE -->
+      <div class="tc" id="tc-financeiro-c">
+        <div class="g2">
+          <div>
+            <div class="sl">Histórico de pagamentos</div>
+            <div class="card" id="pagamentos">
+              <div class="payr"><div class="payn">Junho 2025 — Mensalidade</div><div class="payv">R$ 300</div><span class="ast ast-ok">Pago</span></div>
+              <div class="payr"><div class="payn">Julho 2025 — Mensalidade</div><div class="payv">R$ 300</div><span class="ast ast-pend">Vence 01/08</span></div>
+            </div>
+            <button class="btn bgh bsm" onclick="openModal('modal-pgto')">+ Registrar pagamento</button>
+          </div>
+          <div>
+            <div class="sl">Métricas</div>
+            <div class="card">
+              <div class="kr"><span class="kn">Valor mensal</span><span class="kv warn">R$ <input class="kve" id="fin-mens" value="300" onchange="saveAll()" style="width:50px"></span></div>
+              <div class="kr"><span class="kn">LTV estimado (12m)</span><span class="kv">R$ <input class="kve" id="fin-ltv" value="3.600" onchange="saveAll()" style="width:60px"></span></div>
+              <div class="kr"><span class="kn">Upsell potencial</span><span class="kv good">+ R$ 2.000/mês</span></div>
+              <div class="kr"><span class="kn">Pagamento</span><span class="kv good">Em dia ✓</span></div>
+              <div class="kr"><span class="kn">NPS</span><span class="kv" id="fin-nps-val">Pendente</span></div>
+            </div>
+            <button class="btn bgold bfull" style="margin-top:8px" onclick="abrirUpsell()">↑ Iniciar abordagem de upsell</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- fim view-dossie -->
+  </div><!-- fim page-clientes -->
+
+  <!-- PIPELINE -->
+  <div class="page" id="page-pipeline">
+    <div class="sec">
+      <div class="sh"><div class="stt">Pipeline comercial</div><button class="btn bbl bsm" onclick="openModal('modal-lead-novo')">+ Novo lead</button></div>
+      <div style="display:flex;gap:6px;align-items:stretch;margin-bottom:16px;flex-wrap:wrap">
+        <div class="pipe-stage"><div class="pipe-label">Lead</div><div class="pipe-count" id="pp-lead">0</div><div class="pipe-value" id="pp-lead-val">R$ 0</div><div class="pipe-sla">SLA: 5 min</div></div>
+        <div class="pipe-arrow">›</div>
+        <div class="pipe-stage"><div class="pipe-label">Diagnóstico</div><div class="pipe-count" id="pp-diag">0</div><div class="pipe-value" id="pp-diag-val">R$ 0</div><div class="pipe-sla">SLA: 24h</div></div>
+        <div class="pipe-arrow">›</div>
+        <div class="pipe-stage"><div class="pipe-label">Proposta</div><div class="pipe-count" id="pp-prop">0</div><div class="pipe-value" id="pp-prop-val">R$ 0</div><div class="pipe-sla">SLA: 48h</div></div>
+        <div class="pipe-arrow">›</div>
+        <div class="pipe-stage"><div class="pipe-label">Fechado</div><div class="pipe-count" id="pp-fech">0</div><div class="pipe-value" id="pp-fech-val" style="color:var(--green)">R$ 0</div></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;font-size:11px;border-collapse:collapse">
+          <thead style="background:var(--bg3);border-bottom:.5px solid var(--border)">
+            <tr>
+              <th style="padding:10px;text-align:left;font-weight:600">Lead</th>
+              <th style="padding:10px;text-align:left">Empresa</th>
+              <th style="padding:10px;text-align:left">WhatsApp</th>
+              <th style="padding:10px;text-align:center">Valor</th>
+              <th style="padding:10px;text-align:center">Etapa</th>
+              <th style="padding:10px;text-align:center">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="pipeline-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPACIDADE -->
+  <div class="page" id="page-capacidade">
+    <div class="sec"><div class="g3">
+      <div class="card"><div class="ct">Capacidade</div><div class="kr"><span class="kn">Slots utilizados</span><span class="kv good">1 / 10</span></div><div class="kr"><span class="kn">Operadores</span><span class="kv">1</span></div><div class="kr"><span class="kn">Próxima contratação</span><span class="kv bl">+4 clientes</span></div><div class="cap-bar"><div class="cap-fill" style="width:10%;background:var(--blue)"></div></div><div style="font-size:10px;color:var(--text2);margin-top:4px">10% utilizado</div></div>
+      <div class="card"><div class="ct">Forecast 90d</div><div class="kr"><span class="kn">MRR atual</span><span class="kv warn">R$ 300</span></div><div class="kr"><span class="kn">Upsells previstos</span><span class="kv good"><input class="kve" id="fc-upsell" value="+ R$ 2.000" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Forecast 30d</span><span class="kv bl"><input class="kve" id="fc-30" value="R$ 3.800" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Forecast 90d</span><span class="kv bl"><input class="kve" id="fc-90" value="R$ 9.300" onchange="saveAll()"></span></div><div class="fcast-row"><div class="fbar-wrap"><div class="fbar" style="height:15%;background:var(--bg4)"></div><div class="fbar-label">M1</div></div><div class="fbar-wrap"><div class="fbar" style="height:45%;background:var(--bb)"></div><div class="fbar-label">M2</div></div><div class="fbar-wrap"><div class="fbar" style="height:75%;background:var(--blue)"></div><div class="fbar-label">M3</div></div></div></div>
+      <div class="card"><div class="ct">MRR por nível</div><div class="kr"><span class="kn">N1 — Estruturação</span><span class="kv">R$ 300 · 1 cl.</span></div><div class="kr"><span class="kn">N2 — Aquisição</span><span class="kv">R$ 0 · 0 cl.</span></div><div class="kr"><span class="kn">N3 — Escala</span><span class="kv good">R$ 0 · 0 cl.</span></div><div style="margin-top:8px;padding:8px 10px;background:var(--bd);border:.5px solid var(--bb);border-radius:var(--r);font-size:10px;color:var(--blue)">Smart Limp em N1. Meta: N3 em 90 dias.</div></div>
+    </div></div>
+  </div>
+
+  <!-- TRÁFEGO GERAL -->
+  <div class="page" id="page-trafego">
+    <div class="sec">
+      <div style="padding:10px 14px;background:var(--bd);border:.5px solid var(--bb);border-radius:var(--r);font-size:11px;color:var(--blue);margin-bottom:14px">Para ver tráfego detalhado: <strong>Clientes → Smart Limp → aba Tráfego</strong></div>
+      <div class="g2">
+        <div class="card"><div class="ct">Performance geral</div><div class="kr"><span class="kn">CPL médio</span><span class="kv good">R$ 35</span></div><div class="kr"><span class="kn">ROAS médio</span><span class="kv good">4.2x</span></div><div class="kr"><span class="kn">Budget gerenciado</span><span class="kv">R$ 600/mês</span></div><div class="kr"><span class="kn">Campanhas ativas</span><span class="kv">1</span></div></div>
+        <div class="card"><div class="ct">CTR por formato</div><div class="kr"><span class="kn">Feed</span><span class="kv good"><input class="kve" id="ctr-feed" value="2.4%" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Reels</span><span class="kv good"><input class="kve" id="ctr-reels" value="3.8%" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Stories</span><span class="kv"><input class="kve" id="ctr-stories" value="1.9%" onchange="saveAll()"></span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRIATIVOS -->
+  <div class="page" id="page-criativos">
+    <div class="sec">
+      <div class="sh"><div class="stt">Criativos</div><button class="btn bbl bsm" onclick="openModal('modal-criativo')">+ Novo</button></div>
+      <div class="card">
+        <div class="g3">
+          <div><div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Em teste A/B</div><div class="criat-row"><div class="criat-name">Reels · "Pet + crianças"</div><div class="criat-badge cb-test">Testando</div></div><div class="criat-row"><div class="criat-name">Feed · Depoimento</div><div class="criat-badge cb-test">Testando</div></div></div>
+          <div><div style="font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Winners</div><div class="criat-row"><div class="criat-name">Reels · "O que tem no sofá?"</div><div class="criat-badge cb-win">Winner</div></div><div class="criat-row"><div class="criat-name">Stories · Antes e depois</div><div class="criat-badge cb-win">Winner</div></div></div>
+          <div><div style="font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Aguardando aprovação</div><div class="criat-row" id="criativo-pend"><div class="criat-name">Feed · Oferta pet</div><div style="display:flex;gap:4px"><button class="btn bgreen bsm" onclick="aprovarCriativo()">✓</button><button class="btn bred bsm" onclick="rejeitarCriativo()">✗</button></div></div></div>
+        </div>
+        <div style="height:.5px;background:var(--border);margin:10px 0"></div>
+        <div class="g3"><div class="kr"><span class="kn">CTR Feed</span><span class="kv good">2.4%</span></div><div class="kr"><span class="kn">CTR Reels</span><span class="kv good">3.8%</span></div><div class="kr"><span class="kn">CTR Stories</span><span class="kv">1.9%</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="page" id="page-social">
+    <div class="sec"><div class="g2">
+      <div class="card"><div class="ct">Performance orgânica — Smart Limp</div><div class="kr"><span class="kn">Reels / semana</span><span class="kv"><input class="kve" id="sm-reels" value="2" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Taxa de salvamento</span><span class="kv bl"><input class="kve" id="sm-salv" value="4.2%" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Alcance médio</span><span class="kv"><input class="kve" id="sm-alcance" value="1.200" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Seguidores novos/semana</span><span class="kv"><input class="kve" id="sm-segs" value="38" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Leads orgânicos</span><span class="kv"><input class="kve" id="sm-leads" value="5" onchange="saveAll()"></span></div></div>
+      <div class="card"><div class="ct">NPS e calendário</div><div class="kr"><span class="kn">Smart Limp NPS</span><span class="kv" id="nps-sl" style="color:var(--text3)">Pendente</span></div><button class="btn bgh bsm" style="margin-top:8px" onclick="openModal('modal-nps')">Disparar NPS</button><div style="height:.5px;background:var(--border);margin:10px 0"></div><div class="kr"><span class="kn">Próximo post</span><span class="kv warn"><input class="kve" id="prox-post" value="Amanhã 18h" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Tema da semana</span><span class="kv"><input class="kve" id="tema-sem" value="Antes e depois sofá" onchange="saveAll()"></span></div></div>
+    </div></div>
+  </div>
+
+  <!-- FINANCEIRO GERAL -->
+  <div class="page" id="page-financeiro">
+    <div class="sec">
+      <div class="g4" style="margin-bottom:14px">
+        <div class="metric"><div class="ml">MRR</div><div class="mv" style="color:var(--gold)"><span class="editable" contenteditable id="fin-mrr">R$ 300</span></div><div class="md warn">Meta: R$ 15.000</div><div class="mbar"><div class="mbf" style="width:2%;background:var(--gold)"></div></div></div>
+        <div class="metric"><div class="ml">CAC agência</div><div class="mv"><input class="editable" id="fin-cac" value="R$ 0" onchange="saveAll()" style="width:100%"></div><div class="md">Monitorado</div></div>
+        <div class="metric"><div class="ml">LTV médio</div><div class="mv"><input class="editable" id="fin-ltv2" value="R$ 3.600" onchange="saveAll()" style="width:100%"></div><div class="md good">Meta: +12 meses</div></div>
+        <div class="metric"><div class="ml">Margem líquida</div><div class="mv"><input class="editable" id="fin-margem" value="65%" onchange="saveAll()" style="width:100%"></div><div class="md good">Meta: +40%</div></div>
+      </div>
+      <div class="g2">
+        <div class="card"><div class="ct">Receita do mês</div><div class="kr"><span class="kn">Setup</span><span class="kv"><input class="kve" id="fin-setup" value="R$ 0" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Mensalidades</span><span class="kv"><input class="kve" id="fin-mens2" value="R$ 300" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Performance</span><span class="kv"><input class="kve" id="fin-perf" value="R$ 0" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Total</span><span class="kv warn">R$ 300</span></div><div style="height:.5px;background:var(--border);margin:10px 0"></div><div class="ct">Inadimplência</div><div class="kr"><span class="kn">Em dia</span><span class="kv good">1 cliente ✓</span></div><div class="kr"><span class="kn">Atraso +5d</span><span class="kv good">0 clientes</span></div></div>
+        <div class="card"><div class="ct">Custos</div><div class="kr"><span class="kn">Ferramentas</span><span class="kv bad"><input class="kve" id="custo-tools" value="R$ 80" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Tráfego próprio</span><span class="kv bad"><input class="kve" id="custo-traf" value="R$ 200" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Outros</span><span class="kv bad"><input class="kve" id="custo-out" value="R$ 0" onchange="saveAll()"></span></div><div class="kr"><span class="kn">Total custos</span><span class="kv bad">R$ 280</span></div><div class="kr"><span class="kn">Ponto de equilíbrio</span><span class="kv bl">R$ 700/mês</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATÓRIOS -->
+  <div class="page" id="page-relatorios">
+    <div class="sec"><div class="g2">
+      <div class="card"><div class="ct">Client Report — Smart Limp</div><div style="font-size:11px;color:var(--text2);margin-bottom:10px">Mês: <input class="kve" id="rel-mes" value="Junho 2025" onchange="saveAll()"></div><div class="rp" id="report-preview">Clique em "Gerar" para criar o relatório...</div><div style="display:flex;gap:8px"><button class="btn bbl bsm" onclick="gerarRelatorio()">Gerar</button><button class="btn bgh bsm" onclick="copiarRelatorio()">📋 Copiar</button></div></div>
+      <div class="card"><div class="ct">Agency Report — semanal</div><div style="font-size:11px;color:var(--text2);margin-bottom:10px">Semana: <input class="kve" id="rel-semana" value="23–29 Jun 2025" onchange="saveAll()"></div><div class="rp" id="agency-preview">Clique em "Gerar" para criar o report...</div><div style="display:flex;gap:8px"><button class="btn bbl bsm" onclick="gerarAgencyReport()">Gerar</button><button class="btn bgh bsm" onclick="copiarAgencyReport()">📋 Copiar</button></div></div>
+    </div></div>
+  </div>
+
+  </div>
+</div>
+</div>
+
+<!-- MODALS -->
+<div class="mbg" id="modal-novo-cliente"><div class="modal"><h3>Novo cliente <button class="mc" onclick="closeModal('modal-novo-cliente')">×</button></h3><div class="fg"><label class="fl2">Nome da empresa *</label><input class="fi" id="nc-nome" placeholder="Ex: Clínica Saúde Total"></div><div class="frow"><div class="fg"><label class="fl2">Segmento</label><input class="fi" id="nc-seg" placeholder="Ex: Clínica, Imobiliária"></div><div class="fg"><label class="fl2">Cidade</label><input class="fi" id="nc-cidade" placeholder="Rio de Janeiro — RJ"></div></div><div class="frow"><div class="fg"><label class="fl2">Valor mensal (R$)</label><input class="fi" id="nc-valor" type="number" placeholder="1500"></div><div class="fg"><label class="fl2">Fase inicial</label><select class="fsel" id="nc-fase"><option>Fase 1 — Diagnóstico</option><option>Fase 2 — Ativação</option><option selected>Fase 3 — Estruturação</option></select></div></div><div class="fg"><label class="fl2">Gestor responsável</label><input class="fi" id="nc-resp" value="The Curtys"></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-novo-cliente')">Cancelar</button><button class="btn bbl" onclick="salvarNovoCliente()">Criar dossiê</button></div></div></div>
+<div class="mbg" id="modal-reuniao"><div class="modal"><h3>Registrar reunião <button class="mc" onclick="closeModal('modal-reuniao')">×</button></h3><div class="frow"><div class="fg"><label class="fl2">Data</label><input class="fi" id="reu-data" type="date"></div><div class="fg"><label class="fl2">Tipo</label><select class="fsel" id="reu-tipo"><option>Semanal</option><option>Mensal estratégica</option><option>Kick-off</option><option>Emergência</option></select></div></div><div class="fg"><label class="fl2">Pontos discutidos</label><textarea class="fi" id="reu-pontos" rows="3" placeholder="O que foi discutido..."></textarea></div><div class="fg"><label class="fl2">Próximos passos</label><textarea class="fi" id="reu-prox" rows="2" placeholder="Ações definidas..."></textarea></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-reuniao')">Cancelar</button><button class="btn bbl" onclick="salvarReuniao()">Salvar</button></div></div></div>
+<div class="mbg" id="modal-nps"><div class="modal"><h3>Registrar NPS <button class="mc" onclick="closeModal('modal-nps')">×</button></h3><div class="fg"><label class="fl2">Nota (0 a 10)</label><input class="fi" id="nps-nota" type="number" min="0" max="10" placeholder="0–10"></div><div class="fg"><label class="fl2">Comentário do cliente</label><textarea class="fi" id="nps-comment" rows="3" placeholder="O que o cliente disse..."></textarea></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-nps')">Cancelar</button><button class="btn bbl" onclick="salvarNPS()">Salvar</button></div></div></div>
+<div class="mbg" id="modal-log"><div class="modal"><h3>Registrar atividade <button class="mc" onclick="closeModal('modal-log')">×</button></h3><div class="frow"><div class="fg"><label class="fl2">Tipo</label><select class="fsel" id="log-tipo"><option value="g">✓ Positivo</option><option value="b">ℹ Informativo</option><option value="a">⚠ Atenção</option><option value="r">⛔ Problema</option></select></div><div class="fg"><label class="fl2">Data</label><input class="fi" id="log-data" type="date"></div></div><div class="fg"><label class="fl2">Título</label><input class="fi" id="log-titulo" placeholder="Resumo da atividade..."></div><div class="fg"><label class="fl2">Descrição</label><textarea class="fi" id="log-desc" rows="3" placeholder="Detalhes, decisões, próximos passos..."></textarea></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-log')">Cancelar</button><button class="btn bbl" onclick="salvarLog()">Registrar</button></div></div></div>
+<div class="mbg" id="modal-entrega"><div class="modal"><h3>Nova entrega <button class="mc" onclick="closeModal('modal-entrega')">×</button></h3><div class="fg"><label class="fl2">Descrição</label><input class="fi" id="ent-desc" placeholder="Ex: Landing page configurada"></div><div class="frow"><div class="fg"><label class="fl2">Responsável</label><select class="fsel" id="ent-resp"><option>The Curtys</option><option>Tráfego</option><option>Design</option><option>Comercial</option><option>Operações</option></select></div><div class="fg"><label class="fl2">Prazo</label><input class="fi" id="ent-prazo" placeholder="Ex: Semana 2"></div></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-entrega')">Cancelar</button><button class="btn bbl" onclick="salvarEntrega()">Adicionar</button></div></div></div>
+<div class="mbg" id="modal-pgto"><div class="modal"><h3>Registrar pagamento <button class="mc" onclick="closeModal('modal-pgto')">×</button></h3><div class="frow"><div class="fg"><label class="fl2">Mês de referência</label><input class="fi" id="pgto-mes" placeholder="Ex: Agosto 2025"></div><div class="fg"><label class="fl2">Valor (R$)</label><input class="fi" id="pgto-valor" type="number" placeholder="300"></div></div><div class="fg"><label class="fl2">Status</label><select class="fsel" id="pgto-status"><option>Pago</option><option>Pendente</option><option>Atrasado</option></select></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-pgto')">Cancelar</button><button class="btn bbl" onclick="salvarPgto()">Registrar</button></div></div></div>
+<div class="mbg" id="modal-lead-novo"><div class="modal"><h3>Novo lead <button class="mc" onclick="closeModal('modal-lead-novo')">×</button></h3><div class="fg"><label class="fl2">Nome *</label><input class="fi" id="nl-nome" placeholder="Ex: Maria Silva"></div><div class="fg"><label class="fl2">Empresa *</label><input class="fi" id="nl-empresa" placeholder="Ex: Salão da Maria"></div><div class="fg"><label class="fl2">WhatsApp</label><input class="fi" id="nl-whats" placeholder="(11) 98888-8888"></div><div class="frow"><div class="fg"><label class="fl2">Canal de origem *</label><select class="fsel" id="nl-canal"><option value="">—</option><option>Meta Ads</option><option>Google Ads</option><option>Indicação</option><option>Instagram orgânico</option><option>WhatsApp direto</option></select></div><div class="fg"><label class="fl2">Etapa inicial *</label><select class="fsel" id="nl-etapa"><option>Lead</option><option>Diagnóstico</option><option>Proposta</option></select></div></div><div class="fg"><label class="fl2">Valor estimado (R$)</label><input class="fi" id="nl-valor" type="number" placeholder="3500"></div><div class="fg"><label class="fl2">Observações</label><textarea class="fi" id="nl-obs" rows="2" placeholder="Notas sobre o lead..."></textarea></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-lead-novo')">Cancelar</button><button class="btn bbl" onclick="salvarNovoLead()">Adicionar</button></div></div></div>
+<div class="mbg" id="modal-lead-perdido"><div class="modal"><h3>Marcar lead como perdido <button class="mc" onclick="closeModal('modal-lead-perdido')">×</button></h3><div class="fg"><label class="fl2">Motivo da perda *</label><select class="fsel" id="lp-motivo"><option value="">—</option><option>Preço alto</option><option>Sem urgência</option><option>Concorrente</option><option>Não qualificado</option><option>Outro</option></select></div><div class="fg"><label class="fl2">Detalhes</label><textarea class="fi" id="lp-detalhe" rows="2" placeholder="Explique por que o lead foi perdido..."></textarea></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-lead-perdido')">Cancelar</button><button class="btn bbl" onclick="finalizarLead()">Marcar como perdido</button></div></div></div>
+<div class="mbg" id="modal-alerta"><div class="modal"><h3>Adicionar alerta <button class="mc" onclick="closeModal('modal-alerta')">×</button></h3><div class="fg"><label class="fl2">Tipo</label><select class="fsel" id="al-tipo"><option value="al-r">⛔ Crítico</option><option value="al-a">⚠ Atenção</option><option value="al-g">✓ Informativo</option><option value="al-b">💡 Oportunidade</option></select></div><div class="fg"><label class="fl2">Mensagem</label><textarea class="fi" id="al-msg" rows="3"></textarea></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-alerta')">Cancelar</button><button class="btn bbl" onclick="salvarAlerta()">Adicionar</button></div></div></div>
+<div class="mbg" id="modal-alerta-c"><div class="modal"><h3>Alerta do cliente <button class="mc" onclick="closeModal('modal-alerta-c')">×</button></h3><div class="fg"><label class="fl2">Tipo</label><select class="fsel" id="alc-tipo"><option value="al-r">⛔ Crítico</option><option value="al-a">⚠ Atenção</option><option value="al-g">✓ Informativo</option><option value="al-b">💡 Oportunidade</option></select></div><div class="fg"><label class="fl2">Mensagem</label><textarea class="fi" id="alc-msg" rows="3"></textarea></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-alerta-c')">Cancelar</button><button class="btn bbl" onclick="salvarAlertaC()">Adicionar</button></div></div></div>
+<div class="mbg" id="modal-hook"><div class="modal"><h3>Adicionar hook <button class="mc" onclick="closeModal('modal-hook')">×</button></h3><div class="fg"><label class="fl2">Texto do hook</label><input class="fi" id="hook-txt" placeholder="Ex: Você sabe o que tem no seu sofá?"></div><div class="frow"><div class="fg"><label class="fl2">Formato</label><select class="fsel" id="hook-fmt"><option>Reels</option><option>Feed</option><option>Stories</option></select></div><div class="fg"><label class="fl2">Status</label><select class="fsel" id="hook-st"><option>Pendente</option><option>Testando</option><option>Winner</option></select></div></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-hook')">Cancelar</button><button class="btn bbl" onclick="salvarHook()">Salvar</button></div></div></div>
+<div class="mbg" id="modal-criativo"><div class="modal"><h3>Novo criativo <button class="mc" onclick="closeModal('modal-criativo')">×</button></h3><div class="fg"><label class="fl2">Nome</label><input class="fi" id="cri-nome" placeholder="Ex: Reels · Hook dor · Smart Limp"></div><div class="frow"><div class="fg"><label class="fl2">Formato</label><select class="fsel" id="cri-formato"><option>Reels</option><option>Feed</option><option>Stories</option></select></div><div class="fg"><label class="fl2">Status</label><select class="fsel" id="cri-status"><option>Aguardando aprovação</option><option>Testando</option><option>Winner</option></select></div></div><div class="ma"><button class="btn bgh" onclick="closeModal('modal-criativo')">Cancelar</button><button class="btn bbl" onclick="salvarCriativo()">Salvar</button></div></div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SK='curty_v3';
+function getData(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch{return{}}}
+function setData(d){localStorage.setItem(SK,JSON.stringify(d))}
+function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
+updateClock();setInterval(updateClock,30000);
+function toast(msg,type='green'){const t=document.getElementById('toast');t.textContent=msg;t.style.color=type==='red'?'var(--red)':type==='gold'?'var(--gold)':'var(--green)';t.style.borderColor=type==='red'?'var(--rb)':type==='gold'?'var(--gb)':'var(--grb)';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+const pagesMap={morning:{t:'Morning View',s:'Visão geral do dia · curty capital'},clientes:{t:'Clientes',s:'Dossiês e gestão de clientes ativos'},pipeline:{t:'Pipeline Comercial',s:'Funil de vendas com SLA'},capacidade:{t:'Capacidade & Forecast',s:'Operadores · Forecast 90d'},trafego:{t:'Tráfego Pago',s:'Performance de campanhas'},criativos:{t:'Criativos',s:'A/B tests · Aprovação'},social:{t:'Social Media',s:'Performance orgânica · NPS'},financeiro:{t:'Financeiro',s:'MRR · Custos · Inadimplência'},relatorios:{t:'Relatórios',s:'Client report · Agency report'}};
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
+  const nav=document.querySelector(`.nav-item[onclick="showPage('${id}')"]`);if(nav)nav.classList.add('active');
+  if(pagesMap[id]){document.getElementById('page-title').textContent=pagesMap[id].t;document.getElementById('page-sub').textContent=pagesMap[id].s}
+  // reset dossie view when leaving clientes
+  if(id!=='clientes'){const vl=document.getElementById('view-lista');const vd=document.getElementById('view-dossie');if(vl)vl.style.display='block';if(vd)vd.style.display='none';}
+  window.scrollTo(0,0);
+}
+function showTab(id){
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const tc=document.getElementById('tc-'+id);if(tc)tc.classList.add('active');
+  const tab=event.target.closest('.tab');if(tab)tab.classList.add('active');
+  if(id==='trafego-c'){
+    const mesInput=document.getElementById('trfg-mes');
+    if(!mesInput.value)mesInput.value=new Date().toISOString().slice(0,7);
+    carregarTrafegoDaMes();
+  }
+}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.mbg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+function abrirDossie(id){
+  document.getElementById('view-lista').style.display='none';
+  document.getElementById('view-dossie').style.display='block';
+  document.getElementById('page-title').textContent='Smart Limp — Dossiê completo';
+  document.getElementById('page-sub').textContent='Higienização de estofados · Rio de Janeiro';
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const tc=document.getElementById('tc-visao');if(tc)tc.classList.add('active');
+  const tab=document.querySelector('.tab');if(tab)tab.classList.add('active');
+  window.scrollTo(0,0);
+}
+function abrirDossieFromTable(row){
+  const id=row.getAttribute('data-cliente-id')||'smartlimp';
+  const nome=row.querySelector('input[data-field="nome"]')?.value||'Smart Limp';
+  const tipo=row.querySelector('input[data-field="tipo"]')?.value||'—';
+  const entrada=row.querySelector('input[data-field="entrada"]')?.value||'—';
+  document.getElementById('view-lista').style.display='none';
+  document.getElementById('view-dossie').style.display='block';
+  document.getElementById('page-title').textContent=nome+' — Dossiê completo';
+  document.getElementById('page-sub').textContent=tipo+' · '+entrada;
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const tc=document.getElementById('tc-visao');if(tc)tc.classList.add('active');
+  const tab=document.querySelector('.tab');if(tab)tab.classList.add('active');
+  window.scrollTo(0,0);
+}
+function voltarLista(){
+  // Sincronizar health score da tabela com o dossiê
+  const hs=document.getElementById('dos-hs')?.textContent||'72';
+  const hsElements=document.querySelectorAll('.ct-hs');
+  if(hsElements.length>0){
+    const firstHsEl=hsElements[0];
+    firstHsEl.textContent=hs;
+    firstHsEl.className='ct-hs '+(hs>=80?'hs-g':hs>=50?'hs-a':'hs-r');
+  }
+  document.getElementById('view-lista').style.display='block';
+  document.getElementById('view-dossie').style.display='none';
+  document.getElementById('page-title').textContent='Clientes';
+  document.getElementById('page-sub').textContent='Dossiês e gestão de clientes ativos';
+  calcularForecast();
+  saveAll();
+}
+function saveAll(){
+  const d={};
+  document.querySelectorAll('[id]').forEach(el=>{
+    if(el.tagName==='INPUT'&&el.type!=='button')d[el.id]=el.value;
+    else if(el.tagName==='SELECT')d[el.id]=el.value;
+    else if(el.tagName==='TEXTAREA')d[el.id]=el.value;
+    else if(el.contentEditable==='true')d[el.id]=el.textContent;
+  });
+  document.querySelectorAll('.cli').forEach(cli=>{d['ck_'+cli.id]=cli.classList.contains('done')?'1':'0'});
+  // Salvar dados da tabela de clientes
+  const clientes=[];
+  document.querySelectorAll('#clients-tbody tr').forEach(tr=>{
+    const clienteData={};
+    tr.querySelectorAll('[data-field]').forEach(field=>{
+      const fieldName=field.getAttribute('data-field');
+      clienteData[fieldName]=field.value||field.textContent;
+    });
+    clienteData.id=tr.getAttribute('data-cliente-id');
+    clientes.push(clienteData);
+  });
+  d['clientes_table']=JSON.stringify(clientes);
+  setData(d);toast('Dados salvos ✓');
+}
+function loadAll(){
+  const d=getData();if(!Object.keys(d).length)return;
+  Object.entries(d).forEach(([id,val])=>{
+    if(id.startsWith('ck_')){const el=document.getElementById(id.replace('ck_',''));if(el&&val==='1'){el.classList.add('done');const b=el.querySelector('.clb');if(b){b.classList.add('done');b.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg>'}}return;}
+    const el=document.getElementById(id);if(!el)return;
+    if(el.tagName==='INPUT')el.value=val;
+    else if(el.tagName==='SELECT')el.value=val;
+    else if(el.tagName==='TEXTAREA')el.value=val;
+    else if(el.contentEditable==='true')el.textContent=val;
+  });
+}
+function calcHS(){
+  const p=parseFloat(document.getElementById('hb-pag').style.width)||100;
+  const c=parseFloat(document.getElementById('hb-cpl').style.width)||90;
+  const r=parseFloat(document.getElementById('hb-reu').style.width)||50;
+  const e=parseFloat(document.getElementById('hb-ent').style.width)||60;
+  const n=parseFloat(document.getElementById('hb-nps').style.width)||0;
+  const s=Math.round(p*.25+c*.2+r*.2+e*.2+n*.15);
+  ['dos-hs','hs-mini','hs-card'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.textContent=s;
+    el.className=el.className.replace(/hs-[gar]+/,'')+(s>=80?' hs-g':s>=50?' hs-a':' hs-r');
+  });
+  return s;
+}
+function setHB(id,val,vid){
+  const bar=document.getElementById(id);const lbl=document.getElementById(vid);
+  if(bar)bar.style.width=val+'%';
+  if(lbl){lbl.textContent=val>0?val+'%':'—';lbl.className='hbv '+(val>=80?'good':val>=50?'warn':'bad')}
+  calcHS();
+  // sync card bars
+  if(id==='hb-ent'){const cb=document.getElementById('ccb-ent');if(cb)cb.style.width=val+'%';}
+  if(id==='hb-nps'){const cb=document.getElementById('ccb-nps');if(cb)cb.style.width=val+'%';}
+}
+const faseNames=['Diagnóstico','Ativação','Estruturação','Aquisição','Conversão','Escala'];
+function setFase(f){
+  const phs=document.querySelectorAll('#phase-strip .ph');
+  phs.forEach((ph,i)=>{ph.className='ph '+(i<f-1?'ph-done':i===f-1?'ph-cur':'ph-neu');const s=faseNames[i].substring(0,4)+'.';ph.querySelector('.ph-v').textContent=i<f-1?'✓ '+s:i===f-1?'● '+s:'— '+s;});
+  toast('Fase '+f+' — '+faseNames[f-1]);
+  sugerirUpsell();
+  calcularForecast();
+  saveAll();
+}
+function toggleCheck(btn,rowId){
+  event.stopPropagation();
+  const row=document.getElementById(rowId);const isDone=row.classList.contains('done');
+  if(isDone){row.classList.remove('done');btn.classList.remove('done');btn.innerHTML=''}
+  else{row.classList.add('done');btn.classList.add('done');btn.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg>';}
+  calcEntregas();saveAll();
+}
+function calcEntregas(){
+  const total=document.querySelectorAll('.cli').length;const done=document.querySelectorAll('.cli.done').length;
+  const pct=Math.round(done/total*100);setHB('hb-ent',pct,'hbv-ent');
+  calcNextAction();
+}
+function calcNextAction(){
+  const badge=document.getElementById('dos-na');if(!badge)return;
+  const pendentes=document.querySelectorAll('.cli:not(.done)');
+  if(pendentes.length===0){
+    badge.textContent='✓ Todas as entregas concluídas';
+    badge.style.background='var(--grd)';badge.style.color='var(--green)';badge.style.borderColor='var(--grb)';
+    return;
+  }
+  const primeiro=pendentes[0];
+  const texto=primeiro.querySelector('.clt')?.textContent||'—';
+  const resp=primeiro.querySelector('.clr')?.textContent||'';
+  const prazoEl=primeiro.querySelector('.cld');
+  const isUrgente=prazoEl?.classList.contains('urgent')||prazoEl?.classList.contains('late');
+  badge.textContent='⚡ '+(texto.length>42?texto.substring(0,42)+'…':texto);
+  badge.style.background=isUrgente?'var(--rdd)':'var(--bd)';
+  badge.style.color=isUrgente?'var(--red)':'var(--blue)';
+  badge.style.borderColor=isUrgente?'var(--rb)':'var(--bb)';
+  badge.title=(resp?resp+' · ':'')+prazoEl?.textContent+' — Clique para ir para Entregas';
+}
+function irParaProximaAcao(){
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const tc=document.getElementById('tc-entregas');if(tc)tc.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>{if(t.textContent.trim()==='Entregas')t.classList.add('active');});
+  setTimeout(()=>{
+    const primeiro=document.querySelector('.cli:not(.done)');
+    if(primeiro){
+      primeiro.scrollIntoView({behavior:'smooth',block:'center'});
+      primeiro.style.outline='2px solid var(--blue)';primeiro.style.borderRadius='6px';
+      setTimeout(()=>{primeiro.style.outline='';primeiro.style.borderRadius='';},1500);
+    }
+  },120);
+}
+function toggleDiag(block){const isOpen=block.classList.contains('open2');document.querySelectorAll('.db').forEach(b=>b.classList.remove('open2'));if(!isOpen)block.classList.add('open2');}
+function checkCPL(){const v=parseFloat((document.getElementById('cpl')?.textContent||'').replace(/[^\d.]/g,''))||0;if(v>40)toast('⚠ CPL acima de R$40!','gold');saveAll();}
+function calcMeta(){const mrr=parseFloat((document.getElementById('mrr')?.textContent||'').replace(/[^\d.]/g,''))||0;const pct=Math.min(Math.round(mrr/15000*100),100);const bar=document.getElementById('mrr-bar');if(bar)bar.style.width=pct+'%';const meta=document.getElementById('mrr-meta');if(meta)meta.textContent='Meta: R$ 15.000 · '+pct+'%';saveAll();}
+function upStatus(stId,inputId){const val=document.getElementById(inputId)?.value||'';const st=document.getElementById(stId);if(!st)return;if(!val.trim()){st.className='ast ast-pend';st.textContent='Pendente'}else{st.className='ast ast-ok';st.textContent='Configurado'}saveAll();}
+// Alertas
+let alertCount=3;
+function removeAlerta(id){const el=document.getElementById(id);if(el)el.remove();alertCount--;document.getElementById('badge-alerts').textContent=alertCount;}
+function salvarAlerta(){const tipo=document.getElementById('al-tipo').value;const msg=document.getElementById('al-msg').value.trim();if(!msg)return toast('Digite a mensagem','red');alertCount++;document.getElementById('badge-alerts').textContent=alertCount;const id='al-'+Date.now();const div=document.createElement('div');div.className='alert '+tipo;div.id=id;div.innerHTML=`<div class="adot"></div><div class="atxt">${msg}</div><span class="aclose" onclick="removeAlerta('${id}')">×</span>`;document.getElementById('alertas-container').appendChild(div);document.getElementById('al-msg').value='';closeModal('modal-alerta');toast('Alerta adicionado');}
+function salvarAlertaC(){const tipo=document.getElementById('alc-tipo').value;const msg=document.getElementById('alc-msg').value.trim();if(!msg)return toast('Digite a mensagem','red');const div=document.createElement('div');div.className='alert '+tipo;div.innerHTML=`<div class="adot"></div><div class="atxt">${msg}</div>`;document.getElementById('client-alerts').appendChild(div);document.getElementById('alc-msg').value='';closeModal('modal-alerta-c');toast('Alerta adicionado');}
+// Novo cliente na tabela
+let clientCount=1;
+function calcularForecast(){
+  // Calcula MRR, Upsells, Churn e Forecast 30/60/90 dias — APENAS CLIENTES ATIVOS
+  let mrrTotal=0;let upsellsPotencial=0;let propostas=0;let churnRisco=0;let clientesAtivos=0;
+  document.querySelectorAll('#clients-tbody tr').forEach(tr=>{
+    const status=tr.getAttribute('data-status')||tr.querySelector('select[data-field="status"]')?.value||'Ativo';
+    // Contar apenas clientes ativos
+    if(status==='Ativo')clientesAtivos++;
+    // MRR, Upsell, Churn apenas para ativos
+    if(status==='Ativo'){
+      const mrr=parseFloat(tr.querySelector('input[data-field="mrr"]')?.value?.replace(/[^\d.]/g,'')||'0');
+      const health=parseInt(tr.querySelector('[data-field="health"]')?.textContent||'50');
+      mrrTotal+=mrr;
+      if(health<50)churnRisco+=mrr;
+      if(mrr>2000)upsellsPotencial+=2000;
+    }
+  });
+  const pp=document.getElementById('prop-ab')?.value||'0';
+  const propVal=parseInt(pp)*3500*0.3;
+  const fc30=Math.round(mrrTotal+upsellsPotencial*0.3+propVal*0.3);
+  const fc60=Math.round(mrrTotal+upsellsPotencial*0.6+propVal*0.6);
+  const fc90=Math.round(mrrTotal+upsellsPotencial+propVal);
+  document.getElementById('mrr').textContent='R$ '+mrrTotal;
+  document.getElementById('forecast').textContent='R$ '+fc90;
+  document.getElementById('count-clientes').textContent=clientesAtivos;
+  document.getElementById('badge-clients').textContent=clientesAtivos;
+  document.getElementById('total-clientes').textContent=clientesAtivos;
+  calcMeta();
+}
+function mudarStatusCliente(tr){
+  const novoStatus=tr.querySelector('select[data-field="status"]').value;
+  const nome=tr.querySelector('input[data-field="nome"]').value;
+  tr.setAttribute('data-status',novoStatus);
+  if(novoStatus==='Inativo'){toast('⚠️ Cliente "'+nome+'" marcado como inativo — MRR atualizado','gold');}
+  else if(novoStatus==='Pausado'){toast('⏸️ Cliente "'+nome+'" pausado','gold');}
+  else{toast('✅ Cliente "'+nome+'" ativado');}
+  calcularForecast();
+  saveAll();
+}
+let statusFiltro='todos';
+function filtrarClientesPorStatus(status){
+  statusFiltro=status;
+  document.querySelectorAll('#clients-tbody tr').forEach(tr=>{
+    const trStatus=tr.getAttribute('data-status')||'Ativo';
+    const mostrar=status==='todos'||(status==='Ativo'&&trStatus==='Ativo')||(status===trStatus);
+    tr.style.display=mostrar?'':'none';
+  });
+  // Atualizar botões ativos
+  document.querySelectorAll('button[id^="btn-"]').forEach(btn=>btn.classList.remove('active'));
+  document.getElementById('btn-'+status).classList.add('active');
+  calcularForecast();
+}
+function verificarVencimento(tr){
+  const entrada=tr.querySelector('input[data-field="entrada"]')?.value;
+  if(!entrada)return;
+  const parts=entrada.match(/\d+/g);
+  if(!parts||parts.length<2)return;
+  const dias=365;
+  const dataVencimento=new Date(new Date().getTime()+dias*24*60*60*1000);
+  const diasRestantes=Math.ceil((dataVencimento-new Date())/(1000*60*60*24));
+  if(diasRestantes>0&&diasRestantes<=7){
+    toast('⏰ Contrato vence em '+diasRestantes+' dias','gold');
+  }
+}
+function sugerirUpsell(){
+  const entregas=document.querySelectorAll('.cli.done').length;
+  const hsEl=document.getElementById('dos-hs');
+  const hs=parseInt(hsEl?.textContent||'0');
+  if(entregas>=6&&hs>=70){
+    toast('💡 Upsell disponível! Cliente pronto para próximo nível','gold');
+  }
+}
+function adicionarLinhaCliente(){
+  const tbody=document.getElementById('clients-tbody');
+  const newId='cliente_'+Date.now();
+  const tr=document.createElement('tr');
+  tr.setAttribute('data-cliente-id',newId);
+  tr.setAttribute('data-status','Ativo');
+  tr.setAttribute('onclick','abrirDossieFromTable(this)');
+  tr.innerHTML=`
+    <td><div class="ct-nome"><div class="ct-av">NC</div><input class="ct-edit" type="text" value="Novo cliente" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
+    <td><input class="ct-edit" type="text" value="" data-field="tipo" onchange="saveAll()"></td>
+    <td><input class="ct-edit" type="text" value="" data-field="entrada" onchange="saveAll()"></td>
+    <td><input class="ct-edit" type="text" value="R$ 0" data-field="mrr" onchange="saveAll(); calcularForecast()"></td>
+    <td><span class="ct-tag" data-field="fase" contenteditable="true" onblur="saveAll()">Fase 1</span></td>
+    <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option></select></td>
+    <td><input class="ct-edit" type="text" value="" data-field="contato" onchange="saveAll()"></td>
+    <td style="text-align:center"><div class="ct-hs hs-a" id="hs-table-${newId}" data-field="health">50</div></td>
+  `;
+  tbody.appendChild(tr);
+  clientCount++;
+  calcularForecast();
+  toast('Novo cliente adicionado');
+  saveAll();
+}
+function updateInitials(nameContainer){
+  const input=nameContainer.querySelector('input[data-field="nome"]');
+  const av=nameContainer.querySelector('.ct-av');
+  if(input&&av){
+    const iniciais=input.value.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    av.textContent=iniciais||'NC';
+  }
+}
+function salvarNovoCliente(){
+  const nome=document.getElementById('nc-nome').value.trim();if(!nome)return toast('Digite o nome','red');
+  const valor=document.getElementById('nc-valor').value||'0';const seg=document.getElementById('nc-seg').value||'—';const cidade=document.getElementById('nc-cidade').value||'—';const fase=document.getElementById('nc-fase').value;
+  const tbody=document.getElementById('clients-tbody');
+  const newId='cliente_'+Date.now();
+  const tr=document.createElement('tr');
+  tr.setAttribute('data-cliente-id',newId);
+  tr.setAttribute('data-status','Ativo');
+  tr.setAttribute('onclick','abrirDossieFromTable(this)');
+  const iniciais=nome.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  tr.innerHTML=`
+    <td><div class="ct-nome"><div class="ct-av">${iniciais}</div><input class="ct-edit" type="text" value="${nome}" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
+    <td><input class="ct-edit" type="text" value="${seg}" data-field="tipo" onchange="saveAll()"></td>
+    <td><input class="ct-edit" type="text" value="${cidade}" data-field="entrada" onchange="saveAll()"></td>
+    <td><input class="ct-edit" type="text" value="R$ ${parseFloat(valor).toLocaleString('pt-BR')}" data-field="mrr" onchange="saveAll(); calcularForecast()"></td>
+    <td><span class="ct-tag" data-field="fase" contenteditable="true" onblur="saveAll()">${fase}</span></td>
+    <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option></select></td>
+    <td><input class="ct-edit" type="text" value="" data-field="contato" onchange="saveAll()"></td>
+    <td style="text-align:center"><div class="ct-hs hs-a" id="hs-table-${newId}" data-field="health">50</div></td>
+  `;
+  tbody.appendChild(tr);
+  clientCount++;
+  document.getElementById('count-clientes').textContent=clientCount;
+  document.getElementById('badge-clients').textContent=clientCount;
+  document.getElementById('total-clientes').textContent=clientCount;
+  document.getElementById('nc-nome').value='';document.getElementById('nc-valor').value='';document.getElementById('nc-seg').value='';document.getElementById('nc-cidade').value='';
+  closeModal('modal-novo-cliente');toast('Dossiê de "'+nome+'" criado!');
+  calcularForecast();
+  saveAll();
+}
+// Reunião
+function salvarReuniao(){const data=document.getElementById('reu-data').value;const tipo=document.getElementById('reu-tipo').value;const pontos=document.getElementById('reu-pontos').value;if(!data)return toast('Selecione a data','red');setHB('hb-reu',Math.min((parseFloat(document.getElementById('hb-reu').style.width)||50)+20,100),'hbv-reu');const div=document.createElement('div');div.className='lr';div.innerHTML=`<div class="li li-b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div style="flex:1"><div class="lt2">Reunião ${tipo}</div><div class="ld2">${pontos||'—'}</div></div><div class="ldate">${data}</div>`;document.getElementById('log-container').prepend(div);const pr=document.getElementById('prox-reu');if(pr)pr.value=data;document.getElementById('reu-pontos').value='';document.getElementById('reu-prox').value='';closeModal('modal-reuniao');toast('Reunião registrada');}
+// NPS
+function salvarNPS(){const n=parseInt(document.getElementById('nps-nota').value);if(isNaN(n)||n<0||n>10)return toast('Nota inválida','red');const pct=n*10;setHB('hb-nps',pct,'hbv-nps');document.getElementById('hbv-nps').textContent=n+'/10';const ns=document.getElementById('nps-sl');if(ns){ns.textContent=n+'/10';ns.style.color=n>=8?'var(--green)':n>=6?'var(--gold)':'var(--red)';}const fn=document.getElementById('fin-nps-val');if(fn)fn.textContent=n+'/10';closeModal('modal-nps');toast('NPS '+n+'/10 registrado');document.getElementById('nps-nota').value='';}
+// Log
+function salvarLog(){const tipo=document.getElementById('log-tipo').value;const data=document.getElementById('log-data').value;const titulo=document.getElementById('log-titulo').value.trim();const desc=document.getElementById('log-desc').value.trim();if(!titulo)return toast('Digite o título','red');const cores={g:'var(--green)',b:'var(--blue)',a:'var(--gold)',r:'var(--red)'};const t=tipo[0];const div=document.createElement('div');div.className='lr';div.innerHTML=`<div class="li li-${t}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${cores[t]}" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div style="flex:1"><div class="lt2">${titulo}</div><div class="ld2">${desc}</div></div><div class="ldate">${data||'Hoje'}</div>`;document.getElementById('log-container').prepend(div);document.getElementById('log-titulo').value='';document.getElementById('log-desc').value='';closeModal('modal-log');toast('Atividade registrada');}
+// Entrega
+function salvarEntrega(){const desc=document.getElementById('ent-desc').value.trim();if(!desc)return toast('Digite a descrição','red');const resp=document.getElementById('ent-resp').value;const prazo=document.getElementById('ent-prazo').value||'—';const id='cl-'+Date.now();const div=document.createElement('div');div.className='cli';div.id=id;div.innerHTML=`<div class="clb" onclick="toggleCheck(this,'${id}')"></div><div class="clt">${desc}</div><div class="clr">${resp}</div><div class="cld normal">${prazo}</div>`;document.getElementById('checklist-f3').appendChild(div);document.getElementById('ent-desc').value='';closeModal('modal-entrega');toast('Entrega adicionada');}
+// Pagamento
+function salvarPgto(){const mes=document.getElementById('pgto-mes').value.trim();const valor=document.getElementById('pgto-valor').value;const status=document.getElementById('pgto-status').value;if(!mes||!valor)return toast('Preencha todos os campos','red');const stc=status==='Pago'?'ast-ok':status==='Pendente'?'ast-pend':'ast-miss';const div=document.createElement('div');div.className='payr';div.innerHTML=`<div class="payn">${mes} — Mensalidade</div><div class="payv">R$ ${parseFloat(valor).toLocaleString('pt-BR')}</div><span class="ast ${stc}">${status}</span>`;document.getElementById('pagamentos').appendChild(div);document.getElementById('pgto-mes').value='';document.getElementById('pgto-valor').value='';closeModal('modal-pgto');toast('Pagamento registrado');}
+// Hook
+function salvarHook(){const txt=document.getElementById('hook-txt').value.trim();if(!txt)return toast('Digite o hook','red');const fmt=document.getElementById('hook-fmt').value;const st=document.getElementById('hook-st').value;const stm={Pendente:'tr2',Testando:'ta',Winner:'tg'};const card=document.querySelector('#tc-trafego-c .card:last-of-type');if(card){const btn=card.querySelector('button');const div=document.createElement('div');div.className='kr';div.innerHTML=`<span class="kn">"${txt}" · ${fmt}</span><span class="tag ${stm[st]||'ta'}">${st}</span>`;card.insertBefore(div,btn);}document.getElementById('hook-txt').value='';closeModal('modal-hook');toast('Hook adicionado');}
+// Criativos
+function aprovarCriativo(){const row=document.getElementById('criativo-pend');if(row){const nome=row.querySelector('.criat-name').textContent;row.innerHTML=`<div class="criat-name">${nome}</div><div class="criat-badge cb-test">Testando</div>`;}toast('Criativo aprovado — em teste A/B');}
+function rejeitarCriativo(){const row=document.getElementById('criativo-pend');if(row)row.remove();toast('Criativo rejeitado','gold');}
+function salvarCriativo(){const nome=document.getElementById('cri-nome').value.trim();if(!nome)return toast('Digite o nome','red');toast('Criativo adicionado');closeModal('modal-criativo');document.getElementById('cri-nome').value='';}
+// Upsell
+function abrirUpsell(){toast('Script de upsell N1→N2','gold');setTimeout(()=>alert('Upsell — Smart Limp\n\nCliente em N1 há 15 dias. Pagamento em dia. Base de 3.500 clientes pronta.\n\nScript:\n"A Smart Limp está nos primeiros resultados. Para o próximo nível, proponho ativar a base de reativação + tráfego estruturado. Isso pode triplicar a receita em 30 dias. Posso apresentar o plano?"'),200);}
+// Relatórios
+function gerarRelatorio(){const mes=document.getElementById('rel-mes').value;const hs=document.getElementById('dos-hs')?.textContent||'72';const nps=document.getElementById('fin-nps-val')?.textContent||'Pendente';const roas=document.getElementById('tr-roas')?.value||'4.2x';document.getElementById('report-preview').textContent=`📊 RELATÓRIO MENSAL — SMART LIMP\n📅 ${mes}\n\n🎯 O QUE FOI FEITO\n• Diagnóstico estratégico completo (8 blocos)\n• CRM configurado com pipeline de vendas\n• Estruturação comercial em andamento (Fase 3)\n• Agente Lara (IA) em testes no WhatsApp\n\n📈 RESULTADOS\n• CPL qualificado: R$ 35 (meta < R$40 ✓)\n• ROAS: ${roas}\n• Health score: ${hs}/100\n• NPS: ${nps}\n\n🚀 PRÓXIMO MÊS\n• Configurar BM + Pixel\n• Campanha de reativação da base\n• Escalar tráfego (Fase 4)\n• Meta: 10 orçamentos/semana\n\n💡 RECOMENDAÇÃO\nBase de 3.500 clientes é o maior ativo imediato. Priorizar reativação via WhatsApp antes de tráfego frio. ROI estimado: 5x no primeiro mês.\n\nCurty | Capital`;toast('Relatório gerado!');}
+function copiarRelatorio(){const txt=document.getElementById('report-preview').textContent;if(txt.includes('Clique'))return toast('Gere o relatório primeiro','gold');navigator.clipboard.writeText(txt).then(()=>toast('Copiado!'));}
+function gerarAgencyReport(){const semana=document.getElementById('rel-semana').value;document.getElementById('agency-preview').textContent=`🏢 AGENCY REPORT — CURTY CAPITAL\n📅 Semana ${semana}\n\n💰 FINANCEIRO\n• MRR: R$ 300\n• Forecast 90d: R$ 9.300\n• Meta: R$ 15.000 (2% atingido)\n• Clientes ativos: ${clientCount}\n\n🚦 SAÚDE DOS CLIENTES\n• Smart Limp: ${document.getElementById('dos-hs')?.textContent||72}/100\n• Risco de churn: Nenhum\n\n🎯 TOP 3 DECISÕES\n1. Configurar BM + Pixel — urgente\n2. Fechar 1 novo cliente esta semana\n3. Lançar reativação da base Smart Limp\n\n⚠️ ALERTAS\n• BM não configurado\n• Upsell identificado: Smart Limp N1→N2\n\nCurty | Capital — Uso interno`;toast('Agency report gerado!');}
+function copiarAgencyReport(){const txt=document.getElementById('agency-preview').textContent;if(txt.includes('Clique'))return toast('Gere o report primeiro','gold');navigator.clipboard.writeText(txt).then(()=>toast('Copiado!'));}
+// TRÁFEGO E PUBLICIDADE
+function renderTabelaTrafego(canal,tbodyId,mesDados){
+  const tbody=document.getElementById(tbodyId);tbody.innerHTML='';
+  const diasMes=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+  for(let d=1;d<=diasMes;d++){
+    const dadoDia=mesDados[d]||{traf:0,orc:0,vend:0,fat:0};
+    const traf=parseFloat(dadoDia.traf)||0;const orc=parseInt(dadoDia.orc)||0;const vend=parseInt(dadoDia.vend)||0;const fat=parseFloat(dadoDia.fat)||0;
+    const cpo=orc>0?(traf/orc).toFixed(2):'—';const tconv=orc>0?((vend/orc)*100).toFixed(1)+'%':'—';const cac=vend>0?(traf/vend).toFixed(2):'—';const roi=traf>0?(fat/traf).toFixed(2):'—';const tm=vend>0?(fat/vend).toFixed(2):'—';
+    const tr=document.createElement('tr');
+    tr.style.borderBottom='.5px solid var(--border)';tr.style.background=d%2?'':'var(--bg4)';
+    tr.innerHTML=`
+      <td style="padding:8px">${d}</td>
+      <td style="padding:8px;text-align:center"><input type="number" value="${traf}" step="0.01" onchange="atualizarTrafego('${canal}',${d},this.value,null,null,null)" style="width:60px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
+      <td style="padding:8px;text-align:center"><input type="number" value="${orc}" onchange="atualizarTrafego('${canal}',${d},null,this.value,null,null)" style="width:60px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
+      <td style="padding:8px;text-align:center;color:var(--text2)">${cpo}</td>
+      <td style="padding:8px;text-align:center"><input type="number" value="${vend}" onchange="atualizarTrafego('${canal}',${d},null,null,this.value,null)" style="width:60px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
+      <td style="padding:8px;text-align:center;color:var(--text2)">${tconv}</td>
+      <td style="padding:8px;text-align:center;color:var(--text2)">${cac}</td>
+      <td style="padding:8px;text-align:center"><input type="number" value="${fat}" step="0.01" onchange="atualizarTrafego('${canal}',${d},null,null,null,this.value)" style="width:80px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
+      <td style="padding:8px;text-align:center;color:var(--text2)">${roi}</td>
+      <td style="padding:8px;text-align:center;color:var(--text2)">${tm}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+}
+function atualizarTrafego(canal,dia,traf,orc,vend,fat){
+  const mesChave=document.getElementById('trfg-mes').value||new Date().toISOString().slice(0,7);
+  const key='traf_'+mesChave;const dados=getData()[key]||{};
+  if(!dados[canal])dados[canal]={};
+  if(traf!==null)dados[canal][dia]={...dados[canal][dia],traf:parseFloat(traf)};
+  if(orc!==null)dados[canal][dia]={...dados[canal][dia],orc:parseInt(orc)};
+  if(vend!==null)dados[canal][dia]={...dados[canal][dia],vend:parseInt(vend)};
+  if(fat!==null)dados[canal][dia]={...dados[canal][dia],fat:parseFloat(fat)};
+  const d=getData();d[key]=dados;setData(d);
+  carregarTrafegoDaMes();
+}
+function carregarTrafegoDaMes(){
+  const mesChave=document.getElementById('trfg-mes').value||new Date().toISOString().slice(0,7);
+  const key='traf_'+mesChave;const dados=getData()[key]||{fb:{},gg:{}};
+  renderTabelaTrafego('fb','fb-tabela',dados.fb||{});
+  renderTabelaTrafego('gg','gg-tabela',dados.gg||{});
+  calcularTotaisTrafego(dados);
+}
+function calcularTotaisTrafego(dados){
+  const calcMetricas=(canalDados)=>{
+    let traf=0,orc=0,vend=0,fat=0;
+    Object.values(canalDados||{}).forEach(d=>{traf+=parseFloat(d.traf)||0;orc+=parseInt(d.orc)||0;vend+=parseInt(d.vend)||0;fat+=parseFloat(d.fat)||0;});
+    return{traf,orc,cpo:orc>0?(traf/orc).toFixed(2):'—',vend,tconv:orc>0?((vend/orc)*100).toFixed(1)+'%':'—',cac:vend>0?(traf/vend).toFixed(2):'—',fat,roi:traf>0?(fat/traf).toFixed(2):'—',tm:vend>0?(fat/vend).toFixed(2):'—'};
+  };
+  const fb=calcMetricas(dados.fb);const gg=calcMetricas(dados.gg);
+  document.getElementById('fb-traf').textContent='R$ '+fb.traf.toFixed(2);document.getElementById('fb-orc').textContent=fb.orc;document.getElementById('fb-cpo').textContent=fb.cpo;document.getElementById('fb-vend').textContent=fb.vend;document.getElementById('fb-tconv').textContent=fb.tconv;document.getElementById('fb-cac').textContent=fb.cac;document.getElementById('fb-fat').textContent='R$ '+fb.fat.toFixed(2);document.getElementById('fb-roi').textContent=fb.roi;document.getElementById('fb-tm').textContent=fb.tm;
+  document.getElementById('gg-traf').textContent='R$ '+gg.traf.toFixed(2);document.getElementById('gg-orc').textContent=gg.orc;document.getElementById('gg-cpo').textContent=gg.cpo;document.getElementById('gg-vend').textContent=gg.vend;document.getElementById('gg-tconv').textContent=gg.tconv;document.getElementById('gg-cac').textContent=gg.cac;document.getElementById('gg-fat').textContent='R$ '+gg.fat.toFixed(2);document.getElementById('gg-roi').textContent=gg.roi;document.getElementById('gg-tm').textContent=gg.tm;
+  const tot={traf:fb.traf+gg.traf,orc:fb.orc+gg.orc,vend:fb.vend+gg.vend,fat:fb.fat+gg.fat};
+  tot.cpo=tot.orc>0?(tot.traf/tot.orc).toFixed(2):'—';tot.tconv=tot.orc>0?((tot.vend/tot.orc)*100).toFixed(1)+'%':'—';tot.cac=tot.vend>0?(tot.traf/tot.vend).toFixed(2):'—';tot.roi=tot.traf>0?(tot.fat/tot.traf).toFixed(2):'—';tot.tm=tot.vend>0?(tot.fat/tot.vend).toFixed(2):'—';
+  document.getElementById('tot-traf').textContent='R$ '+tot.traf.toFixed(2);document.getElementById('tot-orc').textContent=tot.orc;document.getElementById('tot-cpo').textContent=tot.cpo;document.getElementById('tot-vend').textContent=tot.vend;document.getElementById('tot-tconv').textContent=tot.tconv;document.getElementById('tot-cac').textContent=tot.cac;document.getElementById('tot-fat').textContent='R$ '+tot.fat.toFixed(2);document.getElementById('tot-roi').textContent=tot.roi;document.getElementById('tot-tm').textContent=tot.tm;
+  // Atualizar CPL qualificado no Morning View
+  if(fb.cpo!=='—')document.getElementById('tr-cplq').value='R$ '+fb.cpo;
+}
+// PIPELINE
+function salvarNovoLead(){
+  const nome=document.getElementById('nl-nome').value.trim();
+  const empresa=document.getElementById('nl-empresa').value.trim();
+  const whats=document.getElementById('nl-whats').value.trim();
+  const canal=document.getElementById('nl-canal').value;
+  const etapa=document.getElementById('nl-etapa').value;
+  const valor=parseFloat(document.getElementById('nl-valor').value)||0;
+  const obs=document.getElementById('nl-obs').value.trim();
+  if(!nome||!empresa||!canal)return toast('Preencha nome, empresa e canal','red');
+  const leadId='lead_'+Date.now();
+  const lead={id:leadId,nome,empresa,whats,canal,etapa,valor,obs,dataCriacao:new Date().toISOString()};
+  const d=getData();
+  if(!d.leads)d.leads=[];
+  d.leads.push(lead);
+  setData(d);
+  document.getElementById('nl-nome').value='';
+  document.getElementById('nl-empresa').value='';
+  document.getElementById('nl-whats').value='';
+  document.getElementById('nl-canal').value='';
+  document.getElementById('nl-etapa').value='Lead';
+  document.getElementById('nl-valor').value='';
+  document.getElementById('nl-obs').value='';
+  closeModal('modal-lead-novo');
+  toast('Lead "'+nome+'" cadastrado');
+  renderPipeline();
+}
+function renderPipeline(){
+  const d=getData();
+  const leads=d.leads||[];
+  const tbody=document.getElementById('pipeline-tbody');
+  tbody.innerHTML='';
+  leads.forEach(lead=>{
+    const tr=document.createElement('tr');
+    tr.style.borderBottom='.5px solid var(--border)';
+    const podeFechar=lead.etapa==='Fechado';
+    const podePerder=['Lead','Diagnóstico','Proposta'].includes(lead.etapa);
+    tr.innerHTML=`
+      <td style="padding:10px">${lead.nome}</td>
+      <td style="padding:10px">${lead.empresa}</td>
+      <td style="padding:10px;font-size:10px">${lead.whats}</td>
+      <td style="padding:10px;text-align:center">R$ ${lead.valor.toFixed(2)}</td>
+      <td style="padding:10px;text-align:center"><span style="background:var(--bg3);padding:4px 8px;border-radius:4px;font-size:10px">${lead.etapa}</span></td>
+      <td style="padding:10px;text-align:center;font-size:10px">
+        ${lead.etapa!=='Fechado'&&lead.etapa!=='Perdido'?`
+          <button class="btn bsm bbl" style="margin-right:4px" onclick="avancarLead('${lead.id}')">Avançar ›</button>
+        `:''}
+        ${podePerder?`
+          <button class="btn bsm" style="background:rgba(255,100,100,0.2);color:var(--red);border:.5px solid var(--red)" onclick="abrirModalPerdido('${lead.id}')">✗ Perdido</button>
+        `:''}
+        ${podeFechar?`
+          <button class="btn bsm" style="background:rgba(100,200,100,0.2);color:var(--green);border:.5px solid var(--green)" onclick="perguntarVirou('${lead.id}')">→ Virou cliente?</button>
+        `:''}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  atualizarContadoresPipeline();
+}
+function avancarLead(leadId){
+  const d=getData();
+  const leads=d.leads||[];
+  const lead=leads.find(l=>l.id===leadId);
+  if(!lead)return;
+  const etapas=['Lead','Diagnóstico','Proposta','Fechado'];
+  const idx=etapas.indexOf(lead.etapa);
+  if(idx<etapas.length-1){
+    lead.etapa=etapas[idx+1];
+    setData(d);
+    renderPipeline();
+    toast(`Lead movido para ${lead.etapa}`);
+  }
+}
+function abrirModalPerdido(leadId){
+  document.getElementById('lp-motivo').value='';
+  document.getElementById('lp-detalhe').value='';
+  document.getElementById('lp-motivo').setAttribute('data-lead-id',leadId);
+  openModal('modal-lead-perdido');
+}
+function finalizarLead(){
+  const leadId=document.getElementById('lp-motivo').getAttribute('data-lead-id');
+  const motivo=document.getElementById('lp-motivo').value;
+  const detalhe=document.getElementById('lp-detalhe').value.trim();
+  if(!motivo)return toast('Selecione um motivo','red');
+  const d=getData();
+  const leads=d.leads||[];
+  const idx=leads.findIndex(l=>l.id===leadId);
+  if(idx>=0){
+    const lead=leads[idx];
+    lead.etapa='Perdido';
+    lead.motivo=motivo;
+    lead.detalhePerda=detalhe;
+    setData(d);
+    renderPipeline();
+    closeModal('modal-lead-perdido');
+    toast(`Lead "${lead.nome}" marcado como perdido`);
+  }
+}
+function perguntarVirou(leadId){
+  const d=getData();
+  const leads=d.leads||[];
+  const lead=leads.find(l=>l.id===leadId);
+  if(!lead)return;
+  if(confirm(`Lead "${lead.nome}" virou cliente?`)){
+    // Abrir modal de novo cliente com dados pré-preenchidos
+    document.getElementById('nc-nome').value=lead.empresa;
+    document.getElementById('nc-seg').value=lead.canal;
+    document.getElementById('nc-valor').value=lead.valor;
+    openModal('modal-novo-cliente');
+    // Marcar lead como Fechado com conversão
+    lead.viruCliente=true;
+    setData(d);
+    renderPipeline();
+    toast('Complete o dossiê do cliente');
+  }
+}
+function atualizarContadoresPipeline(){
+  const d=getData();
+  const leads=d.leads||[];
+  const porEtapa={Lead:0,Diagnóstico:0,Proposta:0,Fechado:0};
+  const valores={Lead:0,Diagnóstico:0,Proposta:0,Fechado:0};
+  leads.forEach(lead=>{
+    if(lead.etapa!=='Perdido'){
+      porEtapa[lead.etapa]=(porEtapa[lead.etapa]||0)+1;
+      valores[lead.etapa]=(valores[lead.etapa]||0)+lead.valor;
+    }
+  });
+  document.getElementById('pp-lead').textContent=porEtapa['Lead'];
+  document.getElementById('pp-lead-val').textContent='R$ '+valores['Lead'].toFixed(2);
+  document.getElementById('pp-diag').textContent=porEtapa['Diagnóstico'];
+  document.getElementById('pp-diag-val').textContent='R$ '+valores['Diagnóstico'].toFixed(2);
+  document.getElementById('pp-prop').textContent=porEtapa['Proposta'];
+  document.getElementById('pp-prop-val').textContent='R$ '+valores['Proposta'].toFixed(2);
+  document.getElementById('pp-fech').textContent=porEtapa['Fechado'];
+  document.getElementById('pp-fech-val').textContent='R$ '+valores['Fechado'].toFixed(2);
+  // Atualizar Morning View
+  document.getElementById('leads-pipe').value=porEtapa['Lead'];
+  document.getElementById('diag-ag').value=porEtapa['Diagnóstico'];
+  document.getElementById('prop-ab').value=porEtapa['Proposta'];
+}
+// INIT
+document.addEventListener('DOMContentLoaded',()=>{
+  const today=new Date().toISOString().split('T')[0];
+  const rd=document.getElementById('reu-data');if(rd)rd.value=today;
+  const ld=document.getElementById('log-data');if(ld)ld.value=today;
+  loadAll();
+  // Carregar dados da tabela de clientes
+  const d=getData();
+  if(d.clientes_table){
+    try{
+      const clientes=JSON.parse(d.clientes_table);
+      if(clientes.length>1){
+        const tbody=document.getElementById('clients-tbody');
+        // Remover todas as linhas exceto a primeira (Smart Limp)
+        const existingRows=tbody.querySelectorAll('tr');
+        for(let i=1;i<existingRows.length;i++){existingRows[i].remove();}
+        // Adicionar clientes salvos
+        clientes.slice(1).forEach(cliente=>{
+          const tr=document.createElement('tr');
+          tr.setAttribute('data-cliente-id',cliente.id);
+          tr.setAttribute('onclick','abrirDossieFromTable(this)');
+          const iniciais=(cliente.nome||'NC').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+          const hs=cliente.health||'50';
+          const hsClass=hs>=80?'hs-g':hs>=50?'hs-a':'hs-r';
+          tr.innerHTML=`
+            <td><div class="ct-nome"><div class="ct-av">${iniciais}</div><input class="ct-edit" type="text" value="${cliente.nome||''}" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
+            <td><input class="ct-edit" type="text" value="${cliente.tipo||''}" data-field="tipo" onchange="saveAll()"></td>
+            <td><input class="ct-edit" type="text" value="${cliente.entrada||''}" data-field="entrada" onchange="saveAll()"></td>
+            <td><input class="ct-edit" type="text" value="${cliente.mrr||''}" data-field="mrr" onchange="saveAll()"></td>
+            <td><span class="ct-tag" data-field="fase" contenteditable="true" onblur="saveAll()">${cliente.fase||'Fase 1'}</span></td>
+            <td><span class="ct-status" data-field="status" contenteditable="true" onblur="saveAll()" class="ct-status ${cliente.status==='Ativo'?'cts-ativo':cliente.status==='Risco'?'cts-risco':'cts-critico'}">${cliente.status||'Ativo'}</span></td>
+            <td><input class="ct-edit" type="text" value="${cliente.contato||''}" data-field="contato" onchange="saveAll()"></td>
+            <td style="text-align:center"><div class="ct-hs ${hsClass}" id="hs-table-${cliente.id}" data-field="health">${hs}</div></td>
+          `;
+          tbody.appendChild(tr);
+          clientCount++;
+        });
+        document.getElementById('count-clientes').textContent=clientCount;
+        document.getElementById('badge-clients').textContent=clientCount;
+        document.getElementById('total-clientes').textContent=clientCount;
+      }
+    }catch(e){console.error('Erro ao carregar clientes:',e);}
+  }
+  calcHS();calcEntregas();calcNextAction();
+  renderPipeline();
+  carregarTrafegoDaMes();
+});
+</script>
+</body>
+</html>
