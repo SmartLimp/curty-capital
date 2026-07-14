@@ -809,7 +809,253 @@ tr[data-status="Pausado"]{opacity:0.7}
 <div class="toast" id="toast"></div>
 
 <script>
-const SK='curty_v3';
+<!-- Supabase Integration -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Configuração Supabase
+const SUPABASE_URL = 'https://qjinabkrrkjspsmgkjty.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Uf1wxNMLESwCZilCVfJajA_iaQXhK0q';
+
+let supabase = null;
+let currentUserId = 'default-user'; // Para RLS se necessário
+
+// Inicializar Supabase
+async function initSupabase() {
+  const { createClient } = window.supabase;
+  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  console.log('✅ Supabase inicializado');
+}
+
+// Fallback para localStorage (se Supabase falhar)
+function getData() { 
+  return JSON.parse(localStorage.getItem('curty_v3') || '{}');
+}
+
+function setData(d) { 
+  localStorage.setItem('curty_v3', JSON.stringify(d));
+}
+
+// ============================================================
+// CLIENTES - CRUD
+// ============================================================
+
+async function loadClientes() {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase.from('clientes').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('❌ Erro ao carregar clientes:', e);
+    return [];
+  }
+}
+
+async function criarCliente(nome, empresa, segmento, cidade, valor, fase) {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase.from('clientes').insert([{
+      nome, empresa, segmento, cidade,
+      valor_mensal: parseFloat(valor),
+      fase, status: 'Ativo'
+    }]).select();
+    if (error) throw error;
+    return data[0];
+  } catch (e) {
+    console.error('❌ Erro ao criar cliente:', e);
+    return null;
+  }
+}
+
+async function atualizarCliente(id, updates) {
+  try {
+    if (!supabase) await initSupabase();
+    const { error } = await supabase.from('clientes').update(updates).eq('id', id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao atualizar cliente:', e);
+    return false;
+  }
+}
+
+async function deletarCliente(id) {
+  try {
+    if (!supabase) await initSupabase();
+    const { error } = await supabase.from('clientes').delete().eq('id', id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao deletar cliente:', e);
+    return false;
+  }
+}
+
+// ============================================================
+// LEADS - CRUD + Pipeline
+// ============================================================
+
+async function loadLeads() {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('❌ Erro ao carregar leads:', e);
+    return [];
+  }
+}
+
+async function criarLead(nome, empresa, whatsapp, canal, etapa, valor, observacoes) {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase.from('leads').insert([{
+      nome, empresa, whatsapp, canal, etapa,
+      valor: parseFloat(valor), observacoes
+    }]).select();
+    if (error) throw error;
+    return data[0];
+  } catch (e) {
+    console.error('❌ Erro ao criar lead:', e);
+    return null;
+  }
+}
+
+async function atualizarLead(id, updates) {
+  try {
+    if (!supabase) await initSupabase();
+    const { error } = await supabase.from('leads').update(updates).eq('id', id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao atualizar lead:', e);
+    return false;
+  }
+}
+
+async function moverLeadEtapa(id, novaEtapa) {
+  return atualizarLead(id, { etapa: novaEtapa, updated_at: new Date().toISOString() });
+}
+
+async function marcarLeadPerdido(id, motivo, detalhe) {
+  return atualizarLead(id, { 
+    etapa: 'Perdido',
+    motivo_perda: motivo,
+    updated_at: new Date().toISOString()
+  });
+}
+
+async function deletarLead(id) {
+  try {
+    if (!supabase) await initSupabase();
+    const { error } = await supabase.from('leads').delete().eq('id', id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao deletar lead:', e);
+    return false;
+  }
+}
+
+// ============================================================
+// PUBLICIDADE - Campanhas
+// ============================================================
+
+async function loadPublicidade(clienteId, mes) {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase
+      .from('publicidade')
+      .select('*')
+      .eq('cliente_id', clienteId)
+      .eq('mes', mes);
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('❌ Erro ao carregar publicidade:', e);
+    return [];
+  }
+}
+
+async function salvarPublicidade(clienteId, plataforma, mes, dia, trafego, orcamentos, vendas, faturamento) {
+  try {
+    if (!supabase) await initSupabase();
+    
+    // Verificar se já existe
+    const { data: existing } = await supabase
+      .from('publicidade')
+      .select('id')
+      .eq('cliente_id', clienteId)
+      .eq('plataforma', plataforma)
+      .eq('mes', mes)
+      .eq('dia', dia)
+      .single();
+
+    if (existing) {
+      // Atualizar
+      const { error } = await supabase
+        .from('publicidade')
+        .update({ trafego, orcamentos, vendas, faturamento })
+        .eq('id', existing.id);
+      if (error) throw error;
+    } else {
+      // Inserir
+      const { error } = await supabase
+        .from('publicidade')
+        .insert([{ cliente_id: clienteId, plataforma, mes, dia, trafego, orcamentos, vendas, faturamento }]);
+      if (error) throw error;
+    }
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao salvar publicidade:', e);
+    return false;
+  }
+}
+
+// ============================================================
+// ATIVIDADES - Log
+// ============================================================
+
+async function criarAtividade(clienteId, leadId, tipo, titulo, descricao) {
+  try {
+    if (!supabase) await initSupabase();
+    const { error } = await supabase.from('atividades').insert([{
+      cliente_id: clienteId || null,
+      lead_id: leadId || null,
+      tipo, titulo, descricao
+    }]);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao criar atividade:', e);
+    return false;
+  }
+}
+
+// ============================================================
+// PIPELINE COLUNAS
+// ============================================================
+
+async function loadPipelineColunas() {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase.from('pipeline_colunas').select('*').order('ordem');
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('❌ Erro ao carregar colunas:', e);
+    return [];
+  }
+}
+
+// Inicializar Supabase quando a página carregar
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSupabase);
+} else {
+  initSupabase();
+}
+</script>
 function getData(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch{return{}}}
 function setData(d){localStorage.setItem(SK,JSON.stringify(d))}
 function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
