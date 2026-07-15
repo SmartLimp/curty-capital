@@ -238,6 +238,13 @@ tr[data-status="Pausado"]{opacity:0.7}
 .diag-atual .diag-label{color:var(--gold)}
 .diag-textarea{width:100%;background:var(--bg3);border:.5px solid var(--border);border-radius:4px;padding:8px;color:var(--text);font-size:11px;font-family:'Inter',sans-serif;outline:none;resize:vertical;min-height:60px}
 .diag-textarea:focus{border-color:var(--blue)}
+
+/* LOADING SPINNER */
+.loading-spinner{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center}
+.loading-spinner.show{display:flex}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-text{color:#fff;font-size:14px;margin-top:16px}
 </style>
 </head>
 <body>
@@ -1283,6 +1290,65 @@ async function salvarDiagnosticoSupabase(clienteId, blocos) {
   }
 }
 
+// Funções para Supabase - DOSSIE (campos editáveis)
+async function salvarCampoDossie(clienteId, campo, valor) {
+  try {
+    if (!supabase) await initSupabase();
+    const { error } = await supabase
+      .from('dossie')
+      .upsert([{
+        cliente_id: clienteId,
+        campo: campo,
+        valor: valor,
+        updated_at: new Date().toISOString()
+      }], { onConflict: 'cliente_id,campo' });
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao salvar campo:', e);
+    return false;
+  }
+}
+
+async function carregarDossieSuabase(clienteId) {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase
+      .from('dossie')
+      .select('*')
+      .eq('cliente_id', clienteId);
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('❌ Erro ao carregar dossie:', e);
+    return [];
+  }
+}
+
+async function criarTabelaDossie() {
+  try {
+    if (!supabase) await initSupabase();
+    // Criar tabela via RPC ou diretamente
+    const { error } = await supabase.rpc('exec_sql', {
+      sql: `CREATE TABLE IF NOT EXISTS dossie (
+        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        cliente_id text NOT NULL,
+        campo text NOT NULL,
+        valor text,
+        updated_at timestamp DEFAULT now(),
+        UNIQUE(cliente_id, campo)
+      );
+      ALTER TABLE dossie ENABLE ROW LEVEL SECURITY;
+      CREATE POLICY "Public access to dossie" ON dossie FOR ALL USING (true);`
+    });
+    if (error) console.warn('Tabela dossie já existe ou erro:', error);
+    return true;
+  } catch (e) {
+    console.warn('⚠️ Não foi possível criar tabela via RPC (esperado):', e);
+    return true;
+  }
+}
+
 // Funções para Supabase - HEALTH SCORE
 async function salvarHealthScoreSupabase(clienteId, healthData) {
   try {
@@ -1337,7 +1403,27 @@ function showTab(id){
 function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 document.querySelectorAll('.mbg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-function abrirDossie(id){
+async function abrirDossie(id){
+  // Mostrar loading spinner
+  document.getElementById('loading-spinner').classList.add('show');
+
+  // Carregar dados do Supabase
+  const dados=await carregarDossieSuabase(id);
+
+  // Preencher campos com dados carregados
+  if(dados && dados.length>0){
+    dados.forEach(item=>{
+      const el=document.getElementById(item.campo);
+      if(el){
+        if(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA'){
+          el.value=item.valor||'';
+        }else if(el.contentEditable==='true'){
+          el.textContent=item.valor||'';
+        }
+      }
+    });
+  }
+
   document.getElementById('view-lista').style.display='none';
   document.getElementById('view-dossie').style.display='block';
   document.getElementById('page-title').textContent='Smart Limp — Dossiê completo';
@@ -1346,13 +1432,38 @@ function abrirDossie(id){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   const tc=document.getElementById('tc-visao');if(tc)tc.classList.add('active');
   const tab=document.querySelector('.tab');if(tab)tab.classList.add('active');
+
+  // Esconder loading spinner
+  document.getElementById('loading-spinner').classList.remove('show');
+
   window.scrollTo(0,0);
 }
-function abrirDossieFromTable(row){
+async function abrirDossieFromTable(row){
   const id=row.getAttribute('data-cliente-id')||'smartlimp';
   const nome=row.querySelector('input[data-field="nome"]')?.value||'Smart Limp';
   const tipo=row.querySelector('input[data-field="tipo"]')?.value||'—';
   const entrada=row.querySelector('input[data-field="entrada"]')?.value||'—';
+
+  // Mostrar loading spinner
+  document.getElementById('loading-spinner').classList.add('show');
+
+  // Carregar dados do Supabase
+  const dados=await carregarDossieSuabase(id);
+
+  // Preencher campos com dados carregados
+  if(dados && dados.length>0){
+    dados.forEach(item=>{
+      const el=document.getElementById(item.campo);
+      if(el){
+        if(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA'){
+          el.value=item.valor||'';
+        }else if(el.contentEditable==='true'){
+          el.textContent=item.valor||'';
+        }
+      }
+    });
+  }
+
   document.getElementById('view-lista').style.display='none';
   document.getElementById('view-dossie').style.display='block';
   document.getElementById('page-title').textContent=nome+' — Dossiê completo';
@@ -1361,6 +1472,10 @@ function abrirDossieFromTable(row){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   const tc=document.getElementById('tc-visao');if(tc)tc.classList.add('active');
   const tab=document.querySelector('.tab');if(tab)tab.classList.add('active');
+
+  // Esconder loading spinner
+  document.getElementById('loading-spinner').classList.remove('show');
+
   window.scrollTo(0,0);
 }
 function voltarLista(){
@@ -1381,15 +1496,38 @@ function voltarLista(){
 }
 async function saveAll(){
   const d={};
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id')||'smartlimp';
+
   document.querySelectorAll('[id]').forEach(el=>{
-    if(el.tagName==='INPUT'&&el.type!=='button')d[el.id]=el.value;
-    else if(el.tagName==='SELECT')d[el.id]=el.value;
-    else if(el.tagName==='TEXTAREA')d[el.id]=el.value;
-    else if(el.contentEditable==='true')d[el.id]=el.textContent;
+    if(el.tagName==='INPUT'&&el.type!=='button'){
+      d[el.id]=el.value;
+      // Salvar campo individual na tabela dossie
+      if(el.id && el.id.startsWith('d-')){ // Campos do dossiê começam com "d-"
+        salvarCampoDossie(clienteId,el.id,el.value);
+      }
+    }
+    else if(el.tagName==='SELECT'){
+      d[el.id]=el.value;
+      if(el.id && el.id.startsWith('d-')){
+        salvarCampoDossie(clienteId,el.id,el.value);
+      }
+    }
+    else if(el.tagName==='TEXTAREA'){
+      d[el.id]=el.value;
+      if(el.id && el.id.startsWith('d-')){
+        salvarCampoDossie(clienteId,el.id,el.value);
+      }
+    }
+    else if(el.contentEditable==='true'){
+      d[el.id]=el.textContent;
+      if(el.id && el.id.startsWith('d-')){
+        salvarCampoDossie(clienteId,el.id,el.textContent);
+      }
+    }
   });
   document.querySelectorAll('.cli').forEach(cli=>{d['ck_'+cli.id]=cli.classList.contains('done')?'1':'0'});
 
-  // Salvar dados de formulários no localStorage (para UI)
+  // Salvar dados de formulários no localStorage (cache local)
   setData(d);
 
   // Salvar clientes no Supabase
@@ -1530,6 +1668,14 @@ function irParaProximaAcao(){
     }
   },120);
 }
+// Função auxiliar para salvar qualquer campo
+async function salvarCampoUI(idCampo,valor){
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+  if(clienteId){
+    await salvarCampoDossie(clienteId,idCampo,valor);
+  }
+}
+
 // Diagnóstico - Salvar blocos
 async function salvarDiagBloco(numero){
   const avaliacao=document.getElementById(`diag-avaliacao-${numero}`)?.value;
@@ -1543,6 +1689,8 @@ async function salvarDiagBloco(numero){
       };
       // Salvar localmente para saber que foi editado
       localStorage.setItem(`diag-bloco-${numero}`,JSON.stringify(blocoData));
+      // Salvar no Supabase
+      await salvarCampoDossie(clienteId,`diag-bloco-${numero}`,JSON.stringify(blocoData));
       toast('Bloco '+numero+' atualizado');
     }
   }
@@ -2016,7 +2164,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   calcHS();calcEntregas();calcNextAction();
   renderPipeline();
   carregarTrafegoDaMes();
+  criarTabelaDossie();
 });
 </script>
+
+<!-- LOADING SPINNER -->
+<div class="loading-spinner" id="loading-spinner">
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="spinner"></div>
+    <div class="spinner-text">Carregando dados...</div>
+  </div>
+</div>
+
 </body>
 </html>
