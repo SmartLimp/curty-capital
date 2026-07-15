@@ -429,6 +429,7 @@ tr[data-status="Pausado"]{opacity:0.7}
         <div class="tab active" onclick="showTab('visao')">Visão geral</div>
         <div class="tab" onclick="showTab('dados')">Dados</div>
         <div class="tab" onclick="showTab('acessos')">Acessos</div>
+        <div class="tab" onclick="showTab('onboarding')">Onboarding</div>
         <div class="tab" onclick="showTab('diagnostico')">Diagnóstico</div>
         <div class="tab" onclick="showTab('entregas')">Entregas</div>
         <div class="tab" onclick="showTab('historico')">Histórico</div>
@@ -535,6 +536,52 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="ar"><div class="an">Hospedagem</div><input class="av-edit" id="ac-host" value="" placeholder="Hostinger / Vercel" onchange="upStatus('st-host','ac-host')"><span class="ast ast-pend" id="st-host">Pendente</span></div>
           <div class="ar"><div class="an">TikTok Ads</div><input class="av-edit" id="ac-ttk" value="" placeholder="ID da conta" onchange="upStatus('st-ttk','ac-ttk')"><span class="ast ast-miss" id="st-ttk">Não tem</span></div>
           <div class="ar"><div class="an">CRM próprio</div><input class="av-edit" id="ac-crm" value="Smart Limp CRM (Vercel)" onchange="upStatus('st-crm','ac-crm')"><span class="ast ast-ok" id="st-crm">Configurado</span></div>
+        </div>
+      </div>
+
+      <!-- ONBOARDING -->
+      <div class="tc" id="tc-onboarding">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:16px">Acompanhe o progresso de onboarding do cliente</div>
+
+        <div class="sl">Fase 1 — Diagnóstico e Setup</div>
+        <div class="card">
+          <div class="cli" id="ob-1"><div class="clb" onclick="toggleOnboarding(this,'ob-1')"></div><div class="clt">Kickoff call agendada</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="ob-2"><div class="clb" onclick="toggleOnboarding(this,'ob-2')"></div><div class="clt">Diagnóstico estratégico (8 blocos) concluído</div><div class="clr">Estratégia</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="ob-3"><div class="clb" onclick="toggleOnboarding(this,'ob-3')"></div><div class="clt">Acesso a sistemas do cliente obtido</div><div class="clr">Operações</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="ob-4"><div class="clb" onclick="toggleOnboarding(this,'ob-4')"></div><div class="clt">Documentação inicial preenchida</div><div class="clr">Documentação</div><div class="cld normal">Semana 1</div></div>
+          <textarea id="ob-obs-1" class="rp" placeholder="Observações sobre Fase 1..." onchange="salvarOnboardingObs('ob-obs-1')"></textarea>
+        </div>
+
+        <div class="sl">Fase 2 — Ativação (Tráfego & Dados)</div>
+        <div class="card">
+          <div class="cli" id="ob-5"><div class="clb" onclick="toggleOnboarding(this,'ob-5')"></div><div class="clt">Business Manager + Conta de Anúncios criada</div><div class="clr">Tráfego</div><div class="cld urgent">Urgente</div></div>
+          <div class="cli" id="ob-6"><div class="clb" onclick="toggleOnboarding(this,'ob-6')"></div><div class="clt">Pixel Meta instalado e testado</div><div class="clr">Tráfego</div><div class="cld urgent">Urgente</div></div>
+          <div class="cli" id="ob-7"><div class="clb" onclick="toggleOnboarding(this,'ob-7')"></div><div class="clt">GTM + eventos mapeados</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="ob-8"><div class="clb" onclick="toggleOnboarding(this,'ob-8')"></div><div class="clt">Google Analytics 4 ativado</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="ob-9"><div class="clb" onclick="toggleOnboarding(this,'ob-9')"></div><div class="clt">CRM integrado e testado</div><div class="clr">Operações</div><div class="cld normal">Semana 2</div></div>
+          <textarea id="ob-obs-2" class="rp" placeholder="Observações sobre Fase 2..." onchange="salvarOnboardingObs('ob-obs-2')"></textarea>
+        </div>
+
+        <div class="sl">Fase 3 — Estruturação Comercial</div>
+        <div class="card">
+          <div class="cli" id="ob-10"><div class="clb" onclick="toggleOnboarding(this,'ob-10')"></div><div class="clt">Script de atendimento validado</div><div class="clr">Comercial</div><div class="cld late">Atrasado</div></div>
+          <div class="cli" id="ob-11"><div class="clb" onclick="toggleOnboarding(this,'ob-11')"></div><div class="clt">Follow-up automatizado no CRM</div><div class="clr">Operações</div><div class="cld normal">Semana 3</div></div>
+          <div class="cli" id="ob-12"><div class="clb" onclick="toggleOnboarding(this,'ob-12')"></div><div class="clt">Reunião semanal agendada (dia e hora fixos)</div><div class="clr">Gestão</div><div class="cld urgent">Pendente</div></div>
+          <div class="cli" id="ob-13"><div class="clb" onclick="toggleOnboarding(this,'ob-13')"></div><div class="clt">Dashboard de KPIs configurado</div><div class="clr">Analytics</div><div class="cld normal">Semana 3</div></div>
+          <textarea id="ob-obs-3" class="rp" placeholder="Observações sobre Fase 3..." onchange="salvarOnboardingObs('ob-obs-3')"></textarea>
+        </div>
+
+        <div class="sl">Fase 4 — Aquisição (Go-Live)</div>
+        <div class="card">
+          <div class="cli" id="ob-14"><div class="clb" onclick="toggleOnboarding(this,'ob-14')"></div><div class="clt">3 criativos validados (Reels + Feed + Stories)</div><div class="clr">Design</div><div class="cld normal">Semana 3</div></div>
+          <div class="cli" id="ob-15"><div class="clb" onclick="toggleOnboarding(this,'ob-15')"></div><div class="clt">Landing page de orçamento ativa</div><div class="clr">Design</div><div class="cld normal">Semana 3</div></div>
+          <div class="cli" id="ob-16"><div class="clb" onclick="toggleOnboarding(this,'ob-16')"></div><div class="clt">Campanha de reativação de base lançada</div><div class="clr">Tráfego</div><div class="cld normal">Semana 4</div></div>
+          <div class="cli" id="ob-17"><div class="clb" onclick="toggleOnboarding(this,'ob-17')"></div><div class="clt">Campanha de aquisição fria — Meta Ads ativa</div><div class="clr">Tráfego</div><div class="cld normal">Semana 4</div></div>
+          <textarea id="ob-obs-4" class="rp" placeholder="Observações sobre Fase 4..." onchange="salvarOnboardingObs('ob-obs-4')"></textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button class="btn bbl bsm" onclick="salvarTodoOnboarding()">💾 Salvar Onboarding</button>
         </div>
       </div>
 
@@ -1428,9 +1475,23 @@ async function abrirDossie(id){
     dados.forEach(item=>{
       const el=document.getElementById(item.campo);
       if(el){
-        if(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA'){
+        // Tratamento especial para checkboxes de onboarding
+        if(item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/)){
+          if(item.valor==='1'){
+            el.classList.add('done');
+            const btn=el.querySelector('.clb');
+            if(btn){
+              btn.classList.add('done');
+              btn.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+            }
+          }
+        }
+        // Tratamento para inputs normais
+        else if(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA'){
           el.value=item.valor||'';
-        }else if(el.contentEditable==='true'){
+        }
+        // Tratamento para elementos contentEditable
+        else if(el.contentEditable==='true'){
           el.textContent=item.valor||'';
         }
       }
@@ -1468,9 +1529,23 @@ async function abrirDossieFromTable(row){
     dados.forEach(item=>{
       const el=document.getElementById(item.campo);
       if(el){
-        if(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA'){
+        // Tratamento especial para checkboxes de onboarding
+        if(item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/)){
+          if(item.valor==='1'){
+            el.classList.add('done');
+            const btn=el.querySelector('.clb');
+            if(btn){
+              btn.classList.add('done');
+              btn.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+            }
+          }
+        }
+        // Tratamento para inputs normais
+        else if(el.tagName==='INPUT'||el.tagName==='SELECT'||el.tagName==='TEXTAREA'){
           el.value=item.valor||'';
-        }else if(el.contentEditable==='true'){
+        }
+        // Tratamento para elementos contentEditable
+        else if(el.contentEditable==='true'){
           el.textContent=item.valor||'';
         }
       }
@@ -1731,6 +1806,53 @@ async function salvarTodosDiagnosticos(){
   if(saved){
     toast('Diagnóstico completo salvo no Supabase!');
   }
+}
+
+// Onboarding
+async function toggleOnboarding(btn,rowId){
+  event.stopPropagation();
+  const row=document.getElementById(rowId);const isDone=row.classList.contains('done');
+  if(isDone){row.classList.remove('done');btn.classList.remove('done');btn.innerHTML=''}
+  else{row.classList.add('done');btn.classList.add('done');btn.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg>';}
+
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+  if(clienteId){
+    await salvarCampoDossie(clienteId,rowId,isDone?'0':'1');
+  }
+}
+
+async function salvarOnboardingObs(id){
+  const valor=document.getElementById(id)?.value||'';
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+  if(clienteId && valor){
+    await salvarCampoDossie(clienteId,id,valor);
+  }
+}
+
+async function salvarTodoOnboarding(){
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+  if(!clienteId){toast('Selecione um cliente','red');return;}
+
+  // Salvar todos os checkboxes
+  for(let i=1;i<=17;i++){
+    const id=`ob-${i}`;
+    const el=document.getElementById(id);
+    if(el){
+      const isDone=el.classList.contains('done')?'1':'0';
+      await salvarCampoDossie(clienteId,id,isDone);
+    }
+  }
+
+  // Salvar observações
+  for(let i=1;i<=4;i++){
+    const id=`ob-obs-${i}`;
+    const obs=document.getElementById(id)?.value||'';
+    if(obs){
+      await salvarCampoDossie(clienteId,id,obs);
+    }
+  }
+
+  toast('Onboarding salvo no Supabase!');
 }
 
 function toggleDiag(block){const isOpen=block.classList.contains('open2');document.querySelectorAll('.db').forEach(b=>b.classList.remove('open2'));if(!isOpen)block.classList.add('open2');}
