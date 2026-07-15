@@ -1049,6 +1049,65 @@ async function loadPipelineColunas() {
   }
 }
 
+// Funções para Supabase - CLIENTES
+async function salvarClienteSupabase(clienteData) {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase
+      .from('clientes')
+      .upsert([clienteData], { onConflict: 'id' });
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao salvar cliente:', e);
+    toast('Erro ao salvar cliente','red');
+    return false;
+  }
+}
+
+async function carregarClientesSupabase() {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase.from('clientes').select('*');
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('❌ Erro ao carregar clientes:', e);
+    return [];
+  }
+}
+
+// Funções para Supabase - ENTREGAS/CHECKLISTS
+async function salvarEntregaSupabase(clienteId, entrega) {
+  try {
+    if (!supabase) await initSupabase();
+    const { data, error } = await supabase
+      .from('entregas')
+      .upsert([{ cliente_id: clienteId, ...entrega }], { onConflict: 'id' });
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao salvar entrega:', e);
+    return false;
+  }
+}
+
+// Funções para Supabase - HEALTH SCORE
+async function salvarHealthScoreSupabase(clienteId, healthData) {
+  try {
+    if (!supabase) await initSupabase();
+    const { error } = await supabase
+      .from('clientes')
+      .update({ health_score: healthData })
+      .eq('id', clienteId);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao salvar health score:', e);
+    return false;
+  }
+}
+
 // Inicializar Supabase quando a página carregar
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initSupabase);
@@ -1129,7 +1188,7 @@ function voltarLista(){
   calcularForecast();
   saveAll();
 }
-function saveAll(){
+async function saveAll(){
   const d={};
   document.querySelectorAll('[id]').forEach(el=>{
     if(el.tagName==='INPUT'&&el.type!=='button')d[el.id]=el.value;
@@ -1138,7 +1197,11 @@ function saveAll(){
     else if(el.contentEditable==='true')d[el.id]=el.textContent;
   });
   document.querySelectorAll('.cli').forEach(cli=>{d['ck_'+cli.id]=cli.classList.contains('done')?'1':'0'});
-  // Salvar dados da tabela de clientes
+
+  // Salvar dados de formulários no localStorage (para UI)
+  setData(d);
+
+  // Salvar clientes no Supabase
   const clientes=[];
   document.querySelectorAll('#clients-tbody tr').forEach(tr=>{
     const clienteData={};
@@ -1149,8 +1212,13 @@ function saveAll(){
     clienteData.id=tr.getAttribute('data-cliente-id');
     clientes.push(clienteData);
   });
-  d['clientes_table']=JSON.stringify(clientes);
-  setData(d);toast('Dados salvos ✓');
+
+  // Enviar cada cliente para Supabase
+  for(const cliente of clientes){
+    await salvarClienteSupabase(cliente);
+  }
+
+  toast('Dados salvos ✓');
 }
 function loadAll(){
   const d=getData();if(!Object.keys(d).length)return;
@@ -1177,14 +1245,28 @@ function calcHS(){
   });
   return s;
 }
-function setHB(id,val,vid){
+async function setHB(id,val,vid){
   const bar=document.getElementById(id);const lbl=document.getElementById(vid);
   if(bar)bar.style.width=val+'%';
   if(lbl){lbl.textContent=val>0?val+'%':'—';lbl.className='hbv '+(val>=80?'good':val>=50?'warn':'bad')}
-  calcHS();
+  const hs=calcHS();
   // sync card bars
   if(id==='hb-ent'){const cb=document.getElementById('ccb-ent');if(cb)cb.style.width=val+'%';}
   if(id==='hb-nps'){const cb=document.getElementById('ccb-nps');if(cb)cb.style.width=val+'%';}
+
+  // Salvar health score no Supabase se estamos num dossiê de cliente
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+  if(clienteId){
+    const healthData={
+      pagamento:parseFloat(document.getElementById('hb-pag').style.width)||100,
+      cpl:parseFloat(document.getElementById('hb-cpl').style.width)||90,
+      reuniao:parseFloat(document.getElementById('hb-reu').style.width)||50,
+      entregas:parseFloat(document.getElementById('hb-ent').style.width)||60,
+      nps:parseFloat(document.getElementById('hb-nps').style.width)||0,
+      score:hs
+    };
+    await salvarHealthScoreSupabase(clienteId,healthData);
+  }
 }
 const faseNames=['Diagnóstico','Ativação','Estruturação','Aquisição','Conversão','Escala'];
 function setFase(f){
@@ -1195,12 +1277,29 @@ function setFase(f){
   calcularForecast();
   saveAll();
 }
-function toggleCheck(btn,rowId){
+async function toggleCheck(btn,rowId){
   event.stopPropagation();
   const row=document.getElementById(rowId);const isDone=row.classList.contains('done');
   if(isDone){row.classList.remove('done');btn.classList.remove('done');btn.innerHTML=''}
   else{row.classList.add('done');btn.classList.add('done');btn.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg>';}
-  calcEntregas();saveAll();
+  calcEntregas();
+
+  // Salvar entrega no Supabase
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+  if(clienteId&&row){
+    const entrega={
+      id:rowId,
+      cliente_id:clienteId,
+      descricao:row.querySelector('.clt')?.textContent||'',
+      responsavel:row.querySelector('.clr')?.textContent||'',
+      prazo:row.querySelector('.cld')?.textContent||'',
+      concluida:!isDone,
+      atualizado_em:new Date().toISOString()
+    };
+    await salvarEntregaSupabase(clienteId,entrega);
+  }
+
+  await saveAll();
 }
 function calcEntregas(){
   const total=document.querySelectorAll('.cli').length;const done=document.querySelectorAll('.cli.done').length;
@@ -1279,15 +1378,22 @@ function calcularForecast(){
   document.getElementById('total-clientes').textContent=clientesAtivos;
   calcMeta();
 }
-function mudarStatusCliente(tr){
+async function mudarStatusCliente(tr){
   const novoStatus=tr.querySelector('select[data-field="status"]').value;
   const nome=tr.querySelector('input[data-field="nome"]').value;
+  const clienteId=tr.getAttribute('data-cliente-id');
   tr.setAttribute('data-status',novoStatus);
   if(novoStatus==='Inativo'){toast('⚠️ Cliente "'+nome+'" marcado como inativo — MRR atualizado','gold');}
   else if(novoStatus==='Pausado'){toast('⏸️ Cliente "'+nome+'" pausado','gold');}
   else{toast('✅ Cliente "'+nome+'" ativado');}
   calcularForecast();
-  saveAll();
+
+  // Salvar status no Supabase
+  if(clienteId){
+    await salvarClienteSupabase({id:clienteId,status:novoStatus});
+  }
+
+  await saveAll();
 }
 let statusFiltro='todos';
 function filtrarClientesPorStatus(status){
@@ -1353,11 +1459,31 @@ function updateInitials(nameContainer){
     av.textContent=iniciais||'NC';
   }
 }
-function salvarNovoCliente(){
+async function salvarNovoCliente(){
   const nome=document.getElementById('nc-nome').value.trim();if(!nome)return toast('Digite o nome','red');
   const valor=document.getElementById('nc-valor').value||'0';const seg=document.getElementById('nc-seg').value||'—';const cidade=document.getElementById('nc-cidade').value||'—';const fase=document.getElementById('nc-fase').value;
   const tbody=document.getElementById('clients-tbody');
   const newId='cliente_'+Date.now();
+
+  // Preparar dados para Supabase
+  const clienteData={
+    id:newId,
+    nome,
+    tipo:seg,
+    entrada:cidade,
+    mrr:parseFloat(valor),
+    fase,
+    status:'Ativo',
+    contato:'',
+    health:50,
+    criado_em:new Date().toISOString()
+  };
+
+  // Salvar no Supabase
+  const saved=await salvarClienteSupabase(clienteData);
+  if(!saved)return;
+
+  // Adicionar à tabela da UI
   const tr=document.createElement('tr');
   tr.setAttribute('data-cliente-id',newId);
   tr.setAttribute('data-status','Ativo');
@@ -1381,16 +1507,24 @@ function salvarNovoCliente(){
   document.getElementById('nc-nome').value='';document.getElementById('nc-valor').value='';document.getElementById('nc-seg').value='';document.getElementById('nc-cidade').value='';
   closeModal('modal-novo-cliente');toast('Dossiê de "'+nome+'" criado!');
   calcularForecast();
-  saveAll();
+  await saveAll();
 }
 // Reunião
-function salvarReuniao(){const data=document.getElementById('reu-data').value;const tipo=document.getElementById('reu-tipo').value;const pontos=document.getElementById('reu-pontos').value;if(!data)return toast('Selecione a data','red');setHB('hb-reu',Math.min((parseFloat(document.getElementById('hb-reu').style.width)||50)+20,100),'hbv-reu');const div=document.createElement('div');div.className='lr';div.innerHTML=`<div class="li li-b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div style="flex:1"><div class="lt2">Reunião ${tipo}</div><div class="ld2">${pontos||'—'}</div></div><div class="ldate">${data}</div>`;document.getElementById('log-container').prepend(div);const pr=document.getElementById('prox-reu');if(pr)pr.value=data;document.getElementById('reu-pontos').value='';document.getElementById('reu-prox').value='';closeModal('modal-reuniao');toast('Reunião registrada');}
+async function salvarReuniao(){const data=document.getElementById('reu-data').value;const tipo=document.getElementById('reu-tipo').value;const pontos=document.getElementById('reu-pontos').value;if(!data)return toast('Selecione a data','red');await setHB('hb-reu',Math.min((parseFloat(document.getElementById('hb-reu').style.width)||50)+20,100),'hbv-reu');const div=document.createElement('div');div.className='lr';div.innerHTML=`<div class="li li-b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div style="flex:1"><div class="lt2">Reunião ${tipo}</div><div class="ld2">${pontos||'—'}</div></div><div class="ldate">${data}</div>`;document.getElementById('log-container').prepend(div);const pr=document.getElementById('prox-reu');if(pr)pr.value=data;
+
+// Salvar atividade no Supabase
+const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+if(clienteId){
+  await criarAtividade(clienteId,null,'reuniao','Reunião '+tipo,pontos);
+}
+
+document.getElementById('reu-pontos').value='';document.getElementById('reu-prox').value='';closeModal('modal-reuniao');toast('Reunião registrada');}
 // NPS
-function salvarNPS(){const n=parseInt(document.getElementById('nps-nota').value);if(isNaN(n)||n<0||n>10)return toast('Nota inválida','red');const pct=n*10;setHB('hb-nps',pct,'hbv-nps');document.getElementById('hbv-nps').textContent=n+'/10';const ns=document.getElementById('nps-sl');if(ns){ns.textContent=n+'/10';ns.style.color=n>=8?'var(--green)':n>=6?'var(--gold)':'var(--red)';}const fn=document.getElementById('fin-nps-val');if(fn)fn.textContent=n+'/10';closeModal('modal-nps');toast('NPS '+n+'/10 registrado');document.getElementById('nps-nota').value='';}
+async function salvarNPS(){const n=parseInt(document.getElementById('nps-nota').value);if(isNaN(n)||n<0||n>10)return toast('Nota inválida','red');const pct=n*10;await setHB('hb-nps',pct,'hbv-nps');document.getElementById('hbv-nps').textContent=n+'/10';const ns=document.getElementById('nps-sl');if(ns){ns.textContent=n+'/10';ns.style.color=n>=8?'var(--green)':n>=6?'var(--gold)':'var(--red)';}const fn=document.getElementById('fin-nps-val');if(fn)fn.textContent=n+'/10';const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');if(clienteId){await criarAtividade(clienteId,null,'nps','NPS registrado',`Nota: ${n}/10`);}closeModal('modal-nps');toast('NPS '+n+'/10 registrado');document.getElementById('nps-nota').value='';}
 // Log
-function salvarLog(){const tipo=document.getElementById('log-tipo').value;const data=document.getElementById('log-data').value;const titulo=document.getElementById('log-titulo').value.trim();const desc=document.getElementById('log-desc').value.trim();if(!titulo)return toast('Digite o título','red');const cores={g:'var(--green)',b:'var(--blue)',a:'var(--gold)',r:'var(--red)'};const t=tipo[0];const div=document.createElement('div');div.className='lr';div.innerHTML=`<div class="li li-${t}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${cores[t]}" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div style="flex:1"><div class="lt2">${titulo}</div><div class="ld2">${desc}</div></div><div class="ldate">${data||'Hoje'}</div>`;document.getElementById('log-container').prepend(div);document.getElementById('log-titulo').value='';document.getElementById('log-desc').value='';closeModal('modal-log');toast('Atividade registrada');}
+async function salvarLog(){const tipo=document.getElementById('log-tipo').value;const data=document.getElementById('log-data').value;const titulo=document.getElementById('log-titulo').value.trim();const desc=document.getElementById('log-desc').value.trim();if(!titulo)return toast('Digite o título','red');const cores={g:'var(--green)',b:'var(--blue)',a:'var(--gold)',r:'var(--red)'};const t=tipo[0];const div=document.createElement('div');div.className='lr';div.innerHTML=`<div class="li li-${t}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="${cores[t]}" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div style="flex:1"><div class="lt2">${titulo}</div><div class="ld2">${desc}</div></div><div class="ldate">${data||'Hoje'}</div>`;document.getElementById('log-container').prepend(div);const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');if(clienteId){await criarAtividade(clienteId,null,tipo,titulo,desc);}document.getElementById('log-titulo').value='';document.getElementById('log-desc').value='';closeModal('modal-log');toast('Atividade registrada');}
 // Entrega
-function salvarEntrega(){const desc=document.getElementById('ent-desc').value.trim();if(!desc)return toast('Digite a descrição','red');const resp=document.getElementById('ent-resp').value;const prazo=document.getElementById('ent-prazo').value||'—';const id='cl-'+Date.now();const div=document.createElement('div');div.className='cli';div.id=id;div.innerHTML=`<div class="clb" onclick="toggleCheck(this,'${id}')"></div><div class="clt">${desc}</div><div class="clr">${resp}</div><div class="cld normal">${prazo}</div>`;document.getElementById('checklist-f3').appendChild(div);document.getElementById('ent-desc').value='';closeModal('modal-entrega');toast('Entrega adicionada');}
+async function salvarEntrega(){const desc=document.getElementById('ent-desc').value.trim();if(!desc)return toast('Digite a descrição','red');const resp=document.getElementById('ent-resp').value;const prazo=document.getElementById('ent-prazo').value||'—';const id='cl-'+Date.now();const div=document.createElement('div');div.className='cli';div.id=id;div.innerHTML=`<div class="clb" onclick="toggleCheck(this,'${id}')"></div><div class="clt">${desc}</div><div class="clr">${resp}</div><div class="cld normal">${prazo}</div>`;document.getElementById('checklist-f3').appendChild(div);const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');if(clienteId){await salvarEntregaSupabase(clienteId,{id,descricao:desc,responsavel:resp,prazo,concluida:false,criado_em:new Date().toISOString()});}document.getElementById('ent-desc').value='';closeModal('modal-entrega');toast('Entrega adicionada');}
 // Pagamento
 function salvarPgto(){const mes=document.getElementById('pgto-mes').value.trim();const valor=document.getElementById('pgto-valor').value;const status=document.getElementById('pgto-status').value;if(!mes||!valor)return toast('Preencha todos os campos','red');const stc=status==='Pago'?'ast-ok':status==='Pendente'?'ast-pend':'ast-miss';const div=document.createElement('div');div.className='payr';div.innerHTML=`<div class="payn">${mes} — Mensalidade</div><div class="payv">R$ ${parseFloat(valor).toLocaleString('pt-BR')}</div><span class="ast ${stc}">${status}</span>`;document.getElementById('pagamentos').appendChild(div);document.getElementById('pgto-mes').value='';document.getElementById('pgto-valor').value='';closeModal('modal-pgto');toast('Pagamento registrado');}
 // Hook
