@@ -1302,10 +1302,16 @@ async function salvarCampoDossie(clienteId, campo, valor) {
         valor: valor,
         updated_at: new Date().toISOString()
       }], { onConflict: 'cliente_id,campo' });
+
+    // Se der erro de tabela não existe, apenas loga (graceful)
+    if (error && error.message && error.message.includes('dossie')) {
+      console.warn('⚠️ Tabela dossie ainda não foi criada. Execute o SQL no Supabase Dashboard.');
+      return false;
+    }
     if (error) throw error;
     return true;
   } catch (e) {
-    console.error('❌ Erro ao salvar campo:', e);
+    console.warn('⚠️ Não foi possível salvar no Supabase:', e);
     return false;
   }
 }
@@ -1317,10 +1323,17 @@ async function carregarDossieSuabase(clienteId) {
       .from('dossie')
       .select('*')
       .eq('cliente_id', clienteId);
+
+    // Se der erro de tabela não existe, retorna array vazio (graceful)
+    if (error && error.message && error.message.includes('dossie')) {
+      console.warn('⚠️ Tabela dossie ainda não foi criada. Usando dados locais.');
+      return [];
+    }
     if (error) throw error;
     return data || [];
   } catch (e) {
     console.error('❌ Erro ao carregar dossie:', e);
+    console.warn('Continuando sem dados do Supabase...');
     return [];
   }
 }
@@ -1498,33 +1511,34 @@ async function saveAll(){
   const d={};
   const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id')||'smartlimp';
 
+  // Campos importantes do dossiê que devem ser salvos no Supabase
+  const camposImportantes=['d-razao','d-cnpj','d-seg','d-cidade','d-ticket','d-pub','d-resp','d-wpp','d-email','d-inicio','d-modelo','d-area','d-base','d-serv','d-nivel','sl-valor','prox-reu','prox-pgto','gestor','ac-bm','ac-ads','ac-pixel','ac-fbpage','ac-ig','ac-wpp','ac-ga4','ac-gtm','ac-gads','ac-gmn','ac-gsc','ac-dom','ac-host','ac-ttk','ac-crm'];
+
   document.querySelectorAll('[id]').forEach(el=>{
+    let valor='';
     if(el.tagName==='INPUT'&&el.type!=='button'){
-      d[el.id]=el.value;
-      // Salvar campo individual na tabela dossie
-      if(el.id && el.id.startsWith('d-')){ // Campos do dossiê começam com "d-"
-        salvarCampoDossie(clienteId,el.id,el.value);
-      }
+      valor=el.value;
+      d[el.id]=valor;
     }
     else if(el.tagName==='SELECT'){
-      d[el.id]=el.value;
-      if(el.id && el.id.startsWith('d-')){
-        salvarCampoDossie(clienteId,el.id,el.value);
-      }
+      valor=el.value;
+      d[el.id]=valor;
     }
     else if(el.tagName==='TEXTAREA'){
-      d[el.id]=el.value;
-      if(el.id && el.id.startsWith('d-')){
-        salvarCampoDossie(clienteId,el.id,el.value);
-      }
+      valor=el.value;
+      d[el.id]=valor;
     }
     else if(el.contentEditable==='true'){
-      d[el.id]=el.textContent;
-      if(el.id && el.id.startsWith('d-')){
-        salvarCampoDossie(clienteId,el.id,el.textContent);
-      }
+      valor=el.textContent;
+      d[el.id]=valor;
+    }
+
+    // Salvar campos importantes na tabela dossie
+    if(camposImportantes.includes(el.id) && valor){
+      salvarCampoDossie(clienteId,el.id,valor);
     }
   });
+
   document.querySelectorAll('.cli').forEach(cli=>{d['ck_'+cli.id]=cli.classList.contains('done')?'1':'0'});
 
   // Salvar dados de formulários no localStorage (cache local)
