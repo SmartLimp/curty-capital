@@ -223,6 +223,21 @@ tr[data-status="Pausado"]{opacity:0.7}
 .fsel{width:100%;background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--r);padding:8px 12px;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:.5px solid var(--grb);border-radius:var(--rl);padding:12px 16px;font-size:12px;color:var(--green);z-index:300;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none}
 .toast.show{transform:translateY(0);opacity:1}
+
+/* DIAGNÓSTICO - NOVOS ESTILOS */
+.diag-bloco{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rl);padding:16px;margin-bottom:12px}
+.diag-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.diag-titulo{font-size:12px;font-weight:600;color:var(--text)}
+.diag-select{background:var(--bg3);border:.5px solid var(--border);border-radius:4px;padding:4px 8px;font-size:11px;color:var(--text);font-family:'Inter',sans-serif;cursor:pointer;outline:none}
+.diag-section{margin-bottom:12px}
+.diag-section:last-child{margin-bottom:0}
+.diag-label{font-size:10px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:block}
+.diag-ideal{background:rgba(47,107,255,0.08);border:.5px solid rgba(47,107,255,0.3);border-radius:6px;padding:10px}
+.diag-ideal .diag-label{color:var(--blue)}
+.diag-atual{background:rgba(200,162,74,0.08);border:.5px solid rgba(200,162,74,0.3);border-radius:6px;padding:10px}
+.diag-atual .diag-label{color:var(--gold)}
+.diag-textarea{width:100%;background:var(--bg3);border:.5px solid var(--border);border-radius:4px;padding:8px;color:var(--text);font-size:11px;font-family:'Inter',sans-serif;outline:none;resize:vertical;min-height:60px}
+.diag-textarea:focus{border-color:var(--blue)}
 </style>
 </head>
 <body>
@@ -518,15 +533,169 @@ tr[data-status="Pausado"]{opacity:0.7}
 
       <!-- DIAGNÓSTICO -->
       <div class="tc" id="tc-diagnostico">
-        <div style="font-size:11px;color:var(--text2);margin-bottom:12px">Clique em cada bloco para expandir e editar</div>
-        <div class="db open2" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">1. Produto</span><span class="dbs ds-ok">Forte</span></div><div class="dbd">Higienização e impermeabilização de estofados. Ticket R$300. Serviço padronizado, não depende do dono para execução.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
-        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">2. Oferta</span><span class="dbs ds-w">Melhorar</span></div><div class="dbd">Diferencial de impermeabilização pouco explorado. Oportunidade: comunicar proteção para famílias com pets e crianças.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
-        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">3. Cliente ideal</span><span class="dbs ds-ok">Definido</span></div><div class="dbd">Mulheres 30+, casadas, filhos e/ou pets, condomínios na Zona Sul e Barra do RJ. Ticket aceito: R$250–R$400.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
-        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">4. Aquisição atual</span><span class="dbs ds-b">Crítico</span></div><div class="dbd">100% dependente de indicação. Sem tráfego pago. Base de 3.500 clientes nunca reativada — oportunidade imediata.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
-        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">5. Conversão</span><span class="dbs ds-w">Melhorar</span></div><div class="dbd">Sem script padronizado. Sem follow-up. Agente Lara (IA) já implementada e em fase de ativação — atendimento 24/7.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
-        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">6. Operação</span><span class="dbs ds-ok">Escalável</span></div><div class="dbd">Serviço padronizado. Equipe executa sem o dono. Capacidade de crescimento identificada na Zona Sul e Barra.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
-        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">7. Dados e controle</span><span class="dbs ds-w">Melhorar</span></div><div class="dbd">CRM próprio em uso (Vercel + Supabase). Sem pixel ativo. Decisões no feeling. Base: 16.000+ registros históricos.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
-        <div class="db" onclick="toggleDiag(this)"><div class="dbh"><span class="dbt">8. Estrutura comercial</span><span class="dbs ds-b">Crítico</span></div><div class="dbd">Sem funil estruturado. Sem script padronizado. Sem follow-up sistemático. Lara em implantação — vai resolver qualificação automática.</div><textarea class="dbe" rows="2" placeholder="Observações..." onclick="event.stopPropagation()" onchange="saveAll()"></textarea></div>
+        <!-- 1. Produto -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">1. Produto</span>
+            <select id="diag-avaliacao-1" class="diag-select" onchange="salvarDiagBloco(1)">
+              <option value="forte" selected>Forte</option>
+              <option value="melhorar">Melhorar</option>
+              <option value="critico">Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-1" class="diag-textarea" placeholder="Higienização e impermeabilização de estofados. Ticket R$300. Serviço padronizado, não depende do dono para execução." onchange="salvarDiagBloco(1)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-1" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(1)"></textarea>
+          </div>
+        </div>
+
+        <!-- 2. Oferta -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">2. Oferta</span>
+            <select id="diag-avaliacao-2" class="diag-select" onchange="salvarDiagBloco(2)">
+              <option value="forte">Forte</option>
+              <option value="melhorar" selected>Melhorar</option>
+              <option value="critico">Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-2" class="diag-textarea" placeholder="Diferencial de impermeabilização pouco explorado. Oportunidade: comunicar proteção para famílias com pets e crianças." onchange="salvarDiagBloco(2)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-2" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(2)"></textarea>
+          </div>
+        </div>
+
+        <!-- 3. Cliente Ideal -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">3. Cliente Ideal</span>
+            <select id="diag-avaliacao-3" class="diag-select" onchange="salvarDiagBloco(3)">
+              <option value="forte" selected>Forte</option>
+              <option value="melhorar">Melhorar</option>
+              <option value="critico">Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-3" class="diag-textarea" placeholder="Mulheres 30+, casadas, filhos e/ou pets, condomínios na Zona Sul e Barra do RJ. Ticket aceito: R$250–R$400." onchange="salvarDiagBloco(3)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-3" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(3)"></textarea>
+          </div>
+        </div>
+
+        <!-- 4. Aquisição Atual -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">4. Aquisição Atual</span>
+            <select id="diag-avaliacao-4" class="diag-select" onchange="salvarDiagBloco(4)">
+              <option value="forte">Forte</option>
+              <option value="melhorar">Melhorar</option>
+              <option value="critico" selected>Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-4" class="diag-textarea" placeholder="100% dependente de indicação. Sem tráfego pago. Base de 3.500 clientes nunca reativada — oportunidade imediata." onchange="salvarDiagBloco(4)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-4" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(4)"></textarea>
+          </div>
+        </div>
+
+        <!-- 5. Conversão -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">5. Conversão</span>
+            <select id="diag-avaliacao-5" class="diag-select" onchange="salvarDiagBloco(5)">
+              <option value="forte">Forte</option>
+              <option value="melhorar" selected>Melhorar</option>
+              <option value="critico">Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-5" class="diag-textarea" placeholder="Sem script padronizado. Sem follow-up. Agente Lara (IA) já implementada e em fase de ativação — atendimento 24/7." onchange="salvarDiagBloco(5)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-5" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(5)"></textarea>
+          </div>
+        </div>
+
+        <!-- 6. Operação -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">6. Operação</span>
+            <select id="diag-avaliacao-6" class="diag-select" onchange="salvarDiagBloco(6)">
+              <option value="forte" selected>Forte</option>
+              <option value="melhorar">Melhorar</option>
+              <option value="critico">Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-6" class="diag-textarea" placeholder="Serviço padronizado. Equipe executa sem o dono. Capacidade de crescimento identificada na Zona Sul e Barra." onchange="salvarDiagBloco(6)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-6" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(6)"></textarea>
+          </div>
+        </div>
+
+        <!-- 7. Dados e Controle -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">7. Dados e Controle</span>
+            <select id="diag-avaliacao-7" class="diag-select" onchange="salvarDiagBloco(7)">
+              <option value="forte">Forte</option>
+              <option value="melhorar" selected>Melhorar</option>
+              <option value="critico">Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-7" class="diag-textarea" placeholder="CRM próprio em uso (Vercel + Supabase). Sem pixel ativo. Decisões no feeling. Base: 16.000+ registros históricos." onchange="salvarDiagBloco(7)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-7" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(7)"></textarea>
+          </div>
+        </div>
+
+        <!-- 8. Estrutura Comercial -->
+        <div class="diag-bloco">
+          <div class="diag-header">
+            <span class="diag-titulo">8. Estrutura Comercial</span>
+            <select id="diag-avaliacao-8" class="diag-select" onchange="salvarDiagBloco(8)">
+              <option value="forte">Forte</option>
+              <option value="melhorar">Melhorar</option>
+              <option value="critico" selected>Crítico</option>
+            </select>
+          </div>
+          <div class="diag-section diag-ideal">
+            <label class="diag-label">Cenário Ideal</label>
+            <textarea id="diag-ideal-8" class="diag-textarea" placeholder="Sem funil estruturado. Sem script padronizado. Sem follow-up sistemático. Lara em implantação — vai resolver qualificação automática." onchange="salvarDiagBloco(8)"></textarea>
+          </div>
+          <div class="diag-section diag-atual">
+            <label class="diag-label">Cenário Atual do Cliente</label>
+            <textarea id="diag-atual-8" class="diag-textarea" placeholder="Descreva a situação atual..." onchange="salvarDiagBloco(8)"></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button class="btn bbl bsm" onclick="salvarTodosDiagnosticos()">💾 Salvar Diagnóstico</button>
+        </div>
       </div>
 
       <!-- ENTREGAS -->
@@ -1092,6 +1261,28 @@ async function salvarEntregaSupabase(clienteId, entrega) {
   }
 }
 
+// Funções para Supabase - DIAGNÓSTICO
+async function salvarDiagnosticoSupabase(clienteId, blocos) {
+  try {
+    if (!supabase) await initSupabase();
+    const diagnostico = {
+      cliente_id: clienteId,
+      tipo: 'diagnostico',
+      titulo: 'Diagnóstico Estratégico (8 blocos)',
+      blocos: blocos,
+      criado_em: new Date().toISOString()
+    };
+    const { error } = await supabase
+      .from('atividades')
+      .insert([diagnostico]);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('❌ Erro ao salvar diagnóstico:', e);
+    return false;
+  }
+}
+
 // Funções para Supabase - HEALTH SCORE
 async function salvarHealthScoreSupabase(clienteId, healthData) {
   try {
@@ -1339,6 +1530,47 @@ function irParaProximaAcao(){
     }
   },120);
 }
+// Diagnóstico - Salvar blocos
+async function salvarDiagBloco(numero){
+  const avaliacao=document.getElementById(`diag-avaliacao-${numero}`)?.value;
+  const ideal=document.getElementById(`diag-ideal-${numero}`)?.value;
+  const atual=document.getElementById(`diag-atual-${numero}`)?.value;
+  if(ideal||atual||avaliacao){
+    const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+    if(clienteId){
+      const blocoData={
+        numero,avaliacao,cenario_ideal:ideal,cenario_atual:atual
+      };
+      // Salvar localmente para saber que foi editado
+      localStorage.setItem(`diag-bloco-${numero}`,JSON.stringify(blocoData));
+      toast('Bloco '+numero+' atualizado');
+    }
+  }
+}
+
+async function salvarTodosDiagnosticos(){
+  const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id');
+  if(!clienteId){toast('Selecione um cliente','red');return;}
+
+  const blocos=[];
+  for(let i=1;i<=8;i++){
+    const avaliacao=document.getElementById(`diag-avaliacao-${i}`)?.value||'melhorar';
+    const ideal=document.getElementById(`diag-ideal-${i}`)?.value||'';
+    const atual=document.getElementById(`diag-atual-${i}`)?.value||'';
+    blocos.push({
+      numero:i,
+      avaliacao,
+      cenario_ideal:ideal,
+      cenario_atual:atual
+    });
+  }
+
+  const saved=await salvarDiagnosticoSupabase(clienteId,blocos);
+  if(saved){
+    toast('Diagnóstico completo salvo no Supabase!');
+  }
+}
+
 function toggleDiag(block){const isOpen=block.classList.contains('open2');document.querySelectorAll('.db').forEach(b=>b.classList.remove('open2'));if(!isOpen)block.classList.add('open2');}
 function checkCPL(){const v=parseFloat((document.getElementById('cpl')?.textContent||'').replace(/[^\d.]/g,''))||0;if(v>40)toast('⚠ CPL acima de R$40!','gold');saveAll();}
 function calcMeta(){const mrr=parseFloat((document.getElementById('mrr')?.textContent||'').replace(/[^\d.]/g,''))||0;const pct=Math.min(Math.round(mrr/15000*100),100);const bar=document.getElementById('mrr-bar');if(bar)bar.style.width=pct+'%';const meta=document.getElementById('mrr-meta');if(meta)meta.textContent='Meta: R$ 15.000 · '+pct+'%';saveAll();}
