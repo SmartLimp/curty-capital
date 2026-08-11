@@ -406,12 +406,14 @@ const { user, error } = await supabase.auth.signUp({
 
 ### Supabase
 
-**Projeto:** curty-capital  
-**URL:** https://qjinabkrrkjspsmgkjty.supabase.co  
-**API Key (Publishable):** `sb_publishable_Uf1wxNMLESwCZilCVfJajA_iaQXhK0q`  
-**SQL Editor:** https://qjinabkrrkjspsmgkjty.supabase.co/editor  
+**Projeto:** curty-capital (ref `prpykajfhfluqdkphkmw`)
+**URL:** https://prpykajfhfluqdkphkmw.supabase.co
+**API Key (Publishable):** `sb_publishable_D2uQGRlcuTh4wLbR2eoj0w_MEkVoY8M`
+**SQL Editor:** https://prpykajfhfluqdkphkmw.supabase.co/project/prpykajfhfluqdkphkmw/sql/new
 
 ⚠️ **Nota:** Esta é a chave pública. Para operações sensíveis, use chave de serviço (não compartilhada aqui).
+
+⚠️ **11/08/2026:** o projeto anterior (`qjinabkrrkjspsmgkjty`) não existe mais — DNS não resolvia (`NXDOMAIN` confirmado em dois resolvers), então nenhum salvamento no Supabase jamais funcionou de fato. Projeto recriado do zero com o schema documentado acima (`clientes`, `leads`, `entregas`, `atividades`, `publicidade`, `dossie`). Também corrigidas duas falhas que impediam qualquer conexão real: (1) a tag `<script>` do CDN do supabase-js estava aninhada dentro de um `<script></script>` vazio e nunca era executada como elemento real; (2) `let supabase = null` colidia com o global `var supabase` exposto pelo próprio CDN, causando `SyntaxError` assim que (1) fosse corrigido. `clientes.id` também foi trocado de `uuid` para `text`, pois o front-end sempre gerou ids como `'smartlimp'` ou `'cliente_'+Date.now()`.
 
 ### GitHub
 

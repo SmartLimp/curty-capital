@@ -1,8 +1,8 @@
 const { createClient } = require('@supabase/supabase-js')
 
 const supabase = createClient(
-  'https://qjinabkrrkjspsmgkjty.supabase.co',
-  'sb_publishable_Uf1wxNMLESwCZilCVfJajA_iaQXhK0q'
+  'https://prpykajfhfluqdkphkmw.supabase.co',
+  'sb_publishable_D2uQGRlcuTh4wLbR2eoj0w_MEkVoY8M'
 )
 
 async function setup() {

@@ -245,6 +245,22 @@ tr[data-status="Pausado"]{opacity:0.7}
 .spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,0.3);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner-text{color:#fff;font-size:14px;margin-top:16px}
+
+/* TRÁFEGO - TABELA DIÁRIA */
+.trf-wrap{overflow-x:auto;border-radius:var(--r);border:.5px solid var(--border)}
+.trf-table{width:100%;font-size:11px;border-collapse:collapse;min-width:820px}
+.trf-table thead th{background:var(--bg3);padding:9px 8px;text-align:center;font-weight:600;color:var(--text2);font-size:9px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;border-bottom:.5px solid var(--border2)}
+.trf-table thead th:first-child{text-align:left}
+.trf-table tbody td{padding:5px 7px;text-align:center;border-bottom:.5px solid var(--border)}
+.trf-table tbody tr:nth-child(even){background:var(--bg3)}
+.trf-table tbody tr:hover{background:var(--bg4)}
+.trf-day{color:var(--text2);font-size:10px;text-align:left!important;font-weight:500;white-space:nowrap}
+.trf-calc{color:var(--text2);font-size:10px;white-space:nowrap}
+.trf-in{width:68px;background:var(--bg3);border:.5px solid var(--border2);border-radius:4px;padding:4px 6px;color:var(--text);font-size:11px;font-family:'Inter',sans-serif;outline:none;text-align:right;transition:all .15s}
+.trf-in:hover{border-color:var(--border2)}
+.trf-in:focus{background:var(--bd);border-color:var(--bb);color:var(--text)}
+.trf-tfoot td{padding:9px 7px;text-align:center;font-weight:700;color:var(--gold);background:var(--bg3);border-top:1px solid var(--border2);white-space:nowrap}
+.trf-tfoot td:first-child{text-align:left}
 </style>
 </head>
 <body>
@@ -798,89 +814,76 @@ tr[data-status="Pausado"]{opacity:0.7}
           <input type="month" id="trfg-mes" onchange="carregarTrafegoDaMes()" style="padding:6px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px">
         </div>
 
+        <!-- CONSOLIDADO -->
+        <div style="margin-bottom:24px">
+          <div class="sl">📊 Consolidado (Facebook + Google)</div>
+          <div class="g4">
+            <div class="metric"><div class="ml">Total investido</div><div class="mv" style="color:var(--blue)" id="tot-total-gasto">R$ 0,00</div></div>
+            <div class="metric"><div class="ml">Total orçamentos</div><div class="mv" id="tot-total-orc">0</div></div>
+            <div class="metric"><div class="ml">CPL consolidado</div><div class="mv" style="color:var(--gold)" id="tot-cpl-medio">—</div></div>
+            <div class="metric"><div class="ml">ROAS consolidado</div><div class="mv" style="color:var(--green)" id="tot-roas-medio">—</div></div>
+          </div>
+        </div>
+
         <!-- FACEBOOK -->
         <div style="margin-bottom:24px">
           <div class="sl">📘 Facebook Ads</div>
-          <div class="g2">
-            <div class="card"><span class="kn">Tráfego (R$)</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="fb-traf">R$ 0</div></div>
-            <div class="card"><span class="kn">Orçamentos</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="fb-orc">0</div></div>
-            <div class="card"><span class="kn">Custo p/ Orç</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-cpo">—</div></div>
-            <div class="card"><span class="kn">Vendas</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="fb-vend">0</div></div>
-            <div class="card"><span class="kn">Taxa Conv %</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-tconv">—</div></div>
-            <div class="card"><span class="kn">CAC</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-cac">—</div></div>
-            <div class="card"><span class="kn">Faturamento</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="fb-fat">R$ 0</div></div>
-            <div class="card"><span class="kn">ROI</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-roi">—</div></div>
-            <div class="card"><span class="kn">Ticket Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="fb-tm">—</div></div>
+          <div class="g4">
+            <div class="metric"><div class="ml">Total gasto</div><div class="mv" style="color:var(--blue)" id="fb-total-gasto">R$ 0,00</div></div>
+            <div class="metric"><div class="ml">Total orçamentos</div><div class="mv" id="fb-total-orc">0</div></div>
+            <div class="metric"><div class="ml">CPL médio</div><div class="mv" style="color:var(--gold)" id="fb-cpl-medio">—</div></div>
+            <div class="metric"><div class="ml">ROAS médio</div><div class="mv" style="color:var(--green)" id="fb-roas-medio">—</div></div>
           </div>
-          <div style="overflow-x:auto;margin-top:12px">
-            <table style="width:100%;font-size:10px;border-collapse:collapse">
+          <div class="trf-wrap" style="margin-top:12px">
+            <table class="trf-table">
               <thead>
-                <tr style="background:var(--bg3);border-bottom:.5px solid var(--border)">
-                  <th style="padding:8px;text-align:left;font-weight:600">Dia</th>
-                  <th style="padding:8px;text-align:center">Tráfego R$</th>
-                  <th style="padding:8px;text-align:center">Orçamentos</th>
-                  <th style="padding:8px;text-align:center">Custo/Orc</th>
-                  <th style="padding:8px;text-align:center">Vendas</th>
-                  <th style="padding:8px;text-align:center">Conv %</th>
-                  <th style="padding:8px;text-align:center">CAC</th>
-                  <th style="padding:8px;text-align:center">Faturamento</th>
-                  <th style="padding:8px;text-align:center">ROI</th>
-                  <th style="padding:8px;text-align:center">Ticket Médio</th>
+                <tr>
+                  <th>Dia</th>
+                  <th>Tráfego (R$)</th>
+                  <th>Orçamentos</th>
+                  <th>Vendas</th>
+                  <th>Faturamento (R$)</th>
+                  <th>CPL</th>
+                  <th>Taxa Conversão</th>
+                  <th>CAC</th>
+                  <th>ROI</th>
+                  <th>Ticket Médio</th>
                 </tr>
               </thead>
               <tbody id="fb-tabela"></tbody>
+              <tfoot><tr id="fb-tfoot" class="trf-tfoot"></tr></tfoot>
             </table>
           </div>
         </div>
 
         <!-- GOOGLE ADS -->
-        <div style="margin-bottom:24px">
+        <div>
           <div class="sl">🔍 Google Ads</div>
-          <div class="g2">
-            <div class="card"><span class="kn">Tráfego (R$)</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="gg-traf">R$ 0</div></div>
-            <div class="card"><span class="kn">Orçamentos</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="gg-orc">0</div></div>
-            <div class="card"><span class="kn">Custo p/ Orç</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-cpo">—</div></div>
-            <div class="card"><span class="kn">Vendas</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="gg-vend">0</div></div>
-            <div class="card"><span class="kn">Taxa Conv %</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-tconv">—</div></div>
-            <div class="card"><span class="kn">CAC</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-cac">—</div></div>
-            <div class="card"><span class="kn">Faturamento</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="gg-fat">R$ 0</div></div>
-            <div class="card"><span class="kn">ROI</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-roi">—</div></div>
-            <div class="card"><span class="kn">Ticket Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="gg-tm">—</div></div>
+          <div class="g4">
+            <div class="metric"><div class="ml">Total gasto</div><div class="mv" style="color:var(--blue)" id="gg-total-gasto">R$ 0,00</div></div>
+            <div class="metric"><div class="ml">Total orçamentos</div><div class="mv" id="gg-total-orc">0</div></div>
+            <div class="metric"><div class="ml">CPL médio</div><div class="mv" style="color:var(--gold)" id="gg-cpl-medio">—</div></div>
+            <div class="metric"><div class="ml">ROAS médio</div><div class="mv" style="color:var(--green)" id="gg-roas-medio">—</div></div>
           </div>
-          <div style="overflow-x:auto;margin-top:12px">
-            <table style="width:100%;font-size:10px;border-collapse:collapse">
+          <div class="trf-wrap" style="margin-top:12px">
+            <table class="trf-table">
               <thead>
-                <tr style="background:var(--bg3);border-bottom:.5px solid var(--border)">
-                  <th style="padding:8px;text-align:left;font-weight:600">Dia</th>
-                  <th style="padding:8px;text-align:center">Tráfego R$</th>
-                  <th style="padding:8px;text-align:center">Orçamentos</th>
-                  <th style="padding:8px;text-align:center">Custo/Orc</th>
-                  <th style="padding:8px;text-align:center">Vendas</th>
-                  <th style="padding:8px;text-align:center">Conv %</th>
-                  <th style="padding:8px;text-align:center">CAC</th>
-                  <th style="padding:8px;text-align:center">Faturamento</th>
-                  <th style="padding:8px;text-align:center">ROI</th>
-                  <th style="padding:8px;text-align:center">Ticket Médio</th>
+                <tr>
+                  <th>Dia</th>
+                  <th>Tráfego (R$)</th>
+                  <th>Orçamentos</th>
+                  <th>Vendas</th>
+                  <th>Faturamento (R$)</th>
+                  <th>CPL</th>
+                  <th>Taxa Conversão</th>
+                  <th>CAC</th>
+                  <th>ROI</th>
+                  <th>Ticket Médio</th>
                 </tr>
               </thead>
               <tbody id="gg-tabela"></tbody>
+              <tfoot><tr id="gg-tfoot" class="trf-tfoot"></tr></tfoot>
             </table>
-          </div>
-        </div>
-
-        <!-- CONSOLIDADO -->
-        <div>
-          <div class="sl">📊 Consolidado (Facebook + Google)</div>
-          <div class="g2">
-            <div class="card"><span class="kn">Tráfego Total (R$)</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="tot-traf">R$ 0</div></div>
-            <div class="card"><span class="kn">Orçamentos Total</span><div style="font-size:18px;font-weight:600;color:var(--blue);margin-top:4px" id="tot-orc">0</div></div>
-            <div class="card"><span class="kn">Custo p/ Orç Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-cpo">—</div></div>
-            <div class="card"><span class="kn">Vendas Total</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="tot-vend">0</div></div>
-            <div class="card"><span class="kn">Taxa Conv % Média</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-tconv">—</div></div>
-            <div class="card"><span class="kn">CAC Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-cac">—</div></div>
-            <div class="card"><span class="kn">Faturamento Total</span><div style="font-size:18px;font-weight:600;color:var(--green);margin-top:4px" id="tot-fat">R$ 0</div></div>
-            <div class="card"><span class="kn">ROI Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-roi">—</div></div>
-            <div class="card"><span class="kn">Ticket Médio</span><div style="font-size:18px;font-weight:600;color:var(--text2);margin-top:4px" id="tot-tm">—</div></div>
           </div>
         </div>
       </div>
@@ -1031,21 +1034,21 @@ tr[data-status="Pausado"]{opacity:0.7}
 
 <div class="toast" id="toast"></div>
 
-<script>
 <!-- Supabase Integration -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Configuração Supabase
-const SUPABASE_URL = 'https://qjinabkrrkjspsmgkjty.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_Uf1wxNMLESwCZilCVfJajA_iaQXhK0q';
+const SUPABASE_URL = 'https://prpykajfhfluqdkphkmw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_D2uQGRlcuTh4wLbR2eoj0w_MEkVoY8M';
 
-let supabase = null;
+let supabaseClient = null;
 let currentUserId = 'default-user'; // Para RLS se necessário
+let clienteAtualId = 'smartlimp'; // cliente do dossiê aberto no momento
 
 // Inicializar Supabase
 async function initSupabase() {
   const { createClient } = window.supabase;
-  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
   console.log('✅ Supabase inicializado');
 }
 
@@ -1064,8 +1067,8 @@ function setData(d) {
 
 async function loadClientes() {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase.from('clientes').select('*').order('created_at', { ascending: false });
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient.from('clientes').select('*').order('created_at', { ascending: false });
     if (error) throw error;
     return data || [];
   } catch (e) {
@@ -1076,8 +1079,8 @@ async function loadClientes() {
 
 async function criarCliente(nome, empresa, segmento, cidade, valor, fase) {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase.from('clientes').insert([{
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient.from('clientes').insert([{
       nome, empresa, segmento, cidade,
       valor_mensal: parseFloat(valor),
       fase, status: 'Ativo'
@@ -1092,8 +1095,8 @@ async function criarCliente(nome, empresa, segmento, cidade, valor, fase) {
 
 async function atualizarCliente(id, updates) {
   try {
-    if (!supabase) await initSupabase();
-    const { error } = await supabase.from('clientes').update(updates).eq('id', id);
+    if (!supabaseClient) await initSupabase();
+    const { error } = await supabaseClient.from('clientes').update(updates).eq('id', id);
     if (error) throw error;
     return true;
   } catch (e) {
@@ -1104,8 +1107,8 @@ async function atualizarCliente(id, updates) {
 
 async function deletarCliente(id) {
   try {
-    if (!supabase) await initSupabase();
-    const { error } = await supabase.from('clientes').delete().eq('id', id);
+    if (!supabaseClient) await initSupabase();
+    const { error } = await supabaseClient.from('clientes').delete().eq('id', id);
     if (error) throw error;
     return true;
   } catch (e) {
@@ -1120,8 +1123,8 @@ async function deletarCliente(id) {
 
 async function loadLeads() {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient.from('leads').select('*').order('created_at', { ascending: false });
     if (error) throw error;
     return data || [];
   } catch (e) {
@@ -1132,8 +1135,8 @@ async function loadLeads() {
 
 async function criarLead(nome, empresa, whatsapp, canal, etapa, valor, observacoes) {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase.from('leads').insert([{
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient.from('leads').insert([{
       nome, empresa, whatsapp, canal, etapa,
       valor: parseFloat(valor), observacoes
     }]).select();
@@ -1147,8 +1150,8 @@ async function criarLead(nome, empresa, whatsapp, canal, etapa, valor, observaco
 
 async function atualizarLead(id, updates) {
   try {
-    if (!supabase) await initSupabase();
-    const { error } = await supabase.from('leads').update(updates).eq('id', id);
+    if (!supabaseClient) await initSupabase();
+    const { error } = await supabaseClient.from('leads').update(updates).eq('id', id);
     if (error) throw error;
     return true;
   } catch (e) {
@@ -1171,8 +1174,8 @@ async function marcarLeadPerdido(id, motivo, detalhe) {
 
 async function deletarLead(id) {
   try {
-    if (!supabase) await initSupabase();
-    const { error } = await supabase.from('leads').delete().eq('id', id);
+    if (!supabaseClient) await initSupabase();
+    const { error } = await supabaseClient.from('leads').delete().eq('id', id);
     if (error) throw error;
     return true;
   } catch (e) {
@@ -1187,8 +1190,8 @@ async function deletarLead(id) {
 
 async function loadPublicidade(clienteId, mes) {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient
       .from('publicidade')
       .select('*')
       .eq('cliente_id', clienteId)
@@ -1203,32 +1206,18 @@ async function loadPublicidade(clienteId, mes) {
 
 async function salvarPublicidade(clienteId, plataforma, mes, dia, trafego, orcamentos, vendas, faturamento) {
   try {
-    if (!supabase) await initSupabase();
-    
-    // Verificar se já existe
-    const { data: existing } = await supabase
-      .from('publicidade')
-      .select('id')
-      .eq('cliente_id', clienteId)
-      .eq('plataforma', plataforma)
-      .eq('mes', mes)
-      .eq('dia', dia)
-      .single();
+    if (!supabaseClient) await initSupabase();
 
-    if (existing) {
-      // Atualizar
-      const { error } = await supabase
-        .from('publicidade')
-        .update({ trafego, orcamentos, vendas, faturamento })
-        .eq('id', existing.id);
-      if (error) throw error;
-    } else {
-      // Inserir
-      const { error } = await supabase
-        .from('publicidade')
-        .insert([{ cliente_id: clienteId, plataforma, mes, dia, trafego, orcamentos, vendas, faturamento }]);
-      if (error) throw error;
-    }
+    // Upsert atômico (evita corrida quando vários campos do mesmo dia são
+    // salvos em sequência rápida — check-then-insert deixava duas chamadas
+    // concorrentes tentarem inserir a mesma linha e colidir na unique key)
+    const { error } = await supabaseClient
+      .from('publicidade')
+      .upsert(
+        [{ cliente_id: clienteId, plataforma, mes, dia, trafego, orcamentos, vendas, faturamento }],
+        { onConflict: 'cliente_id,plataforma,mes,dia' }
+      );
+    if (error) throw error;
     return true;
   } catch (e) {
     console.error('❌ Erro ao salvar publicidade:', e);
@@ -1242,8 +1231,8 @@ async function salvarPublicidade(clienteId, plataforma, mes, dia, trafego, orcam
 
 async function criarAtividade(clienteId, leadId, tipo, titulo, descricao) {
   try {
-    if (!supabase) await initSupabase();
-    const { error } = await supabase.from('atividades').insert([{
+    if (!supabaseClient) await initSupabase();
+    const { error } = await supabaseClient.from('atividades').insert([{
       cliente_id: clienteId || null,
       lead_id: leadId || null,
       tipo, titulo, descricao
@@ -1262,8 +1251,8 @@ async function criarAtividade(clienteId, leadId, tipo, titulo, descricao) {
 
 async function loadPipelineColunas() {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase.from('pipeline_colunas').select('*').order('ordem');
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient.from('pipeline_colunas').select('*').order('ordem');
     if (error) throw error;
     return data || [];
   } catch (e) {
@@ -1275,8 +1264,8 @@ async function loadPipelineColunas() {
 // Funções para Supabase - CLIENTES
 async function salvarClienteSupabase(clienteData) {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient
       .from('clientes')
       .upsert([clienteData], { onConflict: 'id' });
     if (error) throw error;
@@ -1290,8 +1279,8 @@ async function salvarClienteSupabase(clienteData) {
 
 async function carregarClientesSupabase() {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase.from('clientes').select('*');
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient.from('clientes').select('*');
     if (error) throw error;
     return data || [];
   } catch (e) {
@@ -1303,8 +1292,8 @@ async function carregarClientesSupabase() {
 // Funções para Supabase - ENTREGAS/CHECKLISTS
 async function salvarEntregaSupabase(clienteId, entrega) {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient
       .from('entregas')
       .upsert([{ cliente_id: clienteId, ...entrega }], { onConflict: 'id' });
     if (error) throw error;
@@ -1318,7 +1307,7 @@ async function salvarEntregaSupabase(clienteId, entrega) {
 // Funções para Supabase - DIAGNÓSTICO
 async function salvarDiagnosticoSupabase(clienteId, blocos) {
   try {
-    if (!supabase) await initSupabase();
+    if (!supabaseClient) await initSupabase();
     const diagnostico = {
       cliente_id: clienteId,
       tipo: 'diagnostico',
@@ -1326,7 +1315,7 @@ async function salvarDiagnosticoSupabase(clienteId, blocos) {
       blocos: blocos,
       criado_em: new Date().toISOString()
     };
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('atividades')
       .insert([diagnostico]);
     if (error) throw error;
@@ -1340,8 +1329,8 @@ async function salvarDiagnosticoSupabase(clienteId, blocos) {
 // Funções para Supabase - DOSSIE (campos editáveis)
 async function salvarCampoDossie(clienteId, campo, valor) {
   try {
-    if (!supabase) await initSupabase();
-    const { error } = await supabase
+    if (!supabaseClient) await initSupabase();
+    const { error } = await supabaseClient
       .from('dossie')
       .upsert([{
         cliente_id: clienteId,
@@ -1365,8 +1354,8 @@ async function salvarCampoDossie(clienteId, campo, valor) {
 
 async function carregarDossieSuabase(clienteId) {
   try {
-    if (!supabase) await initSupabase();
-    const { data, error } = await supabase
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient
       .from('dossie')
       .select('*')
       .eq('cliente_id', clienteId);
@@ -1387,9 +1376,9 @@ async function carregarDossieSuabase(clienteId) {
 
 async function criarTabelaDossie() {
   try {
-    if (!supabase) await initSupabase();
+    if (!supabaseClient) await initSupabase();
     // Criar tabela via RPC ou diretamente
-    const { error } = await supabase.rpc('exec_sql', {
+    const { error } = await supabaseClient.rpc('exec_sql', {
       sql: `CREATE TABLE IF NOT EXISTS dossie (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         cliente_id text NOT NULL,
@@ -1412,8 +1401,8 @@ async function criarTabelaDossie() {
 // Funções para Supabase - HEALTH SCORE
 async function salvarHealthScoreSupabase(clienteId, healthData) {
   try {
-    if (!supabase) await initSupabase();
-    const { error } = await supabase
+    if (!supabaseClient) await initSupabase();
+    const { error } = await supabaseClient
       .from('clientes')
       .update({ health_score: healthData })
       .eq('id', clienteId);
@@ -1464,6 +1453,7 @@ function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 document.querySelectorAll('.mbg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
 async function abrirDossie(id){
+  clienteAtualId=id||'smartlimp';
   // Mostrar loading spinner
   document.getElementById('loading-spinner').classList.add('show');
 
@@ -1514,6 +1504,7 @@ async function abrirDossie(id){
 }
 async function abrirDossieFromTable(row){
   const id=row.getAttribute('data-cliente-id')||'smartlimp';
+  clienteAtualId=id;
   const nome=row.querySelector('input[data-field="nome"]')?.value||'Smart Limp';
   const tipo=row.querySelector('input[data-field="tipo"]')?.value||'—';
   const entrada=row.querySelector('input[data-field="entrada"]')?.value||'—';
@@ -2056,63 +2047,98 @@ function gerarRelatorio(){const mes=document.getElementById('rel-mes').value;con
 function copiarRelatorio(){const txt=document.getElementById('report-preview').textContent;if(txt.includes('Clique'))return toast('Gere o relatório primeiro','gold');navigator.clipboard.writeText(txt).then(()=>toast('Copiado!'));}
 function gerarAgencyReport(){const semana=document.getElementById('rel-semana').value;document.getElementById('agency-preview').textContent=`🏢 AGENCY REPORT — CURTY CAPITAL\n📅 Semana ${semana}\n\n💰 FINANCEIRO\n• MRR: R$ 300\n• Forecast 90d: R$ 9.300\n• Meta: R$ 15.000 (2% atingido)\n• Clientes ativos: ${clientCount}\n\n🚦 SAÚDE DOS CLIENTES\n• Smart Limp: ${document.getElementById('dos-hs')?.textContent||72}/100\n• Risco de churn: Nenhum\n\n🎯 TOP 3 DECISÕES\n1. Configurar BM + Pixel — urgente\n2. Fechar 1 novo cliente esta semana\n3. Lançar reativação da base Smart Limp\n\n⚠️ ALERTAS\n• BM não configurado\n• Upsell identificado: Smart Limp N1→N2\n\nCurty | Capital — Uso interno`;toast('Agency report gerado!');}
 function copiarAgencyReport(){const txt=document.getElementById('agency-preview').textContent;if(txt.includes('Clique'))return toast('Gere o report primeiro','gold');navigator.clipboard.writeText(txt).then(()=>toast('Copiado!'));}
-// TRÁFEGO E PUBLICIDADE
-function renderTabelaTrafego(canal,tbodyId,mesDados){
+// TRÁFEGO E PUBLICIDADE (fonte de verdade: tabela Supabase "publicidade")
+let trafegoCache={fb:{},gg:{}};
+
+function fmtMoneyTrf(n){return 'R$ '+(Number(n)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function diasNoMes(mesChave){
+  const partes=(mesChave||'').split('-').map(Number);
+  const ano=partes[0],mes=partes[1];
+  if(!ano||!mes)return new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+  return new Date(ano,mes,0).getDate();
+}
+function calcLinhaTrf(traf,orc,vend,fat){
+  return{
+    cpl:orc>0?fmtMoneyTrf(traf/orc):'—',
+    tconv:orc>0?((vend/orc)*100).toFixed(1)+'%':'—',
+    cac:vend>0?fmtMoneyTrf(traf/vend):'—',
+    roi:traf>0?(fat/traf).toFixed(2)+'x':'—',
+    tm:vend>0?fmtMoneyTrf(fat/vend):'—'
+  };
+}
+function renderTabelaTrafego(plataforma,tbodyId,mesDados,mesChave){
   const tbody=document.getElementById(tbodyId);tbody.innerHTML='';
-  const diasMes=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+  const diasMes=diasNoMes(mesChave);
+  let sT=0,sO=0,sV=0,sF=0;
   for(let d=1;d<=diasMes;d++){
     const dadoDia=mesDados[d]||{traf:0,orc:0,vend:0,fat:0};
     const traf=parseFloat(dadoDia.traf)||0;const orc=parseInt(dadoDia.orc)||0;const vend=parseInt(dadoDia.vend)||0;const fat=parseFloat(dadoDia.fat)||0;
-    const cpo=orc>0?(traf/orc).toFixed(2):'—';const tconv=orc>0?((vend/orc)*100).toFixed(1)+'%':'—';const cac=vend>0?(traf/vend).toFixed(2):'—';const roi=traf>0?(fat/traf).toFixed(2):'—';const tm=vend>0?(fat/vend).toFixed(2):'—';
+    sT+=traf;sO+=orc;sV+=vend;sF+=fat;
+    const c=calcLinhaTrf(traf,orc,vend,fat);
     const tr=document.createElement('tr');
-    tr.style.borderBottom='.5px solid var(--border)';tr.style.background=d%2?'':'var(--bg4)';
     tr.innerHTML=`
-      <td style="padding:8px">${d}</td>
-      <td style="padding:8px;text-align:center"><input type="number" value="${traf}" step="0.01" onchange="atualizarTrafego('${canal}',${d},this.value,null,null,null)" style="width:60px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
-      <td style="padding:8px;text-align:center"><input type="number" value="${orc}" onchange="atualizarTrafego('${canal}',${d},null,this.value,null,null)" style="width:60px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
-      <td style="padding:8px;text-align:center;color:var(--text2)">${cpo}</td>
-      <td style="padding:8px;text-align:center"><input type="number" value="${vend}" onchange="atualizarTrafego('${canal}',${d},null,null,this.value,null)" style="width:60px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
-      <td style="padding:8px;text-align:center;color:var(--text2)">${tconv}</td>
-      <td style="padding:8px;text-align:center;color:var(--text2)">${cac}</td>
-      <td style="padding:8px;text-align:center"><input type="number" value="${fat}" step="0.01" onchange="atualizarTrafego('${canal}',${d},null,null,null,this.value)" style="width:80px;background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px"></td>
-      <td style="padding:8px;text-align:center;color:var(--text2)">${roi}</td>
-      <td style="padding:8px;text-align:center;color:var(--text2)">${tm}</td>
+      <td class="trf-day">${d}</td>
+      <td><input class="trf-in" type="number" value="${traf||''}" step="0.01" placeholder="0,00" onchange="atualizarTrafego('${plataforma}',${d},'traf',this.value)"></td>
+      <td><input class="trf-in" type="number" value="${orc||''}" placeholder="0" onchange="atualizarTrafego('${plataforma}',${d},'orc',this.value)"></td>
+      <td><input class="trf-in" type="number" value="${vend||''}" placeholder="0" onchange="atualizarTrafego('${plataforma}',${d},'vend',this.value)"></td>
+      <td><input class="trf-in" type="number" value="${fat||''}" step="0.01" placeholder="0,00" onchange="atualizarTrafego('${plataforma}',${d},'fat',this.value)"></td>
+      <td class="trf-calc">${c.cpl}</td>
+      <td class="trf-calc">${c.tconv}</td>
+      <td class="trf-calc">${c.cac}</td>
+      <td class="trf-calc">${c.roi}</td>
+      <td class="trf-calc">${c.tm}</td>
     `;
     tbody.appendChild(tr);
   }
+  const tot=calcLinhaTrf(sT,sO,sV,sF);
+  const tfoot=document.getElementById(tbodyId.replace('tabela','tfoot'));
+  if(tfoot)tfoot.innerHTML=`<td>Total</td><td>${fmtMoneyTrf(sT)}</td><td>${sO}</td><td>${sV}</td><td>${fmtMoneyTrf(sF)}</td><td>${tot.cpl}</td><td>${tot.tconv}</td><td>${tot.cac}</td><td>${tot.roi}</td><td>${tot.tm}</td>`;
 }
-function atualizarTrafego(canal,dia,traf,orc,vend,fat){
+async function atualizarTrafego(plataforma,dia,campo,valor){
+  const clienteId=clienteAtualId||'smartlimp';
   const mesChave=document.getElementById('trfg-mes').value||new Date().toISOString().slice(0,7);
-  const key='traf_'+mesChave;const dados=getData()[key]||{};
-  if(!dados[canal])dados[canal]={};
-  if(traf!==null)dados[canal][dia]={...dados[canal][dia],traf:parseFloat(traf)};
-  if(orc!==null)dados[canal][dia]={...dados[canal][dia],orc:parseInt(orc)};
-  if(vend!==null)dados[canal][dia]={...dados[canal][dia],vend:parseInt(vend)};
-  if(fat!==null)dados[canal][dia]={...dados[canal][dia],fat:parseFloat(fat)};
-  const d=getData();d[key]=dados;setData(d);
-  carregarTrafegoDaMes();
+  const canal=plataforma==='google'?'gg':'fb';
+  if(!trafegoCache[canal])trafegoCache[canal]={};
+  const atual=trafegoCache[canal][dia]||{traf:0,orc:0,vend:0,fat:0};
+  const parsed=(campo==='traf'||campo==='fat')?(parseFloat(valor)||0):(parseInt(valor)||0);
+  const merged={...atual,[campo]:parsed};
+  trafegoCache[canal][dia]=merged;
+  renderTabelaTrafego(plataforma,canal==='gg'?'gg-tabela':'fb-tabela',trafegoCache[canal],mesChave);
+  atualizarResumosTrafego();
+  const ok=await salvarPublicidade(clienteId,plataforma,mesChave,dia,merged.traf,merged.orc,merged.vend,merged.fat);
+  if(!ok)toast('Erro ao salvar tráfego','red');
 }
-function carregarTrafegoDaMes(){
+async function carregarTrafegoDaMes(){
+  const clienteId=clienteAtualId||'smartlimp';
   const mesChave=document.getElementById('trfg-mes').value||new Date().toISOString().slice(0,7);
-  const key='traf_'+mesChave;const dados=getData()[key]||{fb:{},gg:{}};
-  renderTabelaTrafego('fb','fb-tabela',dados.fb||{});
-  renderTabelaTrafego('gg','gg-tabela',dados.gg||{});
-  calcularTotaisTrafego(dados);
+  const rows=await loadPublicidade(clienteId,mesChave);
+  trafegoCache={fb:{},gg:{}};
+  rows.forEach(r=>{
+    const canal=r.plataforma==='google'?'gg':'fb';
+    trafegoCache[canal][r.dia]={traf:r.trafego,orc:r.orcamentos,vend:r.vendas,fat:r.faturamento};
+  });
+  renderTabelaTrafego('facebook','fb-tabela',trafegoCache.fb,mesChave);
+  renderTabelaTrafego('google','gg-tabela',trafegoCache.gg,mesChave);
+  atualizarResumosTrafego();
 }
-function calcularTotaisTrafego(dados){
-  const calcMetricas=(canalDados)=>{
+function atualizarResumosTrafego(){
+  const somar=(canalDados)=>{
     let traf=0,orc=0,vend=0,fat=0;
     Object.values(canalDados||{}).forEach(d=>{traf+=parseFloat(d.traf)||0;orc+=parseInt(d.orc)||0;vend+=parseInt(d.vend)||0;fat+=parseFloat(d.fat)||0;});
-    return{traf,orc,cpo:orc>0?(traf/orc).toFixed(2):'—',vend,tconv:orc>0?((vend/orc)*100).toFixed(1)+'%':'—',cac:vend>0?(traf/vend).toFixed(2):'—',fat,roi:traf>0?(fat/traf).toFixed(2):'—',tm:vend>0?(fat/vend).toFixed(2):'—'};
+    return{traf,orc,vend,fat};
   };
-  const fb=calcMetricas(dados.fb);const gg=calcMetricas(dados.gg);
-  document.getElementById('fb-traf').textContent='R$ '+fb.traf.toFixed(2);document.getElementById('fb-orc').textContent=fb.orc;document.getElementById('fb-cpo').textContent=fb.cpo;document.getElementById('fb-vend').textContent=fb.vend;document.getElementById('fb-tconv').textContent=fb.tconv;document.getElementById('fb-cac').textContent=fb.cac;document.getElementById('fb-fat').textContent='R$ '+fb.fat.toFixed(2);document.getElementById('fb-roi').textContent=fb.roi;document.getElementById('fb-tm').textContent=fb.tm;
-  document.getElementById('gg-traf').textContent='R$ '+gg.traf.toFixed(2);document.getElementById('gg-orc').textContent=gg.orc;document.getElementById('gg-cpo').textContent=gg.cpo;document.getElementById('gg-vend').textContent=gg.vend;document.getElementById('gg-tconv').textContent=gg.tconv;document.getElementById('gg-cac').textContent=gg.cac;document.getElementById('gg-fat').textContent='R$ '+gg.fat.toFixed(2);document.getElementById('gg-roi').textContent=gg.roi;document.getElementById('gg-tm').textContent=gg.tm;
+  const fb=somar(trafegoCache.fb);const gg=somar(trafegoCache.gg);
   const tot={traf:fb.traf+gg.traf,orc:fb.orc+gg.orc,vend:fb.vend+gg.vend,fat:fb.fat+gg.fat};
-  tot.cpo=tot.orc>0?(tot.traf/tot.orc).toFixed(2):'—';tot.tconv=tot.orc>0?((tot.vend/tot.orc)*100).toFixed(1)+'%':'—';tot.cac=tot.vend>0?(tot.traf/tot.vend).toFixed(2):'—';tot.roi=tot.traf>0?(tot.fat/tot.traf).toFixed(2):'—';tot.tm=tot.vend>0?(tot.fat/tot.vend).toFixed(2):'—';
-  document.getElementById('tot-traf').textContent='R$ '+tot.traf.toFixed(2);document.getElementById('tot-orc').textContent=tot.orc;document.getElementById('tot-cpo').textContent=tot.cpo;document.getElementById('tot-vend').textContent=tot.vend;document.getElementById('tot-tconv').textContent=tot.tconv;document.getElementById('tot-cac').textContent=tot.cac;document.getElementById('tot-fat').textContent='R$ '+tot.fat.toFixed(2);document.getElementById('tot-roi').textContent=tot.roi;document.getElementById('tot-tm').textContent=tot.tm;
-  // Atualizar CPL qualificado no Morning View
-  if(fb.cpo!=='—')document.getElementById('tr-cplq').value='R$ '+fb.cpo;
+  const setResumo=(prefix,dados)=>{
+    document.getElementById(prefix+'-total-gasto').textContent=fmtMoneyTrf(dados.traf);
+    document.getElementById(prefix+'-total-orc').textContent=dados.orc;
+    document.getElementById(prefix+'-cpl-medio').textContent=dados.orc>0?fmtMoneyTrf(dados.traf/dados.orc):'—';
+    document.getElementById(prefix+'-roas-medio').textContent=dados.traf>0?(dados.fat/dados.traf).toFixed(2)+'x':'—';
+  };
+  setResumo('fb',fb);setResumo('gg',gg);setResumo('tot',tot);
+  // CPL qualificado do Morning View = CPL consolidado do mês atual da tabela de publicidade
+  const cplEl=document.getElementById('cpl');
+  if(cplEl)cplEl.textContent=tot.orc>0?fmtMoneyTrf(tot.traf/tot.orc):'R$ 0,00';
 }
 // PIPELINE
 function salvarNovoLead(){
