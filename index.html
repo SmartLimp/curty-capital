@@ -396,7 +396,7 @@ tr[data-status="Pausado"]{opacity:0.7}
           <button class="btn bbl bsm" onclick="filtrarClientesPorStatus('Ativo')" id="btn-ativos">Ativos</button>
           <button class="btn bsm" onclick="filtrarClientesPorStatus('Pausado')" id="btn-pausados" style="background:var(--warn);color:#fff">Pausados</button>
           <button class="btn bred bsm" onclick="filtrarClientesPorStatus('Inativo')" id="btn-inativos">Inativos</button>
-          <button class="btn bbl bsm" style="margin-left:auto" onclick="adicionarLinhaCliente()">+ Novo cliente</button>
+          <button class="btn bbl bsm" style="margin-left:auto" onclick="openModal('modal-novo-cliente')">+ Novo cliente</button>
         </div>
       </div>
       <div class="clients-table-wrapper">
@@ -414,7 +414,7 @@ tr[data-status="Pausado"]{opacity:0.7}
             </tr>
           </thead>
           <tbody id="clients-tbody">
-            <tr onclick="abrirDossieFromTable(this)" data-cliente-id="smartlimp" data-status="Ativo">
+            <tr onclick="abrirDossieFromTable(this,event)" data-cliente-id="smartlimp" data-status="Ativo">
               <td><div class="ct-nome"><div class="ct-av">SL</div><input class="ct-edit" type="text" value="Smart Limp" data-field="nome"></div></td>
               <td><input class="ct-edit" type="text" value="Higienização" data-field="tipo"></td>
               <td><input class="ct-edit" type="text" value="Junho 2025" data-field="entrada"></td>
@@ -426,7 +426,7 @@ tr[data-status="Pausado"]{opacity:0.7}
             </tr>
           </tbody>
         </table>
-        <button class="add-row-btn" onclick="adicionarLinhaCliente()">+ Adicionar cliente</button>
+        <button class="add-row-btn" onclick="openModal('modal-novo-cliente')">+ Adicionar cliente</button>
       </div>
     </div>
 
@@ -1052,15 +1052,6 @@ async function initSupabase() {
   console.log('✅ Supabase inicializado');
 }
 
-// Fallback para localStorage (se Supabase falhar)
-function getData() { 
-  return JSON.parse(localStorage.getItem('curty_v3') || '{}');
-}
-
-function setData(d) { 
-  localStorage.setItem('curty_v3', JSON.stringify(d));
-}
-
 // ============================================================
 // CLIENTES - CRUD
 // ============================================================
@@ -1422,6 +1413,12 @@ if (document.readyState === 'loading') {
 }
 </script>
 <script>
+const SK='curty_v3';
+function parseMoedaBR(str){
+  if(typeof str!=='string')return parseFloat(str)||0;
+  const normalized=str.replace(/[^\d,.-]/g,'').replace(/\./g,'').replace(',','.');
+  return parseFloat(normalized)||0;
+}
 function getData(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch{return{}}}
 function setData(d){localStorage.setItem(SK,JSON.stringify(d))}
 function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
@@ -1502,7 +1499,11 @@ async function abrirDossie(id){
 
   window.scrollTo(0,0);
 }
-async function abrirDossieFromTable(row){
+async function abrirDossieFromTable(row,evt){
+  // Ignora cliques que se originaram em campos editáveis da linha (input/select/
+  // textarea/contenteditable) — sem isso, editar uma célula inline também abre
+  // o dossiê por causa do bubbling do clique até o <tr>.
+  if(evt&&evt.target.closest('input,select,textarea,[contenteditable="true"],button'))return;
   const id=row.getAttribute('data-cliente-id')||'smartlimp';
   clienteAtualId=id;
   const nome=row.querySelector('input[data-field="nome"]')?.value||'Smart Limp';
@@ -1618,6 +1619,8 @@ async function saveAll(){
       const fieldName=field.getAttribute('data-field');
       clienteData[fieldName]=field.value||field.textContent;
     });
+    delete clienteData.health; // não é coluna da tabela clientes; health_score é salvo à parte via salvarHealthScoreSupabase
+    if('mrr' in clienteData)clienteData.mrr=parseMoedaBR(clienteData.mrr); // mrr é numeric no Supabase; a célula mostra "R$ 1.500"
     clienteData.id=tr.getAttribute('data-cliente-id');
     clientes.push(clienteData);
   });
@@ -1935,29 +1938,6 @@ function sugerirUpsell(){
     toast('💡 Upsell disponível! Cliente pronto para próximo nível','gold');
   }
 }
-function adicionarLinhaCliente(){
-  const tbody=document.getElementById('clients-tbody');
-  const newId='cliente_'+Date.now();
-  const tr=document.createElement('tr');
-  tr.setAttribute('data-cliente-id',newId);
-  tr.setAttribute('data-status','Ativo');
-  tr.setAttribute('onclick','abrirDossieFromTable(this)');
-  tr.innerHTML=`
-    <td><div class="ct-nome"><div class="ct-av">NC</div><input class="ct-edit" type="text" value="Novo cliente" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
-    <td><input class="ct-edit" type="text" value="" data-field="tipo" onchange="saveAll()"></td>
-    <td><input class="ct-edit" type="text" value="" data-field="entrada" onchange="saveAll()"></td>
-    <td><input class="ct-edit" type="text" value="R$ 0" data-field="mrr" onchange="saveAll(); calcularForecast()"></td>
-    <td><span class="ct-tag" data-field="fase" contenteditable="true" onblur="saveAll()">Fase 1</span></td>
-    <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option></select></td>
-    <td><input class="ct-edit" type="text" value="" data-field="contato" onchange="saveAll()"></td>
-    <td style="text-align:center"><div class="ct-hs hs-a" id="hs-table-${newId}" data-field="health">50</div></td>
-  `;
-  tbody.appendChild(tr);
-  clientCount++;
-  calcularForecast();
-  toast('Novo cliente adicionado');
-  saveAll();
-}
 function updateInitials(nameContainer){
   const input=nameContainer.querySelector('input[data-field="nome"]');
   const av=nameContainer.querySelector('.ct-av');
@@ -1982,7 +1962,6 @@ async function salvarNovoCliente(){
     fase,
     status:'Ativo',
     contato:'',
-    health:50,
     criado_em:new Date().toISOString()
   };
 
@@ -1994,7 +1973,7 @@ async function salvarNovoCliente(){
   const tr=document.createElement('tr');
   tr.setAttribute('data-cliente-id',newId);
   tr.setAttribute('data-status','Ativo');
-  tr.setAttribute('onclick','abrirDossieFromTable(this)');
+  tr.setAttribute('onclick','abrirDossieFromTable(this,event)');
   const iniciais=nome.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
   tr.innerHTML=`
     <td><div class="ct-nome"><div class="ct-av">${iniciais}</div><input class="ct-edit" type="text" value="${nome}" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
@@ -2300,7 +2279,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         clientes.slice(1).forEach(cliente=>{
           const tr=document.createElement('tr');
           tr.setAttribute('data-cliente-id',cliente.id);
-          tr.setAttribute('onclick','abrirDossieFromTable(this)');
+          tr.setAttribute('onclick','abrirDossieFromTable(this,event)');
           const iniciais=(cliente.nome||'NC').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
           const hs=cliente.health||'50';
           const hsClass=hs>=80?'hs-g':hs>=50?'hs-a':'hs-r';
