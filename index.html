@@ -1542,6 +1542,7 @@ async function abrirDossie(id){
       }
     });
   }
+  atualizarStatusAcessos();
 
   document.getElementById('view-lista').style.display='none';
   document.getElementById('view-dossie').style.display='block';
@@ -1601,6 +1602,7 @@ async function abrirDossieFromTable(row,evt){
       }
     });
   }
+  atualizarStatusAcessos();
 
   document.getElementById('view-lista').style.display='none';
   document.getElementById('view-dossie').style.display='block';
@@ -1985,6 +1987,21 @@ function toggleDiag(block){const isOpen=block.classList.contains('open2');docume
 function checkCPL(){const v=parseFloat((document.getElementById('cpl')?.textContent||'').replace(/[^\d.]/g,''))||0;if(v>40)toast('⚠ CPL acima de R$40!','gold');saveAll();}
 function calcMeta(){const mrr=parseFloat((document.getElementById('mrr')?.textContent||'').replace(/[^\d.]/g,''))||0;const pct=Math.min(Math.round(mrr/15000*100),100);const bar=document.getElementById('mrr-bar');if(bar)bar.style.width=pct+'%';const meta=document.getElementById('mrr-meta');if(meta)meta.textContent='Meta: R$ 15.000 · '+pct+'%';saveAll();}
 function upStatus(stId,inputId){const val=document.getElementById(inputId)?.value||'';const st=document.getElementById(stId);if(!st)return;if(!val.trim()){st.className='ast ast-pend';st.textContent='Pendente'}else{st.className='ast ast-ok';st.textContent='Configurado'}saveAll();}
+function atualizarStatusAcessos(){
+  const camposAcesso=['ac-bm','ac-ads','ac-pixel','ac-fbpage','ac-ig','ac-wpp','ac-ga4','ac-gtm','ac-gads','ac-gmn','ac-gsc','ac-dom','ac-host','ac-ttk','ac-crm'];
+  camposAcesso.forEach(inputId=>{
+    const input=document.getElementById(inputId);
+    const st=document.getElementById('st-'+inputId.slice(3));
+    if(!input||!st)return;
+    if(input.value.trim()){
+      st.className='ast ast-ok';
+      st.textContent='Configurado';
+    }else{
+      st.className='ast ast-pend';
+      st.textContent='Pendente';
+    }
+  });
+}
 // Alertas
 let alertCount=3;
 function removeAlerta(id){const el=document.getElementById(id);if(el)el.remove();alertCount--;document.getElementById('badge-alerts').textContent=alertCount;}
