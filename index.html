@@ -561,6 +561,7 @@ tr[data-status="Pausado"]{opacity:0.7}
 
         <div class="sl">Fase 1 — Diagnóstico e Setup</div>
         <div class="card">
+          <div class="cli" id="onboarding_fase1_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa0')"></div><div class="clt">Criar grupo no WhatsApp (cliente + equipe)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="ob-1"><div class="clb" onclick="toggleOnboarding(this,'ob-1')"></div><div class="clt">Kickoff call agendada</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="ob-2"><div class="clb" onclick="toggleOnboarding(this,'ob-2')"></div><div class="clt">Diagnóstico estratégico (8 blocos) concluído</div><div class="clr">Estratégia</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="ob-3"><div class="clb" onclick="toggleOnboarding(this,'ob-3')"></div><div class="clt">Acesso a sistemas do cliente obtido</div><div class="clr">Operações</div><div class="cld normal">Semana 1</div></div>
@@ -1463,7 +1464,7 @@ async function abrirDossie(id){
       const el=document.getElementById(item.campo);
       if(el){
         // Tratamento especial para checkboxes de onboarding
-        if(item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/)){
+        if(item.campo==='onboarding_fase1_tarefa0' || (item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/))){
           if(item.valor==='1'){
             el.classList.add('done');
             const btn=el.querySelector('.clb');
@@ -1522,7 +1523,7 @@ async function abrirDossieFromTable(row,evt){
       const el=document.getElementById(item.campo);
       if(el){
         // Tratamento especial para checkboxes de onboarding
-        if(item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/)){
+        if(item.campo==='onboarding_fase1_tarefa0' || (item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/))){
           if(item.valor==='1'){
             el.classList.add('done');
             const btn=el.querySelector('.clb');
@@ -1828,6 +1829,10 @@ async function salvarTodoOnboarding(){
   if(!clienteId){toast('Selecione um cliente','red');return;}
 
   // Salvar todos os checkboxes
+  const elTarefa0=document.getElementById('onboarding_fase1_tarefa0');
+  if(elTarefa0){
+    await salvarCampoDossie(clienteId,'onboarding_fase1_tarefa0',elTarefa0.classList.contains('done')?'1':'0');
+  }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
     const el=document.getElementById(id);
