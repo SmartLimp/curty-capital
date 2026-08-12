@@ -567,6 +567,7 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="cli" id="onboarding_fase1_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa3')"></div><div class="clt">Enviar contrato ao cliente</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa4')"></div><div class="clt">Contrato assinado</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa5')"></div><div class="clt">Confirmação de pagamento recebido</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa8"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa8')"></div><div class="clt">Agendar kickoff (data e hora definidas com o cliente)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa6')"></div><div class="clt">Envio do link do formulário de onboarding ao cliente (ao final da call)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa7')"></div><div class="clt">Passagem de bastão para o onboarding com briefing completo</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <textarea id="ob-obs-1" class="rp" placeholder="Observações sobre Fase 1..." onchange="salvarOnboardingObs('ob-obs-1')"></textarea>
@@ -1887,7 +1888,7 @@ async function salvarTodoOnboarding(){
   if(!clienteId){toast('Selecione um cliente','red');return;}
 
   // Salvar todos os checkboxes
-  for(let i=0;i<=7;i++){
+  for(let i=0;i<=8;i++){
     const idExtra=`onboarding_fase1_tarefa${i}`;
     const elExtra=document.getElementById(idExtra);
     if(elExtra){
