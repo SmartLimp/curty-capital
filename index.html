@@ -576,14 +576,21 @@ tr[data-status="Pausado"]{opacity:0.7}
           <textarea id="ob-obs-1" class="rp" placeholder="Observações sobre Fase 1..." onchange="salvarOnboardingObs('ob-obs-1')"></textarea>
         </div>
 
-        <div class="sl">Fase 2 — Ativação (Tráfego & Dados)</div>
+        <div class="sl">Fase 2 — Onboarding + Quick Win (D1–D2)</div>
+        <div style="font-size:11px;color:var(--text2);margin:-4px 0 8px">Responsável: Rafael + Ton</div>
         <div class="card">
-          <div class="cli" id="ob-5"><div class="clb" onclick="toggleOnboarding(this,'ob-5')"></div><div class="clt">Business Manager + Conta de Anúncios criada</div><div class="clr">Tráfego</div><div class="cld urgent">Urgente</div></div>
-          <div class="cli" id="ob-6"><div class="clb" onclick="toggleOnboarding(this,'ob-6')"></div><div class="clt">Pixel Meta instalado e testado</div><div class="clr">Tráfego</div><div class="cld urgent">Urgente</div></div>
-          <div class="cli" id="ob-7"><div class="clb" onclick="toggleOnboarding(this,'ob-7')"></div><div class="clt">GTM + eventos mapeados</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
-          <div class="cli" id="ob-8"><div class="clb" onclick="toggleOnboarding(this,'ob-8')"></div><div class="clt">Google Analytics 4 ativado</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
-          <div class="cli" id="ob-9"><div class="clb" onclick="toggleOnboarding(this,'ob-9')"></div><div class="clt">CRM integrado e testado</div><div class="clr">Operações</div><div class="cld normal">Semana 2</div></div>
-          <textarea id="ob-obs-2" class="rp" placeholder="Observações sobre Fase 2..." onchange="salvarOnboardingObs('ob-obs-2')"></textarea>
+          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Kickoff — Alinhamentos com o cliente</div>
+          <div class="cli" id="onboarding_fase2_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa0')"></div><div class="clt">Alinhamento de expectativas/prazos + coleta ao vivo do que faltar no formulário</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa1')"></div><div class="clt">Coletar ativos de marca (logo PNG, fonte, cores)</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa2')"></div><div class="clt">Alinhar que o cliente não interfere nas campanhas em andamento</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa3')"></div><div class="clt">Definir KPI: 3 cenários de CPL e CAC (CAC ideal = 20% do valor do serviço)</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa4')"></div><div class="clt">Calcular CPA e apresentar investimento necessário (curva crescente, não instantânea)</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa5')"></div><div class="clt">Faixas de CPA: Bom até 15%, Médio até 20%, Ruim 35–45% do ticket</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa6')"></div><div class="clt">Definir melhor dia do mês para carga da conta de anúncios</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa7')"></div><div class="clt">Alinhar política de pagamento e atraso (10 dias sem pagamento = encerramento)</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa8"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa8')"></div><div class="clt">Apresentar overdelivery: domínio + hospedagem grátis por 1 ano</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa9"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa9')"></div><div class="clt">Alinhar política de urgência (urgente: site fora do ar/bug/saldo zerado; não urgente: campanha/criativo novo)</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
+          <textarea id="onboarding_fase2_kickoff_obs" class="rp" placeholder="Observações sobre o Kickoff..." onchange="salvarOnboardingObs('onboarding_fase2_kickoff_obs')"></textarea>
         </div>
 
         <div class="sl">Fase 3 — Estruturação Comercial</div>
@@ -1471,7 +1478,7 @@ async function abrirDossie(id){
       const el=document.getElementById(item.campo);
       if(el){
         // Tratamento especial para checkboxes de onboarding
-        if(item.campo.match(/^onboarding_fase1_tarefa\d+$/) || (item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/))){
+        if(item.campo.match(/^onboarding_fase\d+_tarefa\d+$/) || (item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/))){
           if(item.valor==='1'){
             el.classList.add('done');
             const btn=el.querySelector('.clb');
@@ -1530,7 +1537,7 @@ async function abrirDossieFromTable(row,evt){
       const el=document.getElementById(item.campo);
       if(el){
         // Tratamento especial para checkboxes de onboarding
-        if(item.campo.match(/^onboarding_fase1_tarefa\d+$/) || (item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/))){
+        if(item.campo.match(/^onboarding_fase\d+_tarefa\d+$/) || (item.campo.startsWith('ob-') && item.campo.match(/^ob-\d+$/))){
           if(item.valor==='1'){
             el.classList.add('done');
             const btn=el.querySelector('.clb');
@@ -1842,6 +1849,17 @@ async function salvarTodoOnboarding(){
     if(elExtra){
       await salvarCampoDossie(clienteId,idExtra,elExtra.classList.contains('done')?'1':'0');
     }
+  }
+  for(let i=0;i<=9;i++){
+    const idFase2=`onboarding_fase2_tarefa${i}`;
+    const elFase2=document.getElementById(idFase2);
+    if(elFase2){
+      await salvarCampoDossie(clienteId,idFase2,elFase2.classList.contains('done')?'1':'0');
+    }
+  }
+  const elKickoffObs=document.getElementById('onboarding_fase2_kickoff_obs');
+  if(elKickoffObs){
+    await salvarCampoDossie(clienteId,'onboarding_fase2_kickoff_obs',elKickoffObs.value||'');
   }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
