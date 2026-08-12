@@ -607,13 +607,18 @@ tr[data-status="Pausado"]{opacity:0.7}
           <textarea id="onboarding_fase2_quickwin_obs" class="rp" placeholder="Observações sobre o Quick Win..." onchange="salvarOnboardingObs('onboarding_fase2_quickwin_obs')"></textarea>
         </div>
 
-        <div class="sl">Fase 3 — Estruturação Comercial</div>
+        <div class="sl">Fase 3 — Implementação Técnica (D3–D7)</div>
+        <div style="font-size:11px;color:var(--text2);margin:-4px 0 8px">Responsável: Ton</div>
         <div class="card">
-          <div class="cli" id="ob-10"><div class="clb" onclick="toggleOnboarding(this,'ob-10')"></div><div class="clt">Script de atendimento validado</div><div class="clr">Comercial</div><div class="cld late">Atrasado</div></div>
-          <div class="cli" id="ob-11"><div class="clb" onclick="toggleOnboarding(this,'ob-11')"></div><div class="clt">Follow-up automatizado no CRM</div><div class="clr">Operações</div><div class="cld normal">Semana 3</div></div>
-          <div class="cli" id="ob-12"><div class="clb" onclick="toggleOnboarding(this,'ob-12')"></div><div class="clt">Reunião semanal agendada (dia e hora fixos)</div><div class="clr">Gestão</div><div class="cld urgent">Pendente</div></div>
-          <div class="cli" id="ob-13"><div class="clb" onclick="toggleOnboarding(this,'ob-13')"></div><div class="clt">Dashboard de KPIs configurado</div><div class="clr">Analytics</div><div class="cld normal">Semana 3</div></div>
-          <textarea id="ob-obs-3" class="rp" placeholder="Observações sobre Fase 3..." onchange="salvarOnboardingObs('ob-obs-3')"></textarea>
+          <div class="cli" id="onboarding_fase3_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa0')"></div><div class="clt">Confirmar acessos recebidos</div><div class="clr">Operações</div><div class="cld normal">D3</div></div>
+          <div class="cli" id="onboarding_fase3_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa1')"></div><div class="clt">Instalar e configurar Pixel Meta</div><div class="clr">Tráfego</div><div class="cld normal">D3–D7</div></div>
+          <div class="cli" id="onboarding_fase3_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa2')"></div><div class="clt">Criar ou otimizar Landing Page</div><div class="clr">Design</div><div class="cld normal">D3–D7</div></div>
+          <div class="cli" id="onboarding_fase3_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa3')"></div><div class="clt">Configurar Google Tag Manager</div><div class="clr">Tráfego</div><div class="cld normal">D3–D7</div></div>
+          <div class="cli" id="onboarding_fase3_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa4')"></div><div class="clt">Otimizar Google Meu Negócio: fotos, categorias, serviços, descrição SEO</div><div class="clr">Operações</div><div class="cld normal">D3–D7</div></div>
+          <div class="cli" id="onboarding_fase3_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa5')"></div><div class="clt">Configurar perguntas frequentes do GMN</div><div class="clr">Operações</div><div class="cld normal">D3–D7</div></div>
+          <div class="cli" id="onboarding_fase3_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa6')"></div><div class="clt">Criar os primeiros criativos (mínimo 3 artes + 3 copys)</div><div class="clr">Design</div><div class="cld normal">D3–D7</div></div>
+          <div class="cli" id="onboarding_fase3_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase3_tarefa7')"></div><div class="clt">Subir campanhas no Meta ADS</div><div class="clr">Tráfego</div><div class="cld normal">D3–D7</div></div>
+          <textarea id="onboarding_fase3_obs" class="rp" placeholder="Observações sobre a Fase 3..." onchange="salvarOnboardingObs('onboarding_fase3_obs')"></textarea>
         </div>
 
         <div class="sl">Fase 4 — Aquisição (Go-Live)</div>
@@ -1882,6 +1887,17 @@ async function salvarTodoOnboarding(){
   const elQuickwinObs=document.getElementById('onboarding_fase2_quickwin_obs');
   if(elQuickwinObs){
     await salvarCampoDossie(clienteId,'onboarding_fase2_quickwin_obs',elQuickwinObs.value||'');
+  }
+  for(let i=0;i<=7;i++){
+    const idFase3=`onboarding_fase3_tarefa${i}`;
+    const elFase3=document.getElementById(idFase3);
+    if(elFase3){
+      await salvarCampoDossie(clienteId,idFase3,elFase3.classList.contains('done')?'1':'0');
+    }
+  }
+  const elFase3Obs=document.getElementById('onboarding_fase3_obs');
+  if(elFase3Obs){
+    await salvarCampoDossie(clienteId,'onboarding_fase3_obs',elFase3Obs.value||'');
   }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
