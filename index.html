@@ -561,12 +561,14 @@ tr[data-status="Pausado"]{opacity:0.7}
 
         <div class="sl">Fase 1 — Diagnóstico e Setup</div>
         <div class="card">
-          <div class="cli" id="onboarding_fase1_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa0')"></div><div class="clt">Criar grupo no WhatsApp (cliente + equipe)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="onboarding_fase1_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa1')"></div><div class="clt">Enviar contrato ao cliente</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="onboarding_fase1_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa2')"></div><div class="clt">Contrato assinado</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="onboarding_fase1_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa3')"></div><div class="clt">Confirmação de pagamento recebido</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="onboarding_fase1_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa4')"></div><div class="clt">Envio do link do formulário de onboarding ao cliente (ao final da call)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="onboarding_fase1_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa5')"></div><div class="clt">Passagem de bastão para o onboarding com briefing completo</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa0')"></div><div class="clt">Reunião estratégica com o cliente (Diagnóstico do negócio)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa1')"></div><div class="clt">Apresentação da proposta (Pacote 01 ou 02)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa2')"></div><div class="clt">Criar grupo no WhatsApp (cliente + equipe)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa3')"></div><div class="clt">Enviar contrato ao cliente</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa4')"></div><div class="clt">Contrato assinado</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa5')"></div><div class="clt">Confirmação de pagamento recebido</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa6')"></div><div class="clt">Envio do link do formulário de onboarding ao cliente (ao final da call)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa7')"></div><div class="clt">Passagem de bastão para o onboarding com briefing completo</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="ob-1"><div class="clb" onclick="toggleOnboarding(this,'ob-1')"></div><div class="clt">Kickoff call agendada</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="ob-2"><div class="clb" onclick="toggleOnboarding(this,'ob-2')"></div><div class="clt">Diagnóstico estratégico (8 blocos) concluído</div><div class="clr">Estratégia</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="ob-3"><div class="clb" onclick="toggleOnboarding(this,'ob-3')"></div><div class="clt">Acesso a sistemas do cliente obtido</div><div class="clr">Operações</div><div class="cld normal">Semana 1</div></div>
@@ -1834,7 +1836,7 @@ async function salvarTodoOnboarding(){
   if(!clienteId){toast('Selecione um cliente','red');return;}
 
   // Salvar todos os checkboxes
-  for(let i=0;i<=5;i++){
+  for(let i=0;i<=7;i++){
     const idExtra=`onboarding_fase1_tarefa${i}`;
     const elExtra=document.getElementById(idExtra);
     if(elExtra){
