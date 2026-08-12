@@ -640,6 +640,17 @@ tr[data-status="Pausado"]{opacity:0.7}
           <textarea id="onboarding_fase4_ativacao_obs" class="rp" placeholder="Observações sobre a Ativação..." onchange="salvarOnboardingObs('onboarding_fase4_ativacao_obs')"></textarea>
         </div>
 
+        <div class="sl">Fase 5 — Primeiro Resultado (Semana 2–4)</div>
+        <div style="font-size:11px;color:var(--text2);margin:-4px 0 8px">Responsável: Rafael + Ton</div>
+        <div class="card">
+          <div class="cli" id="onboarding_fase5_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa0')"></div><div class="clt">Monitoramento diário das campanhas na primeira semana</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa1')"></div><div class="clt">Ajustes de público e criativos conforme dados iniciais</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa2')"></div><div class="clt">Acompanhar chegada dos primeiros leads no WhatsApp</div><div class="clr">Operações</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa3')"></div><div class="clt">Validar funil de atendimento com o cliente</div><div class="clr">Comercial</div><div class="cld normal">Semana 3</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa4')"></div><div class="clt">Relatório da primeira quinzena com resultados iniciais</div><div class="clr">Gestão</div><div class="cld normal">Semana 4</div></div>
+          <textarea id="onboarding_fase5_obs" class="rp" placeholder="Observações sobre a Fase 5..." onchange="salvarOnboardingObs('onboarding_fase5_obs')"></textarea>
+        </div>
+
         <div style="display:flex;gap:8px;margin-top:16px">
           <button class="btn bbl bsm" onclick="salvarTodoOnboarding()">💾 Salvar Onboarding</button>
         </div>
@@ -1923,6 +1934,17 @@ async function salvarTodoOnboarding(){
   const elAtivacaoObs=document.getElementById('onboarding_fase4_ativacao_obs');
   if(elAtivacaoObs){
     await salvarCampoDossie(clienteId,'onboarding_fase4_ativacao_obs',elAtivacaoObs.value||'');
+  }
+  for(let i=0;i<=4;i++){
+    const idFase5=`onboarding_fase5_tarefa${i}`;
+    const elFase5=document.getElementById(idFase5);
+    if(elFase5){
+      await salvarCampoDossie(clienteId,idFase5,elFase5.classList.contains('done')?'1':'0');
+    }
+  }
+  const elFase5Obs=document.getElementById('onboarding_fase5_obs');
+  if(elFase5Obs){
+    await salvarCampoDossie(clienteId,'onboarding_fase5_obs',elFase5Obs.value||'');
   }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
