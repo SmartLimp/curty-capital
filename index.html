@@ -559,7 +559,7 @@ tr[data-status="Pausado"]{opacity:0.7}
       <div class="tc" id="tc-onboarding">
         <div style="font-size:11px;color:var(--text2);margin-bottom:16px">Acompanhe o progresso de onboarding do cliente</div>
 
-        <div class="sl">Fase 1 — Diagnóstico e Setup</div>
+        <div class="sl">Fase 1 — Fechamento (D0)</div>
         <div class="card">
           <div class="cli" id="onboarding_fase1_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa0')"></div><div class="clt">Reunião estratégica com o cliente (Diagnóstico do negócio)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa1')"></div><div class="clt">Apresentação da proposta (Pacote 01 ou 02)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
@@ -643,12 +643,22 @@ tr[data-status="Pausado"]{opacity:0.7}
         <div class="sl">Fase 5 — Primeiro Resultado (Semana 2–4)</div>
         <div style="font-size:11px;color:var(--text2);margin:-4px 0 8px">Responsável: Rafael + Ton</div>
         <div class="card">
-          <div class="cli" id="onboarding_fase5_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa0')"></div><div class="clt">Monitoramento diário das campanhas na primeira semana</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
-          <div class="cli" id="onboarding_fase5_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa1')"></div><div class="clt">Ajustes de público e criativos conforme dados iniciais</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
-          <div class="cli" id="onboarding_fase5_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa2')"></div><div class="clt">Acompanhar chegada dos primeiros leads no WhatsApp</div><div class="clr">Operações</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa0')"></div><div class="clt">Monitorar diariamente as campanhas na primeira semana</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa1')"></div><div class="clt">Ajustar público e criativos conforme dados iniciais</div><div class="clr">Tráfego</div><div class="cld normal">Semana 2</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa2')"></div><div class="clt">Rafael acompanha chegada dos primeiros leads no WhatsApp</div><div class="clr">Operações</div><div class="cld normal">Semana 2</div></div>
           <div class="cli" id="onboarding_fase5_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa3')"></div><div class="clt">Validar funil de atendimento com o cliente</div><div class="clr">Comercial</div><div class="cld normal">Semana 3</div></div>
-          <div class="cli" id="onboarding_fase5_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa4')"></div><div class="clt">Relatório da primeira quinzena com resultados iniciais</div><div class="clr">Gestão</div><div class="cld normal">Semana 4</div></div>
+          <div class="cli" id="onboarding_fase5_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase5_tarefa4')"></div><div class="clt">Enviar relatório da primeira quinzena com resultados iniciais</div><div class="clr">Gestão</div><div class="cld normal">Semana 4</div></div>
           <textarea id="onboarding_fase5_obs" class="rp" placeholder="Observações sobre a Fase 5..." onchange="salvarOnboardingObs('onboarding_fase5_obs')"></textarea>
+        </div>
+
+        <div class="sl">Fase 6 — Relatório de 30 Dias</div>
+        <div style="font-size:11px;color:var(--text2);margin:-4px 0 8px">Responsável: Rafael</div>
+        <div class="card">
+          <div class="cli" id="onboarding_fase6_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase6_tarefa0')"></div><div class="clt">Consolidar resultados: leads gerados, orçamentos realizados, CPL, taxa de conversão</div><div class="clr">Analytics</div><div class="cld normal">Dia 30</div></div>
+          <div class="cli" id="onboarding_fase6_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase6_tarefa1')"></div><div class="clt">Reunião de resultado com o cliente</div><div class="clr">Comercial</div><div class="cld normal">Dia 30</div></div>
+          <div class="cli" id="onboarding_fase6_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase6_tarefa2')"></div><div class="clt">Apresentar oportunidades de melhoria</div><div class="clr">Estratégia</div><div class="cld normal">Dia 30</div></div>
+          <div class="cli" id="onboarding_fase6_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase6_tarefa3')"></div><div class="clt">Oferecer upsell para Pacote 02 (se cliente está no Pacote 01)</div><div class="clr">Comercial</div><div class="cld normal">Dia 30</div></div>
+          <textarea id="onboarding_fase6_obs" class="rp" placeholder="Observações sobre a Fase 6..." onchange="salvarOnboardingObs('onboarding_fase6_obs')"></textarea>
         </div>
 
         <div style="display:flex;gap:8px;margin-top:16px">
@@ -1938,6 +1948,17 @@ async function salvarTodoOnboarding(){
   const elFase5Obs=document.getElementById('onboarding_fase5_obs');
   if(elFase5Obs){
     await salvarCampoDossie(clienteId,'onboarding_fase5_obs',elFase5Obs.value||'');
+  }
+  for(let i=0;i<=3;i++){
+    const idFase6=`onboarding_fase6_tarefa${i}`;
+    const elFase6=document.getElementById(idFase6);
+    if(elFase6){
+      await salvarCampoDossie(clienteId,idFase6,elFase6.classList.contains('done')?'1':'0');
+    }
+  }
+  const elFase6Obs=document.getElementById('onboarding_fase6_obs');
+  if(elFase6Obs){
+    await salvarCampoDossie(clienteId,'onboarding_fase6_obs',elFase6Obs.value||'');
   }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
