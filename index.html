@@ -182,7 +182,7 @@ tr[data-status="Pausado"]{opacity:0.7}
 .av-edit{font-size:11px;color:var(--text2);background:transparent;border:none;outline:none;width:130px;cursor:pointer;font-family:'Inter',sans-serif;text-align:right;border-radius:4px;padding:1px 4px;transition:background .2s}
 .av-edit:hover,.av-edit:focus{background:var(--bg3)}
 .ast{font-size:10px;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.ast-ok{background:var(--grd);color:var(--green)}.ast-pend{background:var(--gd);color:var(--gold)}.ast-miss{background:var(--rdd);color:var(--red)}
+.ast-ok{background:var(--grd);color:var(--green)}.ast-pend{background:var(--gd);color:var(--gold)}.ast-miss{background:var(--rdd);color:var(--red)}.ast-blue{background:var(--bd);color:var(--blue)}
 .db{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
 .db:hover{border-color:var(--border2)}.db.open2{border-color:var(--blue)}
 .dbh{display:flex;align-items:center;justify-content:space-between}
@@ -502,6 +502,7 @@ tr[data-status="Pausado"]{opacity:0.7}
       <div class="tc" id="tc-dados">
         <div class="sl">Empresa</div>
         <div class="g3">
+          <div class="field"><div class="fl">Nome fantasia</div><div class="fv"><input class="fv-edit" id="d-nomefantasia" value="Smart Limp" onchange="saveAll()"></div></div>
           <div class="field"><div class="fl">Razão social</div><div class="fv"><input class="fv-edit" id="d-razao" value="Smart Limp Ltda." onchange="saveAll()"></div></div>
           <div class="field"><div class="fl">CNPJ</div><div class="fv"><input class="fv-edit" id="d-cnpj" value="" placeholder="00.000.000/0001-00" onchange="saveAll()"></div></div>
           <div class="field"><div class="fl">Segmento</div><div class="fv"><input class="fv-edit" id="d-seg" value="Higienização de estofados" onchange="saveAll()"></div></div>
@@ -568,7 +569,7 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="cli" id="onboarding_fase1_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa4')"></div><div class="clt">Contrato assinado</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa5')"></div><div class="clt">Confirmação de pagamento recebido</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa8"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa8')"></div><div class="clt">Agendar kickoff (data e hora definidas com o cliente)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="onboarding_fase1_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa6')"></div><div class="clt">Envio do link do formulário de onboarding ao cliente (ao final da call)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
+          <div class="cli" id="onboarding_fase1_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa6')"></div><div class="clt">Envio do link do formulário de onboarding ao cliente (ao final da call)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div><button class="btn bgh bsm" onclick="copiarLinkFormulario()">🔗 Copiar link</button><span class="ast ast-pend" id="badge-formulario-status" title="">Pendente</span></div>
           <div class="cli" id="onboarding_fase1_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa7')"></div><div class="clt">Passagem de bastão para o onboarding com briefing completo</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <textarea id="ob-obs-1" class="rp" placeholder="Observações sobre Fase 1..." onchange="salvarOnboardingObs('ob-obs-1')"></textarea>
         </div>
@@ -1543,6 +1544,7 @@ async function abrirDossie(id){
     });
   }
   atualizarStatusAcessos();
+  carregarStatusFormulario(clienteAtualId);
 
   document.getElementById('view-lista').style.display='none';
   document.getElementById('view-dossie').style.display='block';
@@ -1603,6 +1605,7 @@ async function abrirDossieFromTable(row,evt){
     });
   }
   atualizarStatusAcessos();
+  carregarStatusFormulario(clienteAtualId);
 
   document.getElementById('view-lista').style.display='none';
   document.getElementById('view-dossie').style.display='block';
@@ -1639,7 +1642,7 @@ async function saveAll(){
   const clienteId=document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id')||'smartlimp';
 
   // Campos importantes do dossiê que devem ser salvos no Supabase
-  const camposImportantes=['d-razao','d-cnpj','d-seg','d-cidade','d-ticket','d-pub','d-resp','d-wpp','d-email','d-inicio','d-modelo','d-area','d-base','d-serv','d-nivel','sl-valor','prox-reu','prox-pgto','gestor','ac-bm','ac-ads','ac-pixel','ac-fbpage','ac-ig','ac-wpp','ac-ga4','ac-gtm','ac-gads','ac-gmn','ac-gsc','ac-dom','ac-host','ac-ttk','ac-crm'];
+  const camposImportantes=['d-nomefantasia','d-razao','d-cnpj','d-seg','d-cidade','d-ticket','d-pub','d-resp','d-wpp','d-email','d-inicio','d-modelo','d-area','d-base','d-serv','d-nivel','sl-valor','prox-reu','prox-pgto','gestor','ac-bm','ac-ads','ac-pixel','ac-fbpage','ac-ig','ac-wpp','ac-ga4','ac-gtm','ac-gads','ac-gmn','ac-gsc','ac-dom','ac-host','ac-ttk','ac-crm'];
 
   document.querySelectorAll('[id]').forEach(el=>{
     let valor='';
@@ -1981,6 +1984,99 @@ async function salvarTodoOnboarding(){
   }
 
   toast('Onboarding salvo no Supabase!');
+}
+
+// Formulário de onboarding (form.html) — link, status e sincronização
+const FORM_BASE_URL='https://curty-capital-app.vercel.app/form';
+
+function copiarLinkFormulario(){
+  const clienteId=clienteAtualId||document.querySelector('#clients-tbody tr[data-cliente-id]')?.getAttribute('data-cliente-id')||'smartlimp';
+  const url=`${FORM_BASE_URL}?cliente=${clienteId}`;
+  navigator.clipboard.writeText(url).then(()=>toast('Link copiado!')).catch(()=>toast('Não foi possível copiar','red'));
+}
+
+async function carregarStatusFormulario(clienteId){
+  const badge=document.getElementById('badge-formulario-status');
+  if(!badge)return;
+  try{
+    if(!supabaseClient)await initSupabase();
+    const{data,error}=await supabaseClient.from('formularios').select('status,preenchido_em').eq('slug',clienteId).maybeSingle();
+    if(error||!data){
+      badge.className='ast ast-pend';badge.textContent='Pendente';badge.title='';
+      return;
+    }
+    if(data.status==='concluido'){
+      const d=data.preenchido_em?new Date(data.preenchido_em):null;
+      badge.className='ast ast-ok';
+      badge.textContent='Preenchido ✓'+(d?' '+d.toLocaleDateString('pt-BR'):'');
+      badge.title=d?('Preenchido em '+d.toLocaleString('pt-BR')):'';
+    }else if(data.status==='em_andamento'){
+      badge.className='ast ast-blue';badge.textContent='Em andamento';badge.title='';
+    }else{
+      badge.className='ast ast-pend';badge.textContent='Pendente';badge.title='';
+    }
+  }catch(e){
+    console.warn('Não foi possível carregar status do formulário:',e);
+  }
+}
+
+async function atualizarIconesFormularioLista(){
+  try{
+    if(!supabaseClient)await initSupabase();
+    const linhas=[...document.querySelectorAll('#clients-tbody tr[data-cliente-id]')];
+    const ids=linhas.map(tr=>tr.getAttribute('data-cliente-id'));
+    if(!ids.length)return;
+    const{data,error}=await supabaseClient.from('formularios').select('slug,status').in('slug',ids);
+    if(error)return;
+    const statusPorSlug={};
+    (data||[]).forEach(f=>{statusPorSlug[f.slug]=f.status;});
+    linhas.forEach(tr=>{
+      const slug=tr.getAttribute('data-cliente-id');
+      const nomeCell=tr.querySelector('.ct-nome');
+      if(!nomeCell)return;
+      let icone=nomeCell.querySelector('.ct-form-icon');
+      if(!icone){
+        icone=document.createElement('span');
+        icone.className='ct-form-icon';
+        icone.style.fontSize='9px';
+        nomeCell.appendChild(icone);
+      }
+      const status=statusPorSlug[slug];
+      if(status==='concluido'){icone.textContent='🟢';icone.title='Formulário de onboarding preenchido';}
+      else if(status==='em_andamento'){icone.textContent='🔵';icone.title='Formulário de onboarding em andamento';}
+      else{icone.textContent='⚪';icone.title='Formulário de onboarding pendente';}
+    });
+  }catch(e){
+    console.warn('Não foi possível atualizar ícones de formulário:',e);
+  }
+}
+
+async function verificarFormularioMorningView(){
+  try{
+    if(!supabaseClient)await initSupabase();
+    const ids=[...document.querySelectorAll('#clients-tbody tr[data-cliente-id]')].map(tr=>tr.getAttribute('data-cliente-id'));
+    if(!ids.length)return;
+    const{data,error}=await supabaseClient.from('formularios').select('slug,status').in('slug',ids).eq('status','concluido');
+    if(error||!data)return;
+    const container=document.getElementById('alertas-container');
+    if(!container)return;
+    data.forEach(f=>{
+      const alertId='al-form-'+f.slug;
+      if(document.getElementById(alertId))return;
+      const tr=document.querySelector(`#clients-tbody tr[data-cliente-id="${f.slug}"]`);
+      const nome=tr?.querySelector('input[data-field="nome"]')?.value||f.slug;
+      const div=document.createElement('div');
+      div.className='alert al-b';
+      div.id=alertId;
+      div.innerHTML=`<div class="adot"></div><div class="atxt">${nome} preencheu o formulário de onboarding</div><span class="aclose" onclick="removeAlerta('${alertId}')">×</span>`;
+      container.appendChild(div);
+      alertCount++;
+      const badgeAlerts=document.getElementById('badge-alerts');
+      if(badgeAlerts)badgeAlerts.textContent=alertCount;
+    });
+  }catch(e){
+    console.warn('Não foi possível verificar formulários para o Morning View:',e);
+  }
 }
 
 function toggleDiag(block){const isOpen=block.classList.contains('open2');document.querySelectorAll('.db').forEach(b=>b.classList.remove('open2'));if(!isOpen)block.classList.add('open2');}
@@ -2455,6 +2551,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderPipeline();
   carregarTrafegoDaMes();
   criarTabelaDossie();
+  atualizarIconesFormularioLista();
+  verificarFormularioMorningView();
 });
 </script>
 

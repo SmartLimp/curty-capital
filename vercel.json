@@ -4,9 +4,21 @@
     {
       "src": "index.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "form.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
+    {
+      "src": "/form",
+      "dest": "/form.html"
+    },
+    {
+      "src": "/form.html",
+      "dest": "/form.html"
+    },
     {
       "src": "/(.*)",
       "dest": "/index.html"

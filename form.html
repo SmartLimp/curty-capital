@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulário de Onboarding — Curty Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0D10;--bg2:#111318;--bg3:#1A1D23;--border:#1E2228;--border2:#2A2F3A;--text:#FFF;--text2:#8B919E;--text3:#444851;--blue:#2F6BFF;--bd:#0D1F3C;--bb:#185FA5;--gold:#C8A24A;--gd:#1A140A;--gb:#854F0B;--green:#4ADE80;--red:#F87171;--r:8px;--rl:14px}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;margin:0;min-height:100vh}
+.lc{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:var(--text)}
+.ls{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:300;color:var(--text2)}
+.lk{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:300;color:var(--gold);letter-spacing:2px}
+.logo-wrap{text-align:center;margin-bottom:6px}
+.logo-sub{text-align:center;font-size:11px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:28px}
+
+#progress-wrap{position:sticky;top:0;background:var(--bg);padding:16px 20px 14px;z-index:10;display:none;border-bottom:.5px solid var(--border)}
+.progress-inner{max-width:560px;margin:0 auto}
+.progress-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));transition:width .35s ease;width:0%}
+.progress-label{font-size:10px;color:var(--text2);text-align:right;margin-top:7px;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+
+.page-wrap{max-width:560px;margin:0 auto;padding:40px 20px 60px}
+.card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rl);padding:32px 28px}
+
+.etapa{display:none}
+.etapa.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.step-title{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:500;margin-bottom:6px}
+.step-sub{font-size:12px;color:var(--text2);margin-bottom:26px;line-height:1.6}
+
+.fg{margin-bottom:18px}
+.lbl{font-size:11px;color:var(--text2);margin-bottom:7px;display:block;font-weight:500}
+.lbl .req{color:var(--red)}
+.inp{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 14px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;transition:border-color .15s}
+.inp:focus{outline:none;border-color:var(--blue)}
+.inp.inp-error{border-color:var(--red)}
+textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
+.hint{font-size:10px;color:var(--text3);margin-top:5px}
+
+.toggle-group{display:flex;gap:8px}
+.toggle-btn{flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:var(--r);padding:11px 18px;font-size:13px;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.toggle-btn:hover{border-color:var(--border2);color:var(--text)}
+.toggle-btn.active{background:var(--bd);border-color:var(--bb);color:var(--blue);font-weight:500}
+.toggle-dependent{margin-top:10px}
+
+.nav-row{display:flex;gap:10px;margin-top:28px}
+.btn{border:none;border-radius:var(--r);padding:13px 24px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .15s,transform .1s;font-family:'Inter',sans-serif}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--blue);color:#fff;flex:1}
+.btn-primary:hover:not(:disabled){opacity:.9}
+.btn-gold{background:var(--gold);color:#1A1400;flex:1}
+.btn-gold:hover:not(:disabled){opacity:.9}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover:not(:disabled){color:var(--text);border-color:var(--text3)}
+
+.welcome{text-align:center;padding:12px 0}
+.welcome-emoji{font-size:36px;margin-bottom:18px}
+.welcome-text{font-size:15px;line-height:1.7;color:var(--text);margin-bottom:22px}
+.welcome-time{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);background:var(--bg3);border:.5px solid var(--border2);border-radius:20px;padding:7px 14px;margin-bottom:28px}
+
+.center-screen{max-width:480px;margin:0 auto;padding:80px 20px;text-align:center}
+.center-emoji{font-size:44px;margin-bottom:20px}
+.center-title{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:500;margin-bottom:10px}
+.center-text{font-size:13px;color:var(--text2);line-height:1.7}
+
+#loading-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:14px}
+.spinner{width:28px;height:28px;border:2.5px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:12px;color:var(--text2)}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div class="loading-text">Carregando formulário...</div>
+</div>
+
+<div id="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">Etapa 1 de 6</div>
+  </div>
+</div>
+
+<div class="page-wrap" id="form-shell" style="display:none">
+  <div class="card">
+
+    <!-- ETAPA 1 — BOAS-VINDAS -->
+    <div class="etapa" data-etapa="1">
+      <div class="welcome">
+        <div class="logo-wrap"><span class="lc">Curty</span><span class="ls"> | </span><span class="lk">Capital</span></div>
+        <div class="logo-sub">Máquina de Orçamentos</div>
+        <div class="welcome-emoji">👋</div>
+        <div class="welcome-text">Olá! Preencha as informações abaixo para começarmos a construir sua Máquina de Orçamentos.</div>
+        <div class="welcome-time">⏱ Tempo estimado: 5 minutos</div>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="comecar(this)">Começar →</button>
+    </div>
+
+    <!-- ETAPA 2 — DADOS DA EMPRESA -->
+    <div class="etapa" data-etapa="2">
+      <div class="step-title">Dados da empresa</div>
+      <div class="step-sub">Conte um pouco sobre o seu negócio.</div>
+      <div class="fg"><label class="lbl">Nome fantasia <span class="req">*</span></label><input class="inp" data-field="nome_fantasia" data-required="true" placeholder="Ex: Smart Limp"></div>
+      <div class="fg"><label class="lbl">Razão social</label><input class="inp" data-field="razao_social" placeholder="Ex: Smart Limp Ltda."></div>
+      <div class="fg"><label class="lbl">CNPJ</label><input class="inp" data-field="cnpj" placeholder="00.000.000/0001-00"></div>
+      <div class="fg"><label class="lbl">Segmento / nicho <span class="req">*</span></label><input class="inp" data-field="segmento" data-required="true" placeholder="Ex: Higienização de estofados"></div>
+      <div class="fg"><label class="lbl">Cidade e bairro de atuação <span class="req">*</span></label><input class="inp" data-field="cidade_bairro" data-required="true" placeholder="Ex: Rio de Janeiro — Zona Sul e Barra"></div>
+      <div class="fg"><label class="lbl">Site atual (se tiver)</label><input class="inp" data-field="site_atual" placeholder="https://"></div>
+      <div class="fg"><label class="lbl">Horário de funcionamento</label><input class="inp" data-field="horario_funcionamento" placeholder="Ex: Seg a Sex, 9h às 18h"></div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="voltar(2)">← Voltar</button>
+        <button class="btn btn-primary" onclick="avancar(2,this)">Avançar →</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 3 — CONTATO E EQUIPE -->
+    <div class="etapa" data-etapa="3">
+      <div class="step-title">Contato e equipe</div>
+      <div class="step-sub">Quem vamos falar no dia a dia.</div>
+      <div class="fg"><label class="lbl">Nome do responsável <span class="req">*</span></label><input class="inp" data-field="responsavel_nome" data-required="true" placeholder="Seu nome"></div>
+      <div class="fg"><label class="lbl">WhatsApp direto <span class="req">*</span></label><input class="inp" data-field="whatsapp" data-required="true" placeholder="(21) 99999-9999"></div>
+      <div class="fg"><label class="lbl">E-mail</label><input class="inp" type="email" data-field="email" placeholder="voce@empresa.com.br"></div>
+      <div class="fg"><label class="lbl">Quantos funcionários tem?</label><input class="inp" data-field="num_funcionarios" placeholder="Ex: 5"></div>
+      <div class="fg"><label class="lbl">Quem responde o WhatsApp hoje?</label><input class="inp" data-field="quem_responde_whatsapp" placeholder="Ex: eu mesmo, uma atendente..."></div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="voltar(3)">← Voltar</button>
+        <button class="btn btn-primary" onclick="avancar(3,this)">Avançar →</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 4 — NEGÓCIO E PÚBLICO -->
+    <div class="etapa" data-etapa="4">
+      <div class="step-title">Negócio e público</div>
+      <div class="step-sub">Isso define como vamos te trazer clientes.</div>
+      <div class="fg"><label class="lbl">Principais serviços oferecidos <span class="req">*</span></label><textarea class="inp" data-field="servicos" data-required="true" placeholder="Liste os principais serviços"></textarea></div>
+      <div class="fg"><label class="lbl">Ticket médio (R$) <span class="req">*</span></label><input class="inp" data-field="ticket_medio" data-required="true" placeholder="Ex: 300"></div>
+      <div class="fg"><label class="lbl">Público-alvo: idade, gênero, região <span class="req">*</span></label><textarea class="inp" data-field="publico_alvo" data-required="true" placeholder="Ex: Mulheres 30+, região Zona Sul e Barra"></textarea></div>
+      <div class="fg"><label class="lbl">Diferenciais da empresa</label><textarea class="inp" data-field="diferenciais" placeholder="O que te destaca da concorrência?"></textarea></div>
+      <div class="fg"><label class="lbl">Maior dificuldade para conseguir clientes hoje</label><textarea class="inp" data-field="maior_dificuldade" placeholder="Conte o que mais trava hoje"></textarea></div>
+      <div class="fg"><label class="lbl">Quantos clientes novos quer por mês <span class="req">*</span></label><input class="inp" data-field="meta_clientes_mes" data-required="true" placeholder="Ex: 30"></div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="voltar(4)">← Voltar</button>
+        <button class="btn btn-primary" onclick="avancar(4,this)">Avançar →</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 5 — PRESENÇA DIGITAL -->
+    <div class="etapa" data-etapa="5">
+      <div class="step-title">Presença digital</div>
+      <div class="step-sub">Onde seus clientes já te encontram hoje.</div>
+      <div class="fg"><label class="lbl">Página do Facebook (link)</label><input class="inp" data-field="fb_link" placeholder="https://facebook.com/..."></div>
+      <div class="fg"><label class="lbl">Instagram (link)</label><input class="inp" data-field="ig_link" placeholder="https://instagram.com/..."></div>
+      <div class="fg"><label class="lbl">Google Meu Negócio (link)</label><input class="inp" data-field="gmn_link" placeholder="https://g.co/kgs/..."></div>
+      <div class="fg"><label class="lbl">TikTok (link)</label><input class="inp" data-field="tiktok_link" placeholder="https://tiktok.com/@..."></div>
+
+      <div class="fg">
+        <label class="lbl">Já rodou anúncios antes?</label>
+        <div class="toggle-group" data-toggle="ja_rodou_anuncios">
+          <button type="button" class="toggle-btn" data-value="sim" onclick="setToggle(this)">Sim</button>
+          <button type="button" class="toggle-btn" data-value="nao" onclick="setToggle(this)">Não</button>
+        </div>
+        <div class="toggle-dependent" data-depends-on="ja_rodou_anuncios" data-depends-value="sim" style="display:none">
+          <textarea class="inp" data-field="anuncios_detalhe" placeholder="Quanto investia e qual resultado?"></textarea>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Tem base de clientes antigos?</label>
+        <div class="toggle-group" data-toggle="tem_base_clientes">
+          <button type="button" class="toggle-btn" data-value="sim" onclick="setToggle(this)">Sim</button>
+          <button type="button" class="toggle-btn" data-value="nao" onclick="setToggle(this)">Não</button>
+        </div>
+        <div class="toggle-dependent" data-depends-on="tem_base_clientes" data-depends-value="sim" style="display:none">
+          <input class="inp" data-field="base_clientes_qtd" placeholder="Quantos aproximadamente?">
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Tem lista de contatos no celular?</label>
+        <div class="toggle-group" data-toggle="tem_lista_contatos">
+          <button type="button" class="toggle-btn" data-value="sim" onclick="setToggle(this)">Sim</button>
+          <button type="button" class="toggle-btn" data-value="nao" onclick="setToggle(this)">Não</button>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="voltar(5)">← Voltar</button>
+        <button class="btn btn-primary" onclick="avancar(5,this)">Avançar →</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 6 — MATERIAIS E METAS -->
+    <div class="etapa" data-etapa="6">
+      <div class="step-title">Materiais e metas</div>
+      <div class="step-sub">Últimos detalhes para fecharmos o planejamento.</div>
+      <div class="fg"><label class="lbl">Cores da marca</label><input class="inp" data-field="cores_marca" placeholder="Ex: azul e dourado"></div>
+      <div class="fg"><label class="lbl">Referências visuais que gosta</label><textarea class="inp" data-field="referencias_visuais" placeholder="Links ou descrição"></textarea></div>
+      <div class="fg"><label class="lbl">Investimento disponível para anúncios/mês (R$) <span class="req">*</span></label><input class="inp" data-field="investimento_mensal" data-required="true" placeholder="Ex: 1000"></div>
+      <div class="fg"><label class="lbl">Meta de faturamento em 90 dias (R$)</label><input class="inp" data-field="meta_faturamento_90d" placeholder="Ex: 15000"></div>
+      <div class="fg"><label class="lbl">Observações adicionais</label><textarea class="inp" data-field="observacoes" placeholder="Algo mais que devemos saber?"></textarea></div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" onclick="voltar(6)">← Voltar</button>
+        <button class="btn btn-gold" onclick="finalizar(this)">Enviar formulário</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="obrigado-screen" class="center-screen" style="display:none">
+  <div class="logo-wrap"><span class="lc">Curty</span><span class="ls"> | </span><span class="lk">Capital</span></div>
+  <div class="center-emoji" style="margin-top:24px">✅</div>
+  <div class="center-title">Recebemos suas informações!</div>
+  <div class="center-text">Em breve entraremos em contato.</div>
+</div>
+
+<div id="erro-screen" class="center-screen" style="display:none">
+  <div class="center-emoji">⚠️</div>
+  <div class="center-title">Link inválido</div>
+  <div class="center-text" id="erro-texto">Peça o link correto para sua agência.</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://prpykajfhfluqdkphkmw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_D2uQGRlcuTh4wLbR2eoj0w_MEkVoY8M';
+
+let supabaseClient = null;
+let formularioAtual = null;
+let respostas = {};
+let clienteSlug = null;
+
+async function initSupabase(){
+  const { createClient } = window.supabase;
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+
+function mostrarErro(msg){
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('form-shell').style.display='none';
+  document.getElementById('progress-wrap').style.display='none';
+  if(msg) document.getElementById('erro-texto').textContent=msg;
+  document.getElementById('erro-screen').style.display='block';
+}
+
+function mostrarObrigado(){
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('form-shell').style.display='none';
+  document.getElementById('progress-wrap').style.display='none';
+  document.getElementById('obrigado-screen').style.display='block';
+}
+
+async function buscarOuCriarFormulario(slug){
+  const { data, error } = await supabaseClient.from('formularios').select('*').eq('slug', slug).maybeSingle();
+  if(error) throw error;
+  if(data) return data;
+  const { data: novo, error: err2 } = await supabaseClient
+    .from('formularios')
+    .insert([{ cliente_id: slug, slug: slug, status: 'pendente', etapa_atual: 1 }])
+    .select()
+    .single();
+  if(err2) throw err2;
+  return novo;
+}
+
+async function carregarRespostas(formularioId){
+  const { data, error } = await supabaseClient.from('formulario_respostas').select('campo,valor').eq('formulario_id', formularioId);
+  if(error){ console.warn('Erro ao carregar respostas:', error); return; }
+  (data||[]).forEach(r=>{ respostas[r.campo]=r.valor; });
+}
+
+function preencherEtapa(n){
+  document.querySelectorAll(`.etapa[data-etapa="${n}"] [data-field]`).forEach(el=>{
+    const campo=el.getAttribute('data-field');
+    if(respostas[campo]===undefined || respostas[campo]===null) return;
+    el.value=respostas[campo];
+  });
+  document.querySelectorAll(`.etapa[data-etapa="${n}"] [data-toggle]`).forEach(group=>{
+    const campo=group.getAttribute('data-toggle');
+    if(respostas[campo]===undefined) return;
+    group.querySelectorAll('.toggle-btn').forEach(b=>{
+      b.classList.toggle('active', b.getAttribute('data-value')===respostas[campo]);
+    });
+    atualizarDependentes(campo);
+  });
+}
+
+function setToggle(btn){
+  const group=btn.parentElement;
+  const campo=group.getAttribute('data-toggle');
+  group.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  respostas[campo]=btn.getAttribute('data-value');
+  atualizarDependentes(campo);
+}
+
+function atualizarDependentes(campo){
+  document.querySelectorAll(`.toggle-dependent[data-depends-on="${campo}"]`).forEach(dep=>{
+    const mostrar = respostas[campo]===dep.getAttribute('data-depends-value');
+    dep.style.display = mostrar ? '' : 'none';
+  });
+}
+
+function goToEtapa(n){
+  document.querySelectorAll('.etapa').forEach(el=>el.classList.remove('active'));
+  const el=document.querySelector(`.etapa[data-etapa="${n}"]`);
+  if(el) el.classList.add('active');
+  const mostrarProgresso = n>=2 && n<=6;
+  document.getElementById('progress-wrap').style.display = mostrarProgresso ? 'block' : 'none';
+  if(mostrarProgresso){
+    document.getElementById('progress-fill').style.width = (n/6*100)+'%';
+    document.getElementById('progress-label').textContent = `Etapa ${n} de 6`;
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function validarEtapa(n){
+  let ok=true;
+  let primeiroInvalido=null;
+  document.querySelectorAll(`.etapa[data-etapa="${n}"] [data-required="true"]`).forEach(el=>{
+    const valor=(el.value||'').trim();
+    const valido=valor.length>0;
+    el.classList.toggle('inp-error', !valido);
+    if(!valido){ ok=false; if(!primeiroInvalido) primeiroInvalido=el; }
+  });
+  if(!ok && primeiroInvalido) primeiroInvalido.scrollIntoView({behavior:'smooth',block:'center'});
+  return ok;
+}
+
+function coletarCamposEtapa(n){
+  const campos=[];
+  document.querySelectorAll(`.etapa[data-etapa="${n}"] [data-field]`).forEach(el=>{
+    const campo=el.getAttribute('data-field');
+    const valor=el.value||'';
+    respostas[campo]=valor;
+    campos.push({campo,valor});
+  });
+  document.querySelectorAll(`.etapa[data-etapa="${n}"] [data-toggle]`).forEach(group=>{
+    const campo=group.getAttribute('data-toggle');
+    const valor=respostas[campo]||'';
+    campos.push({campo,valor});
+  });
+  return campos;
+}
+
+async function salvarEtapa(n, opts={}){
+  const campos=coletarCamposEtapa(n);
+  if(campos.length){
+    const rows=campos.map(c=>({
+      formulario_id: formularioAtual.id,
+      campo: c.campo,
+      valor: c.valor,
+      updated_at: new Date().toISOString()
+    }));
+    const { error } = await supabaseClient.from('formulario_respostas').upsert(rows, { onConflict: 'formulario_id,campo' });
+    if(error) console.warn('Erro ao salvar respostas:', error);
+  }
+  const novaEtapa = opts.etapaAtual!==undefined ? opts.etapaAtual : Math.min(n+1,6);
+  const update={ etapa_atual: novaEtapa };
+  if(formularioAtual.status==='pendente') update.status='em_andamento';
+  if(opts.status) update.status=opts.status;
+  if(opts.preenchido_em) update.preenchido_em=opts.preenchido_em;
+  const { error: err2 } = await supabaseClient.from('formularios').update(update).eq('id', formularioAtual.id);
+  if(err2) console.warn('Erro ao atualizar progresso do formulário:', err2);
+  Object.assign(formularioAtual, update);
+}
+
+async function sincronizarComDossie(){
+  const mapa={
+    nome_fantasia:['d-nomefantasia'],
+    razao_social:['d-razao'],
+    cnpj:['d-cnpj'],
+    segmento:['d-seg'],
+    cidade_bairro:['d-cidade'],
+    servicos:['d-serv'],
+    ticket_medio:['d-ticket','sl-valor'],
+    publico_alvo:['d-pub'],
+    fb_link:['ac-fbpage'],
+    ig_link:['ac-ig'],
+    gmn_link:['ac-gmn'],
+    tiktok_link:['ac-ttk']
+  };
+  const rows=[];
+  Object.keys(mapa).forEach(campoForm=>{
+    const valor=respostas[campoForm];
+    if(valor===undefined || valor===null || valor.toString().trim()==='') return;
+    mapa[campoForm].forEach(campoDossie=>{
+      rows.push({ cliente_id: clienteSlug, campo: campoDossie, valor: valor, updated_at: new Date().toISOString() });
+    });
+  });
+  if(!rows.length) return;
+  const { error } = await supabaseClient.from('dossie').upsert(rows, { onConflict: 'cliente_id,campo' });
+  if(error) console.warn('Erro ao sincronizar com o dossiê:', error);
+}
+
+async function comecar(btn){
+  btn.disabled=true;
+  const original=btn.textContent;
+  btn.textContent='Carregando...';
+  try{
+    await salvarEtapa(1, { etapaAtual: 2 });
+    goToEtapa(2);
+  }catch(e){
+    console.error(e);
+    alert('Não foi possível continuar. Verifique sua conexão e tente novamente.');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=original;
+  }
+}
+
+async function avancar(n, btn){
+  if(!validarEtapa(n)) return;
+  btn.disabled=true;
+  const original=btn.textContent;
+  btn.textContent='Salvando...';
+  try{
+    await salvarEtapa(n);
+    goToEtapa(n+1);
+  }catch(e){
+    console.error(e);
+    alert('Não foi possível salvar suas respostas. Verifique sua conexão e tente novamente.');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=original;
+  }
+}
+
+function voltar(n){
+  goToEtapa(n-1);
+}
+
+async function finalizar(btn){
+  if(!validarEtapa(6)) return;
+  btn.disabled=true;
+  const original=btn.textContent;
+  btn.textContent='Enviando...';
+  try{
+    await salvarEtapa(6, { etapaAtual: 6, status: 'concluido', preenchido_em: new Date().toISOString() });
+    await sincronizarComDossie();
+    mostrarObrigado();
+  }catch(e){
+    console.error(e);
+    alert('Não foi possível enviar o formulário. Verifique sua conexão e tente novamente.');
+    btn.disabled=false;
+    btn.textContent=original;
+  }
+}
+
+async function init(){
+  const params=new URLSearchParams(window.location.search);
+  clienteSlug=params.get('cliente');
+  if(!clienteSlug){
+    mostrarErro('Este link está incompleto. Peça o link correto para sua agência.');
+    return;
+  }
+  await initSupabase();
+  try{
+    formularioAtual=await buscarOuCriarFormulario(clienteSlug);
+  }catch(e){
+    console.error(e);
+    mostrarErro('Não foi possível carregar o formulário. Tente novamente em instantes.');
+    return;
+  }
+  if(formularioAtual.status==='concluido'){
+    mostrarObrigado();
+    return;
+  }
+  await carregarRespostas(formularioAtual.id);
+  for(let i=2;i<=6;i++) preencherEtapa(i);
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('form-shell').style.display='block';
+  const etapaInicial = formularioAtual.etapa_atual && formularioAtual.etapa_atual>1 ? Math.min(formularioAtual.etapa_atual,6) : 1;
+  goToEtapa(etapaInicial);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
