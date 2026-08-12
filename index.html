@@ -115,7 +115,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .criat-name{font-size:11px;color:var(--text);flex:1}
 .criat-badge{font-size:9px;padding:2px 7px;border-radius:20px}
 .cb-test{background:var(--bd);color:var(--blue)}.cb-win{background:var(--grd);color:var(--green)}.cb-pend{background:var(--gd);color:var(--gold)}
-.rp{background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--r);padding:14px;font-size:11px;color:var(--text2);line-height:1.8;white-space:pre-line;margin-bottom:10px;min-height:80px}
+.rp{background:var(--bg3);border:.5px solid var(--border2);border-radius:var(--r);padding:14px;font-size:11px;color:var(--text2);line-height:1.8;white-space:pre-line;margin-bottom:10px;width:100%;min-height:120px;resize:vertical;box-sizing:border-box}
 
 /* CLIENTS - TABLE */
 .clients-table-wrapper{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:16px}
@@ -569,7 +569,6 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="cli" id="onboarding_fase1_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa5')"></div><div class="clt">Confirmação de pagamento recebido</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa6')"></div><div class="clt">Envio do link do formulário de onboarding ao cliente (ao final da call)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa7')"></div><div class="clt">Passagem de bastão para o onboarding com briefing completo</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="ob-1"><div class="clb" onclick="toggleOnboarding(this,'ob-1')"></div><div class="clt">Kickoff call agendada</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <textarea id="ob-obs-1" class="rp" placeholder="Observações sobre Fase 1..." onchange="salvarOnboardingObs('ob-obs-1')"></textarea>
         </div>
 
