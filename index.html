@@ -570,9 +570,6 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="cli" id="onboarding_fase1_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa6')"></div><div class="clt">Envio do link do formulário de onboarding ao cliente (ao final da call)</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="onboarding_fase1_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase1_tarefa7')"></div><div class="clt">Passagem de bastão para o onboarding com briefing completo</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
           <div class="cli" id="ob-1"><div class="clb" onclick="toggleOnboarding(this,'ob-1')"></div><div class="clt">Kickoff call agendada</div><div class="clr">Comercial</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="ob-2"><div class="clb" onclick="toggleOnboarding(this,'ob-2')"></div><div class="clt">Diagnóstico estratégico (8 blocos) concluído</div><div class="clr">Estratégia</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="ob-3"><div class="clb" onclick="toggleOnboarding(this,'ob-3')"></div><div class="clt">Acesso a sistemas do cliente obtido</div><div class="clr">Operações</div><div class="cld normal">Semana 1</div></div>
-          <div class="cli" id="ob-4"><div class="clb" onclick="toggleOnboarding(this,'ob-4')"></div><div class="clt">Documentação inicial preenchida</div><div class="clr">Documentação</div><div class="cld normal">Semana 1</div></div>
           <textarea id="ob-obs-1" class="rp" placeholder="Observações sobre Fase 1..." onchange="salvarOnboardingObs('ob-obs-1')"></textarea>
         </div>
 
@@ -591,6 +588,12 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="cli" id="onboarding_fase2_tarefa8"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa8')"></div><div class="clt">Apresentar overdelivery: domínio + hospedagem grátis por 1 ano</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
           <div class="cli" id="onboarding_fase2_tarefa9"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa9')"></div><div class="clt">Alinhar política de urgência (urgente: site fora do ar/bug/saldo zerado; não urgente: campanha/criativo novo)</div><div class="clr">Comercial</div><div class="cld normal">D1</div></div>
           <textarea id="onboarding_fase2_kickoff_obs" class="rp" placeholder="Observações sobre o Kickoff..." onchange="salvarOnboardingObs('onboarding_fase2_kickoff_obs')"></textarea>
+
+          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin:16px 0 8px">Execução operacional</div>
+          <div class="cli" id="onboarding_fase2_tarefa10"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa10')"></div><div class="clt">Acesso a sistemas do cliente obtido (Facebook/Instagram, Google Meu Negócio, WhatsApp Business, Site)</div><div class="clr">Operações</div><div class="cld normal">D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa11"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa11')"></div><div class="clt">Diagnóstico estratégico (8 blocos) concluído</div><div class="clr">Estratégia</div><div class="cld normal">D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa12"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa12')"></div><div class="clt">Documentação inicial preenchida</div><div class="clr">Documentação</div><div class="cld normal">D2</div></div>
+          <textarea id="onboarding_fase2_exec_obs" class="rp" placeholder="Observações sobre a Execução operacional..." onchange="salvarOnboardingObs('onboarding_fase2_exec_obs')"></textarea>
         </div>
 
         <div class="sl">Fase 3 — Estruturação Comercial</div>
@@ -1850,7 +1853,7 @@ async function salvarTodoOnboarding(){
       await salvarCampoDossie(clienteId,idExtra,elExtra.classList.contains('done')?'1':'0');
     }
   }
-  for(let i=0;i<=9;i++){
+  for(let i=0;i<=12;i++){
     const idFase2=`onboarding_fase2_tarefa${i}`;
     const elFase2=document.getElementById(idFase2);
     if(elFase2){
@@ -1860,6 +1863,10 @@ async function salvarTodoOnboarding(){
   const elKickoffObs=document.getElementById('onboarding_fase2_kickoff_obs');
   if(elKickoffObs){
     await salvarCampoDossie(clienteId,'onboarding_fase2_kickoff_obs',elKickoffObs.value||'');
+  }
+  const elExecObs=document.getElementById('onboarding_fase2_exec_obs');
+  if(elExecObs){
+    await salvarCampoDossie(clienteId,'onboarding_fase2_exec_obs',elExecObs.value||'');
   }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
