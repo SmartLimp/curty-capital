@@ -593,6 +593,7 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="cli" id="onboarding_fase2_tarefa10"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa10')"></div><div class="clt">Acesso a sistemas do cliente obtido (Facebook/Instagram, Google Meu Negócio, WhatsApp Business, Site)</div><div class="clr">Operações</div><div class="cld normal">D2</div></div>
           <div class="cli" id="onboarding_fase2_tarefa11"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa11')"></div><div class="clt">Diagnóstico estratégico (8 blocos) concluído</div><div class="clr">Estratégia</div><div class="cld normal">D2</div></div>
           <div class="cli" id="onboarding_fase2_tarefa12"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa12')"></div><div class="clt">Documentação inicial preenchida</div><div class="clr">Documentação</div><div class="cld normal">D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa13"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa13')"></div><div class="clt">Ton inicia produção de criativos e Landing Page com base no briefing (sem esperar acessos)</div><div class="clr">Design</div><div class="cld normal">D2</div></div>
           <textarea id="onboarding_fase2_exec_obs" class="rp" placeholder="Observações sobre a Execução operacional..." onchange="salvarOnboardingObs('onboarding_fase2_exec_obs')"></textarea>
         </div>
 
@@ -1853,7 +1854,7 @@ async function salvarTodoOnboarding(){
       await salvarCampoDossie(clienteId,idExtra,elExtra.classList.contains('done')?'1':'0');
     }
   }
-  for(let i=0;i<=12;i++){
+  for(let i=0;i<=13;i++){
     const idFase2=`onboarding_fase2_tarefa${i}`;
     const elFase2=document.getElementById(idFase2);
     if(elFase2){
