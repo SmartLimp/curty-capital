@@ -595,6 +595,16 @@ tr[data-status="Pausado"]{opacity:0.7}
           <div class="cli" id="onboarding_fase2_tarefa12"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa12')"></div><div class="clt">Documentação inicial preenchida</div><div class="clr">Documentação</div><div class="cld normal">D2</div></div>
           <div class="cli" id="onboarding_fase2_tarefa13"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa13')"></div><div class="clt">Ton inicia produção de criativos e Landing Page com base no briefing (sem esperar acessos)</div><div class="clr">Design</div><div class="cld normal">D2</div></div>
           <textarea id="onboarding_fase2_exec_obs" class="rp" placeholder="Observações sobre a Execução operacional..." onchange="salvarOnboardingObs('onboarding_fase2_exec_obs')"></textarea>
+
+          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin:16px 0 8px">⚡ Quick Win (D1–D2)</div>
+          <div class="cli" id="onboarding_fase2_tarefa14"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa14')"></div><div class="clt">Coletar lista de clientes antigos, contatos e orçamentos não fechados</div><div class="clr">Operações</div><div class="cld normal">D1</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa15"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa15')"></div><div class="clt">Ação 01 — Reativação de clientes antigos</div><div class="clr">Tráfego</div><div class="cld normal">D1–D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa16"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa16')"></div><div class="clt">Ação 02 — Oferta relâmpago para lista fria</div><div class="clr">Tráfego</div><div class="cld normal">D1–D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa17"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa17')"></div><div class="clt">Ação 03 — Post de oferta imediata no Instagram/Facebook</div><div class="clr">Tráfego</div><div class="cld normal">D1–D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa18"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa18')"></div><div class="clt">Ação 04 — Funil de diagnóstico (Teste do Sofá)</div><div class="clr">Tráfego</div><div class="cld normal">D1–D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa19"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa19')"></div><div class="clt">Ação 05 — Programa de indicação com prêmio físico</div><div class="clr">Tráfego</div><div class="cld normal">D1–D2</div></div>
+          <div class="cli" id="onboarding_fase2_tarefa20"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase2_tarefa20')"></div><div class="clt">Enviar relatório do Quick Win ao cliente (D2 à tarde)</div><div class="clr">Comercial</div><div class="cld normal">D2</div></div>
+          <textarea id="onboarding_fase2_quickwin_obs" class="rp" placeholder="Observações sobre o Quick Win..." onchange="salvarOnboardingObs('onboarding_fase2_quickwin_obs')"></textarea>
         </div>
 
         <div class="sl">Fase 3 — Estruturação Comercial</div>
@@ -1854,7 +1864,7 @@ async function salvarTodoOnboarding(){
       await salvarCampoDossie(clienteId,idExtra,elExtra.classList.contains('done')?'1':'0');
     }
   }
-  for(let i=0;i<=13;i++){
+  for(let i=0;i<=20;i++){
     const idFase2=`onboarding_fase2_tarefa${i}`;
     const elFase2=document.getElementById(idFase2);
     if(elFase2){
@@ -1868,6 +1878,10 @@ async function salvarTodoOnboarding(){
   const elExecObs=document.getElementById('onboarding_fase2_exec_obs');
   if(elExecObs){
     await salvarCampoDossie(clienteId,'onboarding_fase2_exec_obs',elExecObs.value||'');
+  }
+  const elQuickwinObs=document.getElementById('onboarding_fase2_quickwin_obs');
+  if(elQuickwinObs){
+    await salvarCampoDossie(clienteId,'onboarding_fase2_quickwin_obs',elQuickwinObs.value||'');
   }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
