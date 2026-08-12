@@ -621,13 +621,23 @@ tr[data-status="Pausado"]{opacity:0.7}
           <textarea id="onboarding_fase3_obs" class="rp" placeholder="Observações sobre a Fase 3..." onchange="salvarOnboardingObs('onboarding_fase3_obs')"></textarea>
         </div>
 
-        <div class="sl">Fase 4 — Aquisição (Go-Live)</div>
+        <div class="sl">Fase 4 — Ativação do Agente de IA (D1–D14)</div>
+        <div style="font-size:11px;color:var(--text2);margin:-4px 0 8px">Responsável: Rafael</div>
         <div class="card">
-          <div class="cli" id="ob-14"><div class="clb" onclick="toggleOnboarding(this,'ob-14')"></div><div class="clt">3 criativos validados (Reels + Feed + Stories)</div><div class="clr">Design</div><div class="cld normal">Semana 3</div></div>
-          <div class="cli" id="ob-15"><div class="clb" onclick="toggleOnboarding(this,'ob-15')"></div><div class="clt">Landing page de orçamento ativa</div><div class="clr">Design</div><div class="cld normal">Semana 3</div></div>
-          <div class="cli" id="ob-16"><div class="clb" onclick="toggleOnboarding(this,'ob-16')"></div><div class="clt">Campanha de reativação de base lançada</div><div class="clr">Tráfego</div><div class="cld normal">Semana 4</div></div>
-          <div class="cli" id="ob-17"><div class="clb" onclick="toggleOnboarding(this,'ob-17')"></div><div class="clt">Campanha de aquisição fria — Meta Ads ativa</div><div class="clr">Tráfego</div><div class="cld normal">Semana 4</div></div>
-          <textarea id="ob-obs-4" class="rp" placeholder="Observações sobre Fase 4..." onchange="salvarOnboardingObs('ob-obs-4')"></textarea>
+          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Mapeamento (D1–D7 — paralelo à Fase 3)</div>
+          <div class="cli" id="onboarding_fase4_tarefa0"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa0')"></div><div class="clt">Mapear recepção do lead</div><div class="clr">IA</div><div class="cld normal">D1–D7</div></div>
+          <div class="cli" id="onboarding_fase4_tarefa1"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa1')"></div><div class="clt">Mapear qualificação (perguntas-chave do nicho)</div><div class="clr">IA</div><div class="cld normal">D1–D7</div></div>
+          <div class="cli" id="onboarding_fase4_tarefa2"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa2')"></div><div class="clt">Mapear agendamento automático</div><div class="clr">IA</div><div class="cld normal">D1–D7</div></div>
+          <div class="cli" id="onboarding_fase4_tarefa3"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa3')"></div><div class="clt">Mapear fallback para atendimento humano</div><div class="clr">IA</div><div class="cld normal">D1–D7</div></div>
+          <div class="cli" id="onboarding_fase4_tarefa4"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa4')"></div><div class="clt">Treinar o agente com FAQ do cliente</div><div class="clr">IA</div><div class="cld normal">D1–D7</div></div>
+          <textarea id="onboarding_fase4_mapeamento_obs" class="rp" placeholder="Observações sobre o Mapeamento..." onchange="salvarOnboardingObs('onboarding_fase4_mapeamento_obs')"></textarea>
+
+          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin:16px 0 8px">Ativação (D7–D14 — depende da Fase 3)</div>
+          <div class="cli" id="onboarding_fase4_tarefa5"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa5')"></div><div class="clt">Configurar conta na Umbler Talk</div><div class="clr">IA</div><div class="cld normal">D7–D14</div></div>
+          <div class="cli" id="onboarding_fase4_tarefa6"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa6')"></div><div class="clt">Integrar com formulário de leads do Meta ADS</div><div class="clr">IA</div><div class="cld normal">D7–D14</div></div>
+          <div class="cli" id="onboarding_fase4_tarefa7"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa7')"></div><div class="clt">Testar completamente os fluxos antes de ativar</div><div class="clr">IA</div><div class="cld normal">D7–D14</div></div>
+          <div class="cli" id="onboarding_fase4_tarefa8"><div class="clb" onclick="toggleOnboarding(this,'onboarding_fase4_tarefa8')"></div><div class="clt">Ativar e monitorar nos primeiros 3 dias</div><div class="clr">IA</div><div class="cld normal">D7–D14</div></div>
+          <textarea id="onboarding_fase4_ativacao_obs" class="rp" placeholder="Observações sobre a Ativação..." onchange="salvarOnboardingObs('onboarding_fase4_ativacao_obs')"></textarea>
         </div>
 
         <div style="display:flex;gap:8px;margin-top:16px">
@@ -1898,6 +1908,21 @@ async function salvarTodoOnboarding(){
   const elFase3Obs=document.getElementById('onboarding_fase3_obs');
   if(elFase3Obs){
     await salvarCampoDossie(clienteId,'onboarding_fase3_obs',elFase3Obs.value||'');
+  }
+  for(let i=0;i<=8;i++){
+    const idFase4=`onboarding_fase4_tarefa${i}`;
+    const elFase4=document.getElementById(idFase4);
+    if(elFase4){
+      await salvarCampoDossie(clienteId,idFase4,elFase4.classList.contains('done')?'1':'0');
+    }
+  }
+  const elMapeamentoObs=document.getElementById('onboarding_fase4_mapeamento_obs');
+  if(elMapeamentoObs){
+    await salvarCampoDossie(clienteId,'onboarding_fase4_mapeamento_obs',elMapeamentoObs.value||'');
+  }
+  const elAtivacaoObs=document.getElementById('onboarding_fase4_ativacao_obs');
+  if(elAtivacaoObs){
+    await salvarCampoDossie(clienteId,'onboarding_fase4_ativacao_obs',elAtivacaoObs.value||'');
   }
   for(let i=1;i<=17;i++){
     const id=`ob-${i}`;
