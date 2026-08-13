@@ -420,7 +420,7 @@ tr[data-status="Pausado"]{opacity:0.7}
               <td><input class="ct-edit" type="text" value="Junho 2025" data-field="entrada"></td>
               <td><input class="ct-edit" type="text" value="R$ 300" data-field="mrr"></td>
               <td><span class="ct-tag" data-field="fase">Fase 3</span></td>
-              <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option></select></td>
+              <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option><option>Excluir</option></select></td>
               <td><input class="ct-edit" type="text" value="Hoje" data-field="contato"></td>
               <td style="text-align:center"><div class="ct-hs hs-g" id="hs-table-smartlimp" data-field="health">72</div></td>
             </tr>
@@ -1346,7 +1346,7 @@ async function carregarClientesSupabase() {
       const hs = cliente.health_score?.score ?? 50;
       const hsClass = hs >= 80 ? 'hs-g' : hs >= 50 ? 'hs-a' : 'hs-r';
       const status = cliente.status || 'Ativo';
-      const statusOpts = ['Ativo', 'Pausado', 'Inativo'].map(op => `<option${status === op ? ' selected' : ''}>${op}</option>`).join('');
+      const statusOpts = ['Ativo', 'Pausado', 'Inativo', 'Excluir'].map(op => `<option${status === op ? ' selected' : ''}>${op}</option>`).join('');
       tr.innerHTML = `
         <td><div class="ct-nome"><div class="ct-av">${iniciais}</div><input class="ct-edit" type="text" value="${cliente.nome || ''}" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
         <td><input class="ct-edit" type="text" value="${cliente.tipo || ''}" data-field="tipo" onchange="saveAll()"></td>
@@ -2211,9 +2211,33 @@ function calcularForecast(){
   calcMeta();
 }
 async function mudarStatusCliente(tr){
-  const novoStatus=tr.querySelector('select[data-field="status"]').value;
+  const select=tr.querySelector('select[data-field="status"]');
+  const novoStatus=select.value;
   const nome=tr.querySelector('input[data-field="nome"]').value;
   const clienteId=tr.getAttribute('data-cliente-id');
+  const statusAnterior=tr.getAttribute('data-status')||'Ativo';
+
+  if(novoStatus==='Excluir'){
+    if(!confirm('Excluir o cliente "'+nome+'"? Essa ação não pode ser desfeita.')){
+      select.value=statusAnterior;
+      return;
+    }
+    const ok=await deletarCliente(clienteId);
+    if(!ok){
+      toast('Erro ao excluir cliente','red');
+      select.value=statusAnterior;
+      return;
+    }
+    tr.remove();
+    clientCount--;
+    document.getElementById('count-clientes').textContent=clientCount;
+    document.getElementById('badge-clients').textContent=clientCount;
+    document.getElementById('total-clientes').textContent=clientCount;
+    toast('Cliente "'+nome+'" excluído');
+    calcularForecast();
+    return;
+  }
+
   tr.setAttribute('data-status',novoStatus);
   if(novoStatus==='Inativo'){toast('⚠️ Cliente "'+nome+'" marcado como inativo — MRR atualizado','gold');}
   else if(novoStatus==='Pausado'){toast('⏸️ Cliente "'+nome+'" pausado','gold');}
@@ -2303,7 +2327,7 @@ async function salvarNovoCliente(){
     <td><input class="ct-edit" type="text" value="${cidade}" data-field="entrada" onchange="saveAll()"></td>
     <td><input class="ct-edit" type="text" value="R$ ${parseFloat(valor).toLocaleString('pt-BR')}" data-field="mrr" onchange="saveAll(); calcularForecast()"></td>
     <td><span class="ct-tag" data-field="fase" contenteditable="true" onblur="saveAll()">${fase}</span></td>
-    <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option></select></td>
+    <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer"><option selected>Ativo</option><option>Pausado</option><option>Inativo</option><option>Excluir</option></select></td>
     <td><input class="ct-edit" type="text" value="" data-field="contato" onchange="saveAll()"></td>
     <td style="text-align:center"><div class="ct-hs hs-a" id="hs-table-${newId}" data-field="health">50</div></td>
   `;
