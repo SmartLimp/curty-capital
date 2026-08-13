@@ -106,6 +106,8 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
     <div class="etapa" data-etapa="2">
       <div class="step-title">Dados da empresa</div>
       <div class="step-sub">Conte um pouco sobre o seu negócio.</div>
+      <div class="fg"><label class="lbl">Nome completo <span class="req">*</span></label><input class="inp" data-field="nome_completo" data-required="true" placeholder="Seu nome completo"></div>
+      <div class="fg"><label class="lbl">CPF <span class="req">*</span></label><input class="inp" data-field="cpf" data-required="true" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" oninput="formatarCPF(this)"></div>
       <div class="fg"><label class="lbl">Nome fantasia <span class="req">*</span></label><input class="inp" data-field="nome_fantasia" data-required="true" placeholder="Ex: Smart Limp"></div>
       <div class="fg"><label class="lbl">Razão social</label><input class="inp" data-field="razao_social" placeholder="Ex: Smart Limp Ltda."></div>
       <div class="fg"><label class="lbl">CNPJ</label><input class="inp" data-field="cnpj" placeholder="00.000.000/0001-00"></div>
@@ -142,7 +144,11 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
       <div class="fg"><label class="lbl">Ticket médio (R$) <span class="req">*</span></label><input class="inp" data-field="ticket_medio" data-required="true" placeholder="Ex: 300"></div>
       <div class="fg"><label class="lbl">Público-alvo: idade, gênero, região <span class="req">*</span></label><textarea class="inp" data-field="publico_alvo" data-required="true" placeholder="Ex: Mulheres 30+, região Zona Sul e Barra"></textarea></div>
       <div class="fg"><label class="lbl">Diferenciais da empresa</label><textarea class="inp" data-field="diferenciais" placeholder="O que te destaca da concorrência?"></textarea></div>
+      <div class="fg"><label class="lbl">Produto ou serviço mais lucrativo <span class="req">*</span></label><input class="inp" data-field="produto_mais_lucrativo" data-required="true" placeholder="Qual gera mais margem hoje?"></div>
+      <div class="fg"><label class="lbl">Sazonalidade do negócio — tem épocas de alta e baixa? Quais?</label><textarea class="inp" data-field="sazonalidade" placeholder="Ex: mais forte no verão, mais fraco em fevereiro..."></textarea></div>
       <div class="fg"><label class="lbl">Maior dificuldade para conseguir clientes hoje</label><textarea class="inp" data-field="maior_dificuldade" placeholder="Conte o que mais trava hoje"></textarea></div>
+      <div class="fg"><label class="lbl">Principais objeções na venda do seu produto/serviço <span class="req">*</span></label><textarea class="inp" data-field="objecoes_venda" data-required="true" placeholder="O que os clientes mais questionam antes de fechar?"></textarea></div>
+      <div class="fg"><label class="lbl">Meta de faturamento em 12 meses (R$)</label><input class="inp" type="number" data-field="meta_faturamento_12m" placeholder="Ex: 180000"></div>
       <div class="fg"><label class="lbl">Quantos clientes novos quer por mês <span class="req">*</span></label><input class="inp" data-field="meta_clientes_mes" data-required="true" placeholder="Ex: 30"></div>
       <div class="nav-row">
         <button class="btn btn-ghost" onclick="voltar(4)">← Voltar</button>
@@ -169,6 +175,27 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
           <textarea class="inp" data-field="anuncios_detalhe" placeholder="Quanto investia e qual resultado?"></textarea>
         </div>
       </div>
+
+      <div class="fg">
+        <label class="lbl">Trabalha com CRM de vendas?</label>
+        <div class="toggle-group" data-toggle="trabalha_com_crm">
+          <button type="button" class="toggle-btn" data-value="sim" onclick="setToggle(this)">Sim</button>
+          <button type="button" class="toggle-btn" data-value="nao" onclick="setToggle(this)">Não</button>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="lbl">Já contratou agência antes?</label>
+        <div class="toggle-group" data-toggle="contratou_agencia_antes">
+          <button type="button" class="toggle-btn" data-value="sim" onclick="setToggle(this)">Sim</button>
+          <button type="button" class="toggle-btn" data-value="nao" onclick="setToggle(this)">Não</button>
+        </div>
+        <div class="toggle-dependent" data-depends-on="contratou_agencia_antes" data-depends-value="sim" style="display:none">
+          <textarea class="inp" data-field="experiencia_agencia_anterior" placeholder="Qual foi a experiência?"></textarea>
+        </div>
+      </div>
+
+      <div class="fg"><label class="lbl">Ações de marketing bem-sucedidas que já realizou?</label><textarea class="inp" data-field="acoes_marketing_sucesso" placeholder="O que já funcionou para atrair clientes?"></textarea></div>
 
       <div class="fg">
         <label class="lbl">Tem base de clientes antigos?</label>
@@ -289,6 +316,14 @@ function preencherEtapa(n){
     });
     atualizarDependentes(campo);
   });
+}
+
+function formatarCPF(el){
+  let v=el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>9) v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
+  else if(v.length>6) v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');
+  else if(v.length>3) v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');
+  el.value=v;
 }
 
 function setToggle(btn){
