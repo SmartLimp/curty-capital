@@ -1330,9 +1330,41 @@ async function salvarClienteSupabase(clienteData) {
 async function carregarClientesSupabase() {
   try {
     if (!supabaseClient) await initSupabase();
-    const { data, error } = await supabaseClient.from('clientes').select('*');
+    const { data, error } = await supabaseClient.from('clientes').select('*').order('criado_em', { ascending: true });
     if (error) throw error;
-    return data || [];
+    if (!data || data.length === 0) return [];
+
+    const tbody = document.getElementById('clients-tbody');
+    tbody.innerHTML = '';
+    clientCount = 0;
+    data.forEach(cliente => {
+      const tr = document.createElement('tr');
+      tr.setAttribute('data-cliente-id', cliente.id);
+      tr.setAttribute('data-status', cliente.status || 'Ativo');
+      tr.setAttribute('onclick', 'abrirDossieFromTable(this,event)');
+      const iniciais = (cliente.nome || 'NC').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+      const hs = cliente.health_score?.score ?? 50;
+      const hsClass = hs >= 80 ? 'hs-g' : hs >= 50 ? 'hs-a' : 'hs-r';
+      const status = cliente.status || 'Ativo';
+      const statusOpts = ['Ativo', 'Pausado', 'Inativo'].map(op => `<option${status === op ? ' selected' : ''}>${op}</option>`).join('');
+      tr.innerHTML = `
+        <td><div class="ct-nome"><div class="ct-av">${iniciais}</div><input class="ct-edit" type="text" value="${cliente.nome || ''}" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
+        <td><input class="ct-edit" type="text" value="${cliente.tipo || ''}" data-field="tipo" onchange="saveAll()"></td>
+        <td><input class="ct-edit" type="text" value="${cliente.entrada || ''}" data-field="entrada" onchange="saveAll()"></td>
+        <td><input class="ct-edit" type="text" value="R$ ${(parseFloat(cliente.mrr) || 0).toLocaleString('pt-BR')}" data-field="mrr" onchange="saveAll(); calcularForecast()"></td>
+        <td><span class="ct-tag" data-field="fase" contenteditable="true" onblur="saveAll()">${cliente.fase || 'Fase 1'}</span></td>
+        <td><select class="ct-status" data-field="status" onchange="mudarStatusCliente(this.parentElement.parentElement)" style="background:var(--bg2);border:.5px solid var(--border);padding:4px;border-radius:4px;font-size:11px;color:var(--text);cursor:pointer">${statusOpts}</select></td>
+        <td><input class="ct-edit" type="text" value="${cliente.contato || ''}" data-field="contato" onchange="saveAll()"></td>
+        <td style="text-align:center"><div class="ct-hs ${hsClass}" id="hs-table-${cliente.id}" data-field="health">${hs}</div></td>
+      `;
+      tbody.appendChild(tr);
+      clientCount++;
+    });
+    document.getElementById('count-clientes').textContent = clientCount;
+    document.getElementById('badge-clients').textContent = clientCount;
+    document.getElementById('total-clientes').textContent = clientCount;
+    calcularForecast();
+    return data;
   } catch (e) {
     console.error('❌ Erro ao carregar clientes:', e);
     return [];
@@ -1419,6 +1451,28 @@ async function carregarDossieSuabase(clienteId) {
     return data || [];
   } catch (e) {
     console.error('❌ Erro ao carregar dossie:', e);
+    console.warn('Continuando sem dados do Supabase...');
+    return [];
+  }
+}
+
+async function carregarEntregasSupabase(clienteId) {
+  try {
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient
+      .from('entregas')
+      .select('*')
+      .eq('cliente_id', clienteId);
+
+    // Se der erro de tabela não existe, retorna array vazio (graceful)
+    if (error && error.message && error.message.includes('entregas')) {
+      console.warn('⚠️ Tabela entregas ainda não foi criada. Usando dados locais.');
+      return [];
+    }
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('❌ Erro ao carregar entregas:', e);
     console.warn('Continuando sem dados do Supabase...');
     return [];
   }
@@ -1514,13 +1568,15 @@ document.querySelectorAll('.mbg').forEach(m=>m.addEventListener('click',e=>{if(e
 // o Supabase devolver uma linha para aquele campo específico — e um
 // cliente novo, sem nada salvo ainda, nunca teria essa linha.
 function limparCamposDossie(){
-  document.querySelectorAll('#view-dossie input.fv-edit, #view-dossie input.av-edit, #view-dossie input.kve, #view-dossie textarea.rp, #view-dossie textarea.diag-textarea').forEach(el=>{el.value='';});
+  document.querySelectorAll('#view-dossie input.fv-edit, #view-dossie input.av-edit, #view-dossie input.kve, #view-dossie input.editable, #view-dossie textarea.rp, #view-dossie textarea.diag-textarea').forEach(el=>{el.value='';});
   document.querySelectorAll('#view-dossie select.diag-select').forEach(el=>{el.selectedIndex=0;});
   document.querySelectorAll('#view-dossie .cli[id]').forEach(el=>{
     el.classList.remove('done');
     const btn=el.querySelector('.clb');
     if(btn){btn.classList.remove('done');btn.innerHTML='';}
   });
+  const checklistEl=document.getElementById('checklist-f3');
+  if(checklistEl)checklistEl.innerHTML='';
 }
 
 // Aplica no DOM os pares campo/valor devolvidos pelo Supabase para o
@@ -1571,6 +1627,21 @@ async function abrirDossiePorId(id,rowInfo){
 
   // 1) Limpa tudo primeiro.
   limparCamposDossie();
+
+  // 1b) Recarrega os cards de entrega apenas desse cliente (checklist-f3
+  // foi zerado em limparCamposDossie e não deve ficar com itens de outro cliente).
+  const entregas=await carregarEntregasSupabase(id);
+  const checklistEl=document.getElementById('checklist-f3');
+  if(checklistEl){
+    entregas.forEach(entrega=>{
+      const div=document.createElement('div');
+      div.className='cli'+(entrega.concluida?' done':'');
+      div.id=entrega.id;
+      const checkSvg=entrega.concluida?'<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5L4 7.5L8.5 2.5" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/></svg>':'';
+      div.innerHTML=`<div class="clb${entrega.concluida?' done':''}" onclick="toggleCheck(this,'${entrega.id}')">${checkSvg}</div><div class="clt">${entrega.descricao||''}</div><div class="clr">${entrega.responsavel||''}</div><div class="cld normal">${entrega.prazo||'—'}</div>`;
+      checklistEl.appendChild(div);
+    });
+  }
 
   // 2) Cabeçalho do dossiê — antes ficava sempre fixo em "Smart Limp",
   // seja qual fosse o cliente aberto.
@@ -2511,48 +2582,13 @@ function atualizarContadoresPipeline(){
   document.getElementById('prop-ab').value=porEtapa['Proposta'];
 }
 // INIT
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',async ()=>{
   const today=new Date().toISOString().split('T')[0];
   const rd=document.getElementById('reu-data');if(rd)rd.value=today;
   const ld=document.getElementById('log-data');if(ld)ld.value=today;
   loadAll();
-  // Carregar dados da tabela de clientes
-  const d=getData();
-  if(d.clientes_table){
-    try{
-      const clientes=JSON.parse(d.clientes_table);
-      if(clientes.length>1){
-        const tbody=document.getElementById('clients-tbody');
-        // Remover todas as linhas exceto a primeira (Smart Limp)
-        const existingRows=tbody.querySelectorAll('tr');
-        for(let i=1;i<existingRows.length;i++){existingRows[i].remove();}
-        // Adicionar clientes salvos
-        clientes.slice(1).forEach(cliente=>{
-          const tr=document.createElement('tr');
-          tr.setAttribute('data-cliente-id',cliente.id);
-          tr.setAttribute('onclick','abrirDossieFromTable(this,event)');
-          const iniciais=(cliente.nome||'NC').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-          const hs=cliente.health||'50';
-          const hsClass=hs>=80?'hs-g':hs>=50?'hs-a':'hs-r';
-          tr.innerHTML=`
-            <td><div class="ct-nome"><div class="ct-av">${iniciais}</div><input class="ct-edit" type="text" value="${cliente.nome||''}" data-field="nome" onchange="saveAll(); updateInitials(this.parentElement)"></div></td>
-            <td><input class="ct-edit" type="text" value="${cliente.tipo||''}" data-field="tipo" onchange="saveAll()"></td>
-            <td><input class="ct-edit" type="text" value="${cliente.entrada||''}" data-field="entrada" onchange="saveAll()"></td>
-            <td><input class="ct-edit" type="text" value="${cliente.mrr||''}" data-field="mrr" onchange="saveAll()"></td>
-            <td><span class="ct-tag" data-field="fase" contenteditable="true" onblur="saveAll()">${cliente.fase||'Fase 1'}</span></td>
-            <td><span class="ct-status" data-field="status" contenteditable="true" onblur="saveAll()" class="ct-status ${cliente.status==='Ativo'?'cts-ativo':cliente.status==='Risco'?'cts-risco':'cts-critico'}">${cliente.status||'Ativo'}</span></td>
-            <td><input class="ct-edit" type="text" value="${cliente.contato||''}" data-field="contato" onchange="saveAll()"></td>
-            <td style="text-align:center"><div class="ct-hs ${hsClass}" id="hs-table-${cliente.id}" data-field="health">${hs}</div></td>
-          `;
-          tbody.appendChild(tr);
-          clientCount++;
-        });
-        document.getElementById('count-clientes').textContent=clientCount;
-        document.getElementById('badge-clients').textContent=clientCount;
-        document.getElementById('total-clientes').textContent=clientCount;
-      }
-    }catch(e){console.error('Erro ao carregar clientes:',e);}
-  }
+  // Carregar clientes reais do Supabase (fonte de verdade — não depende de localStorage)
+  await carregarClientesSupabase();
   calcHS();calcEntregas();calcNextAction();
   renderPipeline();
   carregarTrafegoDaMes();
