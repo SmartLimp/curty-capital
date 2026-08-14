@@ -1399,12 +1399,15 @@ async function salvarEntregaSupabase(clienteId, entrega) {
 async function salvarDiagnosticoSupabase(clienteId, blocos) {
   try {
     if (!supabaseClient) await initSupabase();
+    // "atividades" não tem coluna "criado_em" (só "created_at", com default
+    // now()) — enviar esse campo fazia o Postgres rejeitar o insert inteiro
+    // (erro engolido pelo catch, nunca gravava). Omitindo o campo, o default
+    // do banco cuida disso, igual já acontece em criarAtividade().
     const diagnostico = {
       cliente_id: clienteId,
       tipo: 'diagnostico',
       titulo: 'Diagnóstico Estratégico (8 blocos)',
-      blocos: blocos,
-      criado_em: new Date().toISOString()
+      blocos: blocos
     };
     const { error } = await supabaseClient
       .from('atividades')
@@ -1549,6 +1552,42 @@ function renderHistorico(atividades) {
     const data = a.created_at ? new Date(a.created_at).toLocaleDateString('pt-BR') : '—';
     return `<div class="lr">${iconeAtividade(a.tipo)}<div style="flex:1"><div class="lt2">${escHtmlOnboarding(a.titulo || '')}</div><div class="ld2">${escHtmlOnboarding(a.descricao || '')}</div></div><div class="ldate">${data}</div></div>`;
   }).join('');
+}
+
+// Diagnóstico (aba "Diagnóstico") — fonte de verdade é a linha mais recente
+// com tipo='diagnostico' na tabela "atividades" (gravada por
+// salvarDiagnosticoSupabase). Mesmo padrão de Histórico/Entregas: sem essa
+// leitura, o botão "Salvar Diagnóstico" parecia funcionar mas o dado sumia
+// da tela em qualquer F5, mesmo quando o insert tivesse sido bem-sucedido.
+async function carregarDiagnosticoSupabase(clienteId) {
+  try {
+    if (!supabaseClient) await initSupabase();
+    const { data, error } = await supabaseClient
+      .from('atividades')
+      .select('blocos, created_at')
+      .eq('cliente_id', clienteId)
+      .eq('tipo', 'diagnostico')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) throw error;
+    return data?.blocos || null;
+  } catch (e) {
+    console.error('❌ Erro ao carregar diagnóstico:', e);
+    return null;
+  }
+}
+
+function renderDiagnostico(blocos) {
+  if (!blocos || !blocos.length) return;
+  blocos.forEach(b => {
+    const selEl = document.getElementById(`diag-avaliacao-${b.numero}`);
+    const idealEl = document.getElementById(`diag-ideal-${b.numero}`);
+    const atualEl = document.getElementById(`diag-atual-${b.numero}`);
+    if (selEl && b.avaliacao) selEl.value = b.avaliacao;
+    if (idealEl) idealEl.value = b.cenario_ideal || '';
+    if (atualEl) atualEl.value = b.cenario_atual || '';
+  });
 }
 
 async function criarTabelaDossie() {
@@ -1722,6 +1761,11 @@ async function abrirDossiePorId(id,rowInfo){
   // razão do item 1b: já foi zerado em limparCamposDossie().
   const atividadesHistorico=await carregarHistoricoSupabase(id);
   renderHistorico(atividadesHistorico);
+
+  // 1d) Recarrega os 8 blocos de Diagnóstico apenas desse cliente — já
+  // limpos em limparCamposDossie() (select.diag-select e textarea.diag-textarea).
+  const blocosDiagnostico=await carregarDiagnosticoSupabase(id);
+  renderDiagnostico(blocosDiagnostico);
 
   // 2) Cabeçalho do dossiê — antes ficava sempre fixo em "Smart Limp",
   // seja qual fosse o cliente aberto.
@@ -2037,6 +2081,8 @@ async function salvarTodosDiagnosticos(){
   const saved=await salvarDiagnosticoSupabase(clienteId,blocos);
   if(saved){
     toast('Diagnóstico completo salvo no Supabase!');
+  }else{
+    toast('Não foi possível salvar o diagnóstico no banco','red');
   }
 }
 
