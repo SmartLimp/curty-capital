@@ -446,6 +446,7 @@ tr[data-status="Pausado"]{opacity:0.7}
         <div class="tab" onclick="showTab('dados')">Dados</div>
         <div class="tab" onclick="showTab('acessos')">Acessos</div>
         <div class="tab" onclick="showTab('onboarding')">Onboarding</div>
+        <div class="tab" onclick="showTab('respostas-onboarding')">Respostas Onboarding</div>
         <div class="tab" onclick="showTab('diagnostico')">Diagnóstico</div>
         <div class="tab" onclick="showTab('entregas')">Entregas</div>
         <div class="tab" onclick="showTab('historico')">Histórico</div>
@@ -664,6 +665,13 @@ tr[data-status="Pausado"]{opacity:0.7}
 
         <div style="display:flex;gap:8px;margin-top:16px">
           <button class="btn bbl bsm" onclick="salvarTodoOnboarding()">💾 Salvar Onboarding</button>
+        </div>
+      </div>
+
+      <!-- RESPOSTAS ONBOARDING -->
+      <div class="tc" id="tc-respostas-onboarding">
+        <div id="respostas-onboarding-container">
+          <div style="font-size:11px;color:var(--text2)">Carregando...</div>
         </div>
       </div>
 
@@ -1660,6 +1668,7 @@ async function abrirDossiePorId(id,rowInfo){
   // 3) Só então carrega e aplica os dados reais desse cliente.
   const dados=await carregarDossieSuabase(id);
   popularCamposDossie(dados);
+  carregarRespostasOnboarding(id);
 
   // Se a aba Dados tiver segmento/cidade salvos, usa isso no subtítulo do
   // header (mais completo do que tipo/entrada da tabela).
@@ -2094,6 +2103,106 @@ async function carregarStatusFormulario(clienteId){
     }
   }catch(e){
     console.warn('Não foi possível carregar status do formulário:',e);
+  }
+}
+
+// Etapas e campos do formulário público (form.html), na ordem/labels exatos
+// usados lá, para exibir as respostas do onboarding no dossiê do cliente.
+const ETAPAS_ONBOARDING_FORM=[
+  {titulo:'Etapa 2 — Dados da empresa',campos:[
+    ['nome_completo','Nome completo'],['cpf','CPF'],['nome_fantasia','Nome fantasia'],
+    ['razao_social','Razão social'],['cnpj','CNPJ'],['segmento','Segmento / nicho'],
+    ['cidade_bairro','Cidade e bairro de atuação'],['site_atual','Site atual'],
+    ['horario_funcionamento','Horário de funcionamento']
+  ]},
+  {titulo:'Etapa 3 — Contato e equipe',campos:[
+    ['responsavel_nome','Nome do responsável'],['whatsapp','WhatsApp direto'],['email','E-mail'],
+    ['num_funcionarios','Quantos funcionários tem?'],['quem_responde_whatsapp','Quem responde o WhatsApp hoje?']
+  ]},
+  {titulo:'Etapa 4 — Negócio e público',campos:[
+    ['servicos','Principais serviços oferecidos'],['ticket_medio','Ticket médio (R$)'],
+    ['publico_alvo','Público-alvo'],['diferenciais','Diferenciais da empresa'],
+    ['produto_mais_lucrativo','Produto/serviço mais lucrativo'],['sazonalidade','Sazonalidade'],
+    ['maior_dificuldade','Maior dificuldade para conseguir clientes'],
+    ['objecoes_venda','Principais objeções na venda'],
+    ['meta_faturamento_12m','Meta de faturamento em 12 meses'],
+    ['meta_clientes_mes','Clientes novos por mês']
+  ]},
+  {titulo:'Etapa 5 — Presença digital',campos:[
+    ['fb_link','Facebook'],['ig_link','Instagram'],['gmn_link','Google Meu Negócio'],['tiktok_link','TikTok'],
+    ['ja_rodou_anuncios','Já rodou anúncios antes?'],['anuncios_detalhe','Detalhe dos anúncios'],
+    ['trabalha_com_crm','Trabalha com CRM?'],['contratou_agencia_antes','Já contratou agência antes?'],
+    ['experiencia_agencia_anterior','Experiência com agência anterior'],
+    ['acoes_marketing_sucesso','Ações de marketing bem-sucedidas'],
+    ['tem_base_clientes','Tem base de clientes antigos?'],['base_clientes_qtd','Quantidade de clientes na base'],
+    ['tem_lista_contatos','Tem lista de contatos?']
+  ]},
+  {titulo:'Etapa 6 — Materiais e metas',campos:[
+    ['cores_marca','Cores da marca'],['referencias_visuais','Referências visuais'],
+    ['investimento_mensal','Investimento mensal em anúncios'],
+    ['meta_faturamento_90d','Meta de faturamento em 90 dias'],['observacoes','Observações adicionais']
+  ]}
+];
+
+function escHtmlOnboarding(str){
+  return String(str==null?'':str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function carregarRespostasOnboarding(clienteId){
+  const container=document.getElementById('respostas-onboarding-container');
+  if(!container)return;
+  container.innerHTML='<div style="font-size:11px;color:var(--text2)">Carregando...</div>';
+  try{
+    if(!supabaseClient)await initSupabase();
+    const{data:formulario,error:errForm}=await supabaseClient
+      .from('formularios')
+      .select('id,status,etapa_atual,preenchido_em')
+      .eq('slug',clienteId)
+      .maybeSingle();
+
+    if(errForm||!formulario||(formulario.status!=='concluido'&&formulario.status!=='em_andamento')){
+      container.innerHTML='<div class="card" style="text-align:center;color:var(--text3);font-size:12px;padding:24px">Formulário ainda não foi preenchido por este cliente</div>';
+      return;
+    }
+
+    if(formulario.status==='em_andamento'){
+      container.innerHTML=`<div class="card" style="text-align:center;color:var(--text3);font-size:12px;padding:24px">Formulário em andamento — etapa ${formulario.etapa_atual||1} de 6</div>`;
+      return;
+    }
+
+    const{data:respostas,error:errResp}=await supabaseClient
+      .from('formulario_respostas')
+      .select('campo,valor')
+      .eq('formulario_id',formulario.id);
+
+    if(errResp){
+      container.innerHTML='<div class="card" style="text-align:center;color:var(--red);font-size:12px;padding:24px">Erro ao carregar respostas do formulário</div>';
+      return;
+    }
+
+    const mapaRespostas={};
+    (respostas||[]).forEach(r=>{mapaRespostas[r.campo]=r.valor;});
+
+    const dataPreenchimento=formulario.preenchido_em?new Date(formulario.preenchido_em).toLocaleString('pt-BR'):'—';
+
+    let html=`<div style="padding:10px 12px;background:var(--bd);border:.5px solid var(--bb);border-radius:var(--r);font-size:11px;color:var(--blue);margin-bottom:14px">
+      <strong>Status:</strong> Preenchido ✓ &nbsp;·&nbsp; <strong>Preenchido em:</strong> ${dataPreenchimento}
+    </div>`;
+
+    ETAPAS_ONBOARDING_FORM.forEach(etapa=>{
+      html+=`<div class="sl">${escHtmlOnboarding(etapa.titulo)}</div><div class="card">`;
+      etapa.campos.forEach(([chave,label])=>{
+        const valor=mapaRespostas[chave];
+        const valorExibido=(valor===undefined||valor===null||String(valor).trim()==='')?'—':escHtmlOnboarding(valor);
+        html+=`<div class="field"><div class="fl">${escHtmlOnboarding(label)}</div><div class="fv" style="white-space:pre-wrap">${valorExibido}</div></div>`;
+      });
+      html+='</div>';
+    });
+
+    container.innerHTML=html;
+  }catch(e){
+    console.warn('Não foi possível carregar respostas do onboarding:',e);
+    container.innerHTML='<div class="card" style="text-align:center;color:var(--red);font-size:12px;padding:24px">Erro ao carregar respostas do formulário</div>';
   }
 }
 
