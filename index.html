@@ -2153,22 +2153,20 @@ const ETAPAS_ONBOARDING_FORM=[
     ['produto_mais_lucrativo','Produto/serviço mais lucrativo'],['sazonalidade','Sazonalidade'],
     ['maior_dificuldade','Maior dificuldade para conseguir clientes'],
     ['objecoes_venda','Principais objeções na venda'],
-    ['meta_faturamento_12m','Meta de faturamento em 12 meses'],
     ['meta_clientes_mes','Clientes novos por mês']
   ]},
   {titulo:'Etapa 5 — Presença digital',campos:[
     ['fb_link','Facebook'],['ig_link','Instagram'],['gmn_link','Google Meu Negócio'],['tiktok_link','TikTok'],
-    ['ja_rodou_anuncios','Já rodou anúncios antes?'],['anuncios_detalhe','Detalhe dos anúncios'],
+    ['ja_rodou_anuncios','Já rodou anúncios no Facebook/Instagram?'],['anuncios_detalhe','Detalhe dos anúncios'],
+    ['ja_rodou_anuncios_google','Já rodou anúncios no Google Ads?'],
     ['trabalha_com_crm','Trabalha com CRM?'],['contratou_agencia_antes','Já contratou agência antes?'],
     ['experiencia_agencia_anterior','Experiência com agência anterior'],
     ['acoes_marketing_sucesso','Ações de marketing bem-sucedidas'],
     ['tem_base_clientes','Tem base de clientes antigos?'],['base_clientes_qtd','Quantidade de clientes na base'],
-    ['tem_lista_contatos','Tem lista de contatos?']
-  ]},
-  {titulo:'Etapa 6 — Materiais e metas',campos:[
-    ['cores_marca','Cores da marca'],['referencias_visuais','Referências visuais'],
+    ['tem_lista_contatos','Tem lista de contatos?'],
     ['investimento_mensal','Investimento mensal em anúncios'],
-    ['meta_faturamento_90d','Meta de faturamento em 90 dias'],['observacoes','Observações adicionais']
+    ['meta_faturamento_90d','Meta de faturamento em 90 dias'],
+    ['meta_faturamento_12m','Meta de faturamento em 12 meses']
   ]}
 ];
 
@@ -2194,7 +2192,7 @@ async function carregarRespostasOnboarding(clienteId){
     }
 
     if(formulario.status==='em_andamento'){
-      container.innerHTML=`<div class="card" style="text-align:center;color:var(--text3);font-size:12px;padding:24px">Formulário em andamento — etapa ${formulario.etapa_atual||1} de 6</div>`;
+      container.innerHTML=`<div class="card" style="text-align:center;color:var(--text3);font-size:12px;padding:24px">Formulário em andamento — etapa ${formulario.etapa_atual||1} de 5</div>`;
       return;
     }
 
@@ -2217,15 +2215,31 @@ async function carregarRespostasOnboarding(clienteId){
       <strong>Status:</strong> Preenchido ✓ &nbsp;·&nbsp; <strong>Preenchido em:</strong> ${dataPreenchimento}
     </div>`;
 
+    const camposConhecidos=new Set();
     ETAPAS_ONBOARDING_FORM.forEach(etapa=>{
       html+=`<div class="sl">${escHtmlOnboarding(etapa.titulo)}</div><div class="card">`;
       etapa.campos.forEach(([chave,label])=>{
+        camposConhecidos.add(chave);
         const valor=mapaRespostas[chave];
         const valorExibido=(valor===undefined||valor===null||String(valor).trim()==='')?'—':escHtmlOnboarding(valor);
         html+=`<div class="field"><div class="fl">${escHtmlOnboarding(label)}</div><div class="fv" style="white-space:pre-wrap">${valorExibido}</div></div>`;
       });
       html+='</div>';
     });
+
+    // Respostas antigas de campos que já saíram do formulário atual (ex.: cores_marca,
+    // referencias_visuais, observacoes da extinta Etapa 6) continuam existindo no banco
+    // para clientes que responderam antes da mudança — mostra em vez de simplesmente omitir.
+    const outrasChaves=Object.keys(mapaRespostas).filter(chave=>!camposConhecidos.has(chave));
+    if(outrasChaves.length){
+      html+='<div class="sl">Outras respostas</div><div class="card">';
+      outrasChaves.forEach(chave=>{
+        const valor=mapaRespostas[chave];
+        const valorExibido=(valor===undefined||valor===null||String(valor).trim()==='')?'—':escHtmlOnboarding(valor);
+        html+=`<div class="field"><div class="fl">${escHtmlOnboarding(chave)}</div><div class="fv" style="white-space:pre-wrap">${valorExibido}</div></div>`;
+      });
+      html+='</div>';
+    }
 
     container.innerHTML=html;
   }catch(e){

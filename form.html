@@ -83,7 +83,7 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
 <div id="progress-wrap">
   <div class="progress-inner">
     <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-    <div class="progress-label" id="progress-label">Etapa 1 de 6</div>
+    <div class="progress-label" id="progress-label">Etapa 1 de 5</div>
   </div>
 </div>
 
@@ -106,13 +106,13 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
     <div class="etapa" data-etapa="2">
       <div class="step-title">Dados da empresa</div>
       <div class="step-sub">Conte um pouco sobre o seu negócio.</div>
-      <div class="fg"><label class="lbl">Nome completo <span class="req">*</span></label><input class="inp" data-field="nome_completo" data-required="true" placeholder="Seu nome completo"></div>
-      <div class="fg"><label class="lbl">CPF <span class="req">*</span></label><input class="inp" data-field="cpf" data-required="true" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" oninput="formatarCPF(this)"></div>
-      <div class="fg"><label class="lbl">Nome fantasia <span class="req">*</span></label><input class="inp" data-field="nome_fantasia" data-required="true" placeholder="Ex: Smart Limp"></div>
+      <div class="fg"><label class="lbl">Nome completo</label><input class="inp" data-field="nome_completo" placeholder="Seu nome completo"></div>
+      <div class="fg"><label class="lbl">CPF</label><input class="inp" data-field="cpf" placeholder="000.000.000-00" inputmode="numeric" maxlength="14" oninput="formatarCPF(this)"></div>
+      <div class="fg"><label class="lbl">Nome fantasia</label><input class="inp" data-field="nome_fantasia" placeholder="Ex: Smart Limp"></div>
       <div class="fg"><label class="lbl">Razão social</label><input class="inp" data-field="razao_social" placeholder="Ex: Smart Limp Ltda."></div>
       <div class="fg"><label class="lbl">CNPJ</label><input class="inp" data-field="cnpj" placeholder="00.000.000/0001-00"></div>
-      <div class="fg"><label class="lbl">Segmento / nicho <span class="req">*</span></label><input class="inp" data-field="segmento" data-required="true" placeholder="Ex: Higienização de estofados"></div>
-      <div class="fg"><label class="lbl">Cidade e bairro de atuação <span class="req">*</span></label><input class="inp" data-field="cidade_bairro" data-required="true" placeholder="Ex: Rio de Janeiro — Zona Sul e Barra"></div>
+      <div class="fg"><label class="lbl">Segmento / nicho</label><input class="inp" data-field="segmento" placeholder="Ex: Higienização de estofados"></div>
+      <div class="fg"><label class="lbl">Cidade e bairro de atuação</label><input class="inp" data-field="cidade_bairro" placeholder="Ex: Rio de Janeiro — Zona Sul e Barra"></div>
       <div class="fg"><label class="lbl">Site atual (se tiver)</label><input class="inp" data-field="site_atual" placeholder="https://"></div>
       <div class="fg"><label class="lbl">Horário de funcionamento</label><input class="inp" data-field="horario_funcionamento" placeholder="Ex: Seg a Sex, 9h às 18h"></div>
       <div class="nav-row">
@@ -125,8 +125,8 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
     <div class="etapa" data-etapa="3">
       <div class="step-title">Contato e equipe</div>
       <div class="step-sub">Quem vamos falar no dia a dia.</div>
-      <div class="fg"><label class="lbl">Nome do responsável <span class="req">*</span></label><input class="inp" data-field="responsavel_nome" data-required="true" placeholder="Seu nome"></div>
-      <div class="fg"><label class="lbl">WhatsApp direto <span class="req">*</span></label><input class="inp" data-field="whatsapp" data-required="true" placeholder="(21) 99999-9999"></div>
+      <div class="fg"><label class="lbl">Nome do responsável</label><input class="inp" data-field="responsavel_nome" placeholder="Seu nome"></div>
+      <div class="fg"><label class="lbl">WhatsApp direto</label><input class="inp" data-field="whatsapp" placeholder="(21) 99999-9999"></div>
       <div class="fg"><label class="lbl">E-mail</label><input class="inp" type="email" data-field="email" placeholder="voce@empresa.com.br"></div>
       <div class="fg"><label class="lbl">Quantos funcionários tem?</label><input class="inp" data-field="num_funcionarios" placeholder="Ex: 5"></div>
       <div class="fg"><label class="lbl">Quem responde o WhatsApp hoje?</label><input class="inp" data-field="quem_responde_whatsapp" placeholder="Ex: eu mesmo, uma atendente..."></div>
@@ -140,16 +140,15 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
     <div class="etapa" data-etapa="4">
       <div class="step-title">Negócio e público</div>
       <div class="step-sub">Isso define como vamos te trazer clientes.</div>
-      <div class="fg"><label class="lbl">Principais serviços oferecidos <span class="req">*</span></label><textarea class="inp" data-field="servicos" data-required="true" placeholder="Liste os principais serviços"></textarea></div>
-      <div class="fg"><label class="lbl">Ticket médio (R$) <span class="req">*</span></label><input class="inp" data-field="ticket_medio" data-required="true" placeholder="Ex: 300"></div>
-      <div class="fg"><label class="lbl">Público-alvo: idade, gênero, região <span class="req">*</span></label><textarea class="inp" data-field="publico_alvo" data-required="true" placeholder="Ex: Mulheres 30+, região Zona Sul e Barra"></textarea></div>
+      <div class="fg"><label class="lbl">Principais serviços oferecidos</label><textarea class="inp" data-field="servicos" placeholder="Liste os principais serviços"></textarea></div>
+      <div class="fg"><label class="lbl">Ticket médio (R$)</label><input class="inp" data-field="ticket_medio" placeholder="Ex: 300"></div>
+      <div class="fg"><label class="lbl">Público-alvo: idade, gênero, região</label><textarea class="inp" data-field="publico_alvo" placeholder="Ex: Mulheres 30+, região Zona Sul e Barra"></textarea></div>
       <div class="fg"><label class="lbl">Diferenciais da empresa</label><textarea class="inp" data-field="diferenciais" placeholder="O que te destaca da concorrência?"></textarea></div>
-      <div class="fg"><label class="lbl">Produto ou serviço mais lucrativo <span class="req">*</span></label><input class="inp" data-field="produto_mais_lucrativo" data-required="true" placeholder="Qual gera mais margem hoje?"></div>
+      <div class="fg"><label class="lbl">Produto ou serviço mais lucrativo</label><input class="inp" data-field="produto_mais_lucrativo" placeholder="Qual gera mais margem hoje?"></div>
       <div class="fg"><label class="lbl">Sazonalidade do negócio — tem épocas de alta e baixa? Quais?</label><textarea class="inp" data-field="sazonalidade" placeholder="Ex: mais forte no verão, mais fraco em fevereiro..."></textarea></div>
       <div class="fg"><label class="lbl">Maior dificuldade para conseguir clientes hoje</label><textarea class="inp" data-field="maior_dificuldade" placeholder="Conte o que mais trava hoje"></textarea></div>
-      <div class="fg"><label class="lbl">Principais objeções na venda do seu produto/serviço <span class="req">*</span></label><textarea class="inp" data-field="objecoes_venda" data-required="true" placeholder="O que os clientes mais questionam antes de fechar?"></textarea></div>
-      <div class="fg"><label class="lbl">Meta de faturamento em 12 meses (R$)</label><input class="inp" type="number" data-field="meta_faturamento_12m" placeholder="Ex: 180000"></div>
-      <div class="fg"><label class="lbl">Quantos clientes novos quer por mês <span class="req">*</span></label><input class="inp" data-field="meta_clientes_mes" data-required="true" placeholder="Ex: 30"></div>
+      <div class="fg"><label class="lbl">Principais objeções na venda do seu produto/serviço</label><textarea class="inp" data-field="objecoes_venda" placeholder="O que os clientes mais questionam antes de fechar?"></textarea></div>
+      <div class="fg"><label class="lbl">Quantos clientes novos quer por mês</label><input class="inp" data-field="meta_clientes_mes" placeholder="Ex: 30"></div>
       <div class="nav-row">
         <button class="btn btn-ghost" onclick="voltar(4)">← Voltar</button>
         <button class="btn btn-primary" onclick="avancar(4,this)">Avançar →</button>
@@ -166,7 +165,7 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
       <div class="fg"><label class="lbl">TikTok (link)</label><input class="inp" data-field="tiktok_link" placeholder="https://tiktok.com/@..."></div>
 
       <div class="fg">
-        <label class="lbl">Já rodou anúncios antes?</label>
+        <label class="lbl">Já rodou anúncios no Facebook/Instagram antes?</label>
         <div class="toggle-group" data-toggle="ja_rodou_anuncios">
           <button type="button" class="toggle-btn" data-value="sim" onclick="setToggle(this)">Sim</button>
           <button type="button" class="toggle-btn" data-value="nao" onclick="setToggle(this)">Não</button>
@@ -216,23 +215,20 @@ textarea.inp{resize:vertical;min-height:70px;line-height:1.6}
         </div>
       </div>
 
+      <div class="fg"><label class="lbl">Investimento disponível para anúncios/mês (R$)</label><input class="inp" data-field="investimento_mensal" placeholder="Ex: 1000"></div>
+      <div class="fg"><label class="lbl">Meta de faturamento em 90 dias (R$)</label><input class="inp" data-field="meta_faturamento_90d" placeholder="Ex: 15000"></div>
+      <div class="fg"><label class="lbl">Meta de faturamento em 12 meses (R$)</label><input class="inp" type="number" data-field="meta_faturamento_12m" placeholder="Ex: 180000"></div>
+
+      <div class="fg">
+        <label class="lbl">Já rodou anúncios no Google Ads antes?</label>
+        <div class="toggle-group" data-toggle="ja_rodou_anuncios_google">
+          <button type="button" class="toggle-btn" data-value="sim" onclick="setToggle(this)">Sim</button>
+          <button type="button" class="toggle-btn" data-value="nao" onclick="setToggle(this)">Não</button>
+        </div>
+      </div>
+
       <div class="nav-row">
         <button class="btn btn-ghost" onclick="voltar(5)">← Voltar</button>
-        <button class="btn btn-primary" onclick="avancar(5,this)">Avançar →</button>
-      </div>
-    </div>
-
-    <!-- ETAPA 6 — MATERIAIS E METAS -->
-    <div class="etapa" data-etapa="6">
-      <div class="step-title">Materiais e metas</div>
-      <div class="step-sub">Últimos detalhes para fecharmos o planejamento.</div>
-      <div class="fg"><label class="lbl">Cores da marca</label><input class="inp" data-field="cores_marca" placeholder="Ex: azul e dourado"></div>
-      <div class="fg"><label class="lbl">Referências visuais que gosta</label><textarea class="inp" data-field="referencias_visuais" placeholder="Links ou descrição"></textarea></div>
-      <div class="fg"><label class="lbl">Investimento disponível para anúncios/mês (R$) <span class="req">*</span></label><input class="inp" data-field="investimento_mensal" data-required="true" placeholder="Ex: 1000"></div>
-      <div class="fg"><label class="lbl">Meta de faturamento em 90 dias (R$)</label><input class="inp" data-field="meta_faturamento_90d" placeholder="Ex: 15000"></div>
-      <div class="fg"><label class="lbl">Observações adicionais</label><textarea class="inp" data-field="observacoes" placeholder="Algo mais que devemos saber?"></textarea></div>
-      <div class="nav-row">
-        <button class="btn btn-ghost" onclick="voltar(6)">← Voltar</button>
         <button class="btn btn-gold" onclick="finalizar(this)">Enviar formulário</button>
       </div>
     </div>
@@ -346,11 +342,11 @@ function goToEtapa(n){
   document.querySelectorAll('.etapa').forEach(el=>el.classList.remove('active'));
   const el=document.querySelector(`.etapa[data-etapa="${n}"]`);
   if(el) el.classList.add('active');
-  const mostrarProgresso = n>=2 && n<=6;
+  const mostrarProgresso = n>=2 && n<=5;
   document.getElementById('progress-wrap').style.display = mostrarProgresso ? 'block' : 'none';
   if(mostrarProgresso){
-    document.getElementById('progress-fill').style.width = (n/6*100)+'%';
-    document.getElementById('progress-label').textContent = `Etapa ${n} de 6`;
+    document.getElementById('progress-fill').style.width = (n/5*100)+'%';
+    document.getElementById('progress-label').textContent = `Etapa ${n} de 5`;
   }
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -396,7 +392,7 @@ async function salvarEtapa(n, opts={}){
     const { error } = await supabaseClient.from('formulario_respostas').upsert(rows, { onConflict: 'formulario_id,campo' });
     if(error) console.warn('Erro ao salvar respostas:', error);
   }
-  const novaEtapa = opts.etapaAtual!==undefined ? opts.etapaAtual : Math.min(n+1,6);
+  const novaEtapa = opts.etapaAtual!==undefined ? opts.etapaAtual : Math.min(n+1,5);
   const update={ etapa_atual: novaEtapa };
   if(formularioAtual.status==='pendente') update.status='em_andamento';
   if(opts.status) update.status=opts.status;
@@ -472,12 +468,12 @@ function voltar(n){
 }
 
 async function finalizar(btn){
-  if(!validarEtapa(6)) return;
+  if(!validarEtapa(5)) return;
   btn.disabled=true;
   const original=btn.textContent;
   btn.textContent='Enviando...';
   try{
-    await salvarEtapa(6, { etapaAtual: 6, status: 'concluido', preenchido_em: new Date().toISOString() });
+    await salvarEtapa(5, { etapaAtual: 5, status: 'concluido', preenchido_em: new Date().toISOString() });
     await sincronizarComDossie();
     mostrarObrigado();
   }catch(e){
@@ -508,10 +504,10 @@ async function init(){
     return;
   }
   await carregarRespostas(formularioAtual.id);
-  for(let i=2;i<=6;i++) preencherEtapa(i);
+  for(let i=2;i<=5;i++) preencherEtapa(i);
   document.getElementById('loading-screen').style.display='none';
   document.getElementById('form-shell').style.display='block';
-  const etapaInicial = formularioAtual.etapa_atual && formularioAtual.etapa_atual>1 ? Math.min(formularioAtual.etapa_atual,6) : 1;
+  const etapaInicial = formularioAtual.etapa_atual && formularioAtual.etapa_atual>1 ? Math.min(formularioAtual.etapa_atual,5) : 1;
   goToEtapa(etapaInicial);
 }
 
