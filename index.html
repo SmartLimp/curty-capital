@@ -1750,6 +1750,14 @@ async function saveAll(){
   // Campos importantes do dossiê que devem ser salvos no Supabase
   const camposImportantes=CAMPOS_IMPORTANTES_DOSSIE;
 
+  // Só persiste camposImportantes na tabela dossie se o dossiê estiver de fato
+  // aberto na tela. clienteAtualId sozinho não basta: ele fica com o fallback
+  // 'smartlimp' mesmo com o dossiê fechado, e saveAll() é chamado em vários
+  // fluxos que nada têm a ver com o dossiê (ex.: cálculos da Visão geral em
+  // todo carregamento de página) — sem essa guarda, esses fluxos resalvam os
+  // placeholders do HTML por cima dos dados reais do cliente no Supabase.
+  const dossieAberto=document.getElementById('view-dossie')?.style.display==='block';
+
   document.querySelectorAll('[id]').forEach(el=>{
     let valor='';
     if(el.tagName==='INPUT'&&el.type!=='button'){
@@ -1769,8 +1777,8 @@ async function saveAll(){
       d[el.id]=valor;
     }
 
-    // Salvar campos importantes na tabela dossie
-    if(camposImportantes.includes(el.id) && valor){
+    // Salvar campos importantes na tabela dossie (só com o dossiê aberto)
+    if(dossieAberto && camposImportantes.includes(el.id) && valor){
       salvarCampoDossie(clienteId,el.id,valor);
     }
   });
@@ -2287,7 +2295,7 @@ async function verificarFormularioMorningView(){
 
 function toggleDiag(block){const isOpen=block.classList.contains('open2');document.querySelectorAll('.db').forEach(b=>b.classList.remove('open2'));if(!isOpen)block.classList.add('open2');}
 function checkCPL(){const v=parseFloat((document.getElementById('cpl')?.textContent||'').replace(/[^\d.]/g,''))||0;if(v>40)toast('⚠ CPL acima de R$40!','gold');saveAll();}
-function calcMeta(){const mrr=parseFloat((document.getElementById('mrr')?.textContent||'').replace(/[^\d.]/g,''))||0;const pct=Math.min(Math.round(mrr/15000*100),100);const bar=document.getElementById('mrr-bar');if(bar)bar.style.width=pct+'%';const meta=document.getElementById('mrr-meta');if(meta)meta.textContent='Meta: R$ 15.000 · '+pct+'%';saveAll();}
+function calcMeta(){const mrr=parseFloat((document.getElementById('mrr')?.textContent||'').replace(/[^\d.]/g,''))||0;const pct=Math.min(Math.round(mrr/15000*100),100);const bar=document.getElementById('mrr-bar');if(bar)bar.style.width=pct+'%';const meta=document.getElementById('mrr-meta');if(meta)meta.textContent='Meta: R$ 15.000 · '+pct+'%';}
 function upStatus(stId,inputId){const input=document.getElementById(inputId);const val=input?.value||'';const st=document.getElementById(stId);if(!st)return;if(!val.trim()){st.className='ast ast-pend';st.textContent='Pendente'}else{st.className='ast ast-ok';st.textContent='Configurado'}salvarCampoIndividual(input);}
 function atualizarStatusAcessos(){
   const camposAcesso=['ac-bm','ac-ads','ac-pixel','ac-fbpage','ac-ig','ac-wpp','ac-ga4','ac-gtm','ac-gads','ac-gmn','ac-gsc','ac-dom','ac-host','ac-ttk','ac-crm'];
